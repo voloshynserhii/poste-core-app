@@ -1,0 +1,1 @@
+The project is a core logistic system being developped for POSTE GE
