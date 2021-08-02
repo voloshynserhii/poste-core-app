@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import AddButton from '../AddButton';
 import AuthContext from '../../store/auth-context';
 import classes from './MainNavigation.module.css';
 
@@ -22,7 +21,6 @@ const MainNavigation = () => {
       </Link>
       <nav>
         <ul>
-          {isLoggedIn && <AddButton>Create Order</AddButton>}
           {!isLoggedIn && (
             <li>
               <Link to='/auth'>Login</Link>

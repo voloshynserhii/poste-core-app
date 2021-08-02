@@ -1,4 +1,10 @@
 .starting {
   margin: 1rem auto;
   text-align: center;
+  height: 100%;
+}
+.wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
 }

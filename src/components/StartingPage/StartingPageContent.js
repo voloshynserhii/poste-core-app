@@ -2,6 +2,7 @@ import { useContext } from "react";
 
 import AuthContext from "../../store/auth-context";
 import MainTable from "../MainTable";
+import SideBar from "../SideBar";
 import classes from "./StartingPageContent.module.css";
 
 const StartingPageContent = () => {
@@ -12,7 +13,14 @@ const StartingPageContent = () => {
   return (
     <section className={classes.starting}>
       {!isLoggedIn && <h1> Please log in</h1>}
-      {isLoggedIn && <MainTable />}
+      {isLoggedIn && (
+        <>
+          <div className={classes.wrapper}>
+            <SideBar collection="order" data={null} title="Tracking" />
+            <MainTable />
+          </div>
+        </>
+      )}
     </section>
   );
 };
