@@ -7,8 +7,6 @@ import classes from "./sidebar.module.css";
 const SideBar = (props) => {
   const authCtx = useContext(AuthContext);
 
-  const isLoggedIn = authCtx.isLoggedIn;
-
   return (
     <aside className={classes.sidebar} data={props.data}>
         <h3>{props.title}</h3>
