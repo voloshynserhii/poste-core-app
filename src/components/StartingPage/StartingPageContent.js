@@ -3,6 +3,7 @@ import { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 import MainTable from "../MainTable";
 import SideBar from "../SideBar";
+
 import classes from "./StartingPageContent.module.css";
 
 const StartingPageContent = () => {
