@@ -4,6 +4,7 @@ import { loadToken } from './auth/utils';
 import * as auth from './auth';
 import * as info from './info';
 import * as collection from './collection';
+import * as orders from './tracking';
 
 const api = {
   // Pre-configured HTTP request instances
@@ -21,6 +22,7 @@ const api = {
   auth,
   info,
   collection,
+  orders
 };
 
 export default api;

@@ -1,30 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { LinearProgress, Grid } from '@material-ui/core';
+import React, { useState, useEffect, useCallback } from "react";
+import { LinearProgress, Grid } from "@material-ui/core";
 
-import UsersTable from './components/UsersTable';
-import AddButton from './components/AddButton';
-import UserForm from './components/UserForm';
-import USERS from './utils';
+import api from "../../api";
+import {useAppStore} from '../../store/AppStore';
+import UsersTable from "./components/UsersTable";
+import AddButton from "./components/AddButton";
+import UserForm from "./components/UserForm";
 
 const AllOperatorsView = () => {
+  const [state, dispatch] = useAppStore();
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
-  const [addUser, setAddUser] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [addOrder, setAddOrder] = useState(false);
+
 
   useEffect(() => {
     async function fetchData() {
-      setUsers(USERS);
+      const res = await api.orders.read(); // List of All orders
+      if (res) {
+        setOrders(res);
+      }
       setLoading(false);
     }
     fetchData();
   }, []);
 
+
   const handleAddUser = () => {
-    setAddUser(true);
+    setAddOrder(true);
   };
 
   const handleCloseForm = () => {
-    setAddUser(false);
+    setAddOrder(false);
   };
 
   if (loading) return <LinearProgress />;
@@ -35,8 +42,8 @@ const AllOperatorsView = () => {
     <>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          {/* <UsersTable data={users} /> */}
-        </Grid>
+          <UsersTable data={orders} />
+          </Grid>
       </Grid>
       <AddButton collection="users" onClick={handleAddUser}>
         Add Order

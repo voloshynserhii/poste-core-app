@@ -9,7 +9,7 @@ const initialAppState = {
   error: '',
   isAuthenticated: false,
   currentUser: null,
-  games: [],
+  orders: [],
 };
 
 /**

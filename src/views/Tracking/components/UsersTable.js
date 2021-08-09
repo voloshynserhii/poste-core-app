@@ -14,7 +14,7 @@ import UsersToolbar from './UsersToolbar';
 import UsersTableHead from './UsersTableHead';
 // import AppButton from '../../../components/AppButton';
 
-import USERS from '../utils';
+// import USERS from '../utils';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UsersTable() {
+export default function UsersTable( {data} ) {
   const history = useHistory();
   const classes = useStyles();
   const [rows, setRows] = useState([]);
@@ -79,9 +79,9 @@ export default function UsersTable() {
   function createData(id, name, email, currency, country, balance, bonusBalance, status) {
     return { id, name, email, currency, country, balance, bonusBalance, status };
   }
-
+console.log(data);
   useEffect(() => {
-    const rows = USERS.map((user) => {
+    const rows = data.map((user) => {
       return createData(
         user.id,
         user.name,
@@ -94,7 +94,7 @@ export default function UsersTable() {
       );
     });
     setRows(rows);
-  }, []);
+  }, [data]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';

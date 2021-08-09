@@ -32,6 +32,11 @@ const AppReducer = (state, action) => {
         darkMode,
       };
     }
+    case 'SET_ORDERS':
+      return {
+        ...state,
+        orders: action?.orders || action?.payload,
+      };
     case 'SET_ERROR':
       return {
         ...state,

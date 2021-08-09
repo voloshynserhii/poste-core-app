@@ -21,7 +21,7 @@ const UsersToolbar = (props) => {
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-        Users Table
+        Orders Table
       </Typography>
       <Tooltip title="Filter list">
         <IconButton aria-label="filter list" onClick={props.onFilter}>
