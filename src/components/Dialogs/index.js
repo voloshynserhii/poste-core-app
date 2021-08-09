@@ -1,6 +1,6 @@
 import CommonDialog from './CommonDialog';
-// import MessageDialog from './MessageDialog';
+import MessageDialog from './MessageDialog';
 import ConfirmationDialog from './ConfirmationDialog';
-// import EmailEditDialog from './EmailEditDialog';
+import EmailEditDialog from './EmailEditDialog';
 
-export  {CommonDialog, ConfirmationDialog};
+export { CommonDialog, MessageDialog, ConfirmationDialog, EmailEditDialog };

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-// import { useHistory } from 'react-router-dom';
-// import api from '../../api';
+import { useHistory } from 'react-router-dom';
+import api from '../../api';
 import { AppButton } from '../AppButton';
 import { ConfirmationDialog } from '../Dialogs';
 import { capitalize } from '../../utils/string';
@@ -15,18 +15,18 @@ import { capitalize } from '../../utils/string';
  */
 const AddButton = ({ collection, noConfirmation = false, redirectTo = '', disabled, ...restOfProps }) => {
   const [modal, setModal] = useState();
-  // const history = useHistory();
+  const history = useHistory();
   const title = capitalize(collection);
 
   const createRecord = useCallback(async () => {
-    // const res = await api.collection.create(collection, { name: `New ${title}`, slug: `new-${collection}` });
-    // const url = redirectTo
-    //   ? redirectTo
-    //   : collection[collection.length - 1] === 's'
-    //   ? '/' + collection.slice(0, -1) 
-    //   : '/' + collection;
-    // history.push(`${url}/${res?.id}`);
-  }, []);
+    const res = await api.collection.create(collection, { name: `New ${title}`, slug: `new-${collection}` });
+    const url = redirectTo
+      ? redirectTo
+      : collection[collection.length - 1] === 's'
+      ? '/' + collection.slice(0, -1) // remove ending s: games -> game, etc.
+      : '/' + collection;
+    history.push(`${url}/${res?.id}`);
+  }, [history, collection, title, redirectTo]);
 
   const onDialogClose = useCallback((event, reason) => {
     setModal(null);
@@ -60,12 +60,12 @@ const AddButton = ({ collection, noConfirmation = false, redirectTo = '', disabl
       />
     );
     setModal(dialog);
-  }, [createRecord, noConfirmation, title, onDialogClose, onDialogConfirm]);
+  }, [noConfirmation, title, createRecord, onDialogClose, onDialogConfirm]);
 
   return (
     <>
       {modal}
-      <AppButton color="primary" disabled={disabled} onClick={onButtonClick} {...restOfProps} />
+      <AppButton color="success" disabled={disabled} onClick={onButtonClick} {...restOfProps} />
     </>
   );
 };
