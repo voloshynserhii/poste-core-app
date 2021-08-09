@@ -29,17 +29,17 @@ const AllOperatorsView = () => {
 
   if (loading) return <LinearProgress />;
 
-  if (addUser) return <UserForm onCancel={handleCloseForm} />;
+  // if (addUser) return <UserForm onCancel={handleCloseForm} />;
 
   return (
     <>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <UsersTable data={users} />
+          {/* <UsersTable data={users} /> */}
         </Grid>
       </Grid>
       <AddButton collection="users" onClick={handleAddUser}>
-        Add User
+        Add Order
       </AddButton>
     </>
   );
