@@ -6,47 +6,39 @@ import api from "../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from '../../utils/form';
 import AppAlert from '../../components/AppAlert';
 import AppButton from '../../components/AppButton';
-import ChangeBalanceForm from './components/ChangeBalanceForm';
+import SaveButton from '../../components/SaveButton';
 
-import { languages } from './utils';
+import { statuses } from './utils';
 
 const VALIDATE_FORM_USER = {
-  name: {
+  trackingNumber: {
+    type: 'string',
+    presence: { allowEmpty: false },
+  },
+  weight: {
     type: 'string',
     presence: { allowEmpty: true },
   },
-  email: {
+  collectionFrom: {
     type: 'string',
     presence: { allowEmpty: false },
   },
-  password: {
+  deliveryTo: {
     type: 'string',
     presence: { allowEmpty: false },
   },
-  currency: {
+  status: {
     type: 'string',
     presence: { allowEmpty: false },
   },
-  country: {
+  submittedBy: {
     type: 'string',
     presence: { allowEmpty: false },
   },
-  city: {
+  assignedCurier: {
     type: 'string',
     presence: { allowEmpty: true },
-  },
-  lang: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  balance: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
-  bonusBalance: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
+  }
 };
 
 const SingleOrderView = () => {
@@ -54,7 +46,6 @@ const SingleOrderView = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  // const [order, setOrder] = useState('');
   const [change, setChange] = useState(false);
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] = useAppForm({
     validationSchema: VALIDATE_FORM_USER,
@@ -75,7 +66,11 @@ const SingleOrderView = () => {
             ...oldFormState,
             values: {
               ...oldFormState.values,
-              trackingNumber: res?.trackingNumber || ''
+              trackingNumber: res?.trackingNumber || '',
+              weight: res?.weight || '0',
+              collectionFrom: res?.collectionData.city || '',
+              deliveryTo: res?.deliveryData.city || '',
+              status: res?.status || 'Pending'
             },
           }));
         } else {
@@ -100,9 +95,6 @@ const SingleOrderView = () => {
     history.replace('/tracking');
   }, [history]);
 
-  // const handleChangeBalance = () => {
-  //   setChange(true);
-  // };
   const handleCancel = () => {
     history.replace('/tracking');
   };
@@ -122,7 +114,6 @@ const SingleOrderView = () => {
 
   if (loading) return <LinearProgress />;
 
-  if (change) return <ChangeBalanceForm onCancel={() => setChange(false)} />;
   return (
     <>
       {Boolean(error) && (
@@ -136,6 +127,7 @@ const SingleOrderView = () => {
             <CardHeader title="Order Details" />
             <CardContent>
               <TextField
+                disabled
                 label="Tracking number"
                 name="trackingNumber"
                 value={values.trackingNumber}
@@ -144,127 +136,57 @@ const SingleOrderView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
-              {/* <TextField
-                disabled
-                required
-                label="Email"
-                name="email"
-                value={values.email}
-                error={fieldHasError('email')}
-                helperText={fieldGetError('email') || 'Display email of the User'}
-                onChange={onFieldChange}
-                {...SHARED_CONTROL_PROPS}
-              />
-              <div style={{ display: 'flex' }}>
-                <TextField
-                  disabled={disabledPassword}
-                  required
-                  label="Password"
-                  name="password"
-                  value={values.password}
-                  error={fieldHasError('password')}
-                  helperText={fieldGetError('password') || 'Display password of the User'}
-                  onChange={onFieldChange}
-                  {...SHARED_CONTROL_PROPS}
-                />
-                <AppButton 
-                style={{ height: 50, marginTop: 10 }} 
-                color={disabledPassword ? 'error' : 'secondary'}
-                onClick={() => setDisabledPassword((prev) => !prev)}
-                >
-                  {disabledPassword ? 'Change' : 'Confirm'}
-                </AppButton>
-              </div>
               <TextField
-                disabled
                 required
-                label="Currency"
-                name="currency"
-                value={values.currency}
-                error={fieldHasError('currency')}
-                helperText={fieldGetError('currency') || 'Display currency'}
+                label="Weight"
+                name="weight"
+                value={values.weight}
+                error={fieldHasError('weight')}
+                helperText={fieldGetError('weight') || 'Display weight of the order'}
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
-                disabled
                 required
-                label="Country"
-                name="country"
-                value={values.country}
-                error={fieldHasError('country')}
-                helperText={fieldGetError('country') || 'Display country of the User'}
+                label="Collection From"
+                name="collectionFrom"
+                value={values.collectionFrom}
+                error={fieldHasError('collectionFrom')}
+                helperText={fieldGetError('collectionFrom') || 'Display collectionFrom'}
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
-                disabled
-                label="City"
-                name="city"
-                value={values.city}
-                error={fieldHasError('city')}
-                helperText={fieldGetError('city') || 'Display city of the User'}
+                required
+                label="Delivery To"
+                name="deliveryTo"
+                value={values.deliveryTo}
+                error={fieldHasError('deliveryTo')}
+                helperText={fieldGetError('deliveryTo') || 'Display deliveryTo'}
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
-              <div style={{ display: 'flex' }}>
                 <TextField
                   select
-                  disabled={disabledLang}
                   required
-                  label="Language"
-                  name="lang"
-                  value={values.lang}
-                  defaultValue={values.lang}
-                  error={fieldHasError('lang')}
-                  helperText={fieldGetError('lang') || 'Display language of the User'}
+                  label="Status"
+                  name="status"
+                  value={values.status}
+                  defaultValue={values.status}
+                  error={fieldHasError('status')}
+                  helperText={fieldGetError('status') || 'Display status of the Order'}
                   onChange={onFieldChange}
                   {...SHARED_CONTROL_PROPS}
                 >
-                  {lang.map((option) => (
+                  {statuses.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
                 </TextField>
-                <AppButton
-                  style={{ height: 50, marginTop: 10 }}
-                  color={disabledLang ? 'error' : 'secondary'}
-                  onClick={() => setDisabledLang((prev) => !prev)}
-                >
-                  {disabledLang ? 'Change' : 'Confirm'}
-                </AppButton>
-              </div>
-              <TextField
-                disabled
-                required
-                label="Balance"
-                name="balance"
-                value={values.balance}
-                error={fieldHasError('balance')}
-                helperText={fieldGetError('balance') || 'Balance of the User account'}
-                onChange={onFieldChange}
-                {...SHARED_CONTROL_PROPS}
-              />
-              <TextField
-                disabled
-                required
-                label="BonusBalance"
-                name="bonusBalance"
-                value={values.bonusBalance}
-                error={fieldHasError('bonusBalance')}
-                helperText={fieldGetError('bonusBalance') || 'Balance of the User account'}
-                onChange={onFieldChange}
-                {...SHARED_CONTROL_PROPS}
-              /> */}
-              <Grid container justifyContent="center" alignItems="center">
-                <AppButton color="primary" onClick={() => {}}>
-                  Save
-                </AppButton>
+              <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
-                <AppButton color="error" id={params.id} payload={values} onClick={() => {}}>
-                  Change
-                </AppButton>
+                <SaveButton collection="orders" color="primary">Save</SaveButton>
               </Grid>
             </CardContent>
           </Card>

@@ -5,8 +5,8 @@ import { useAppForm, SHARED_CONTROL_PROPS } from '../../../utils/form';
 import SaveButton from './SaveButton';
 import AppButton from '../../../components/AppButton';
 
-const VALIDATE_FORM_USER = {
-  name: {
+const VALIDATE_FORM_ORDER = {
+  trackingNumber: {
     type: 'string',
     presence: { allowEmpty: true },
   },
@@ -46,32 +46,24 @@ const VALIDATE_FORM_USER = {
 
 const UserForm = ({ onCancel }) => {
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] = useAppForm({
-    validationSchema: VALIDATE_FORM_USER,
+    validationSchema: VALIDATE_FORM_ORDER,
     initialValues: { name: '', email: '', balance: '' },
   });
   const values = formState.values;
 
-  const formUser = useCallback(() => {
+  const formOrder = useCallback(() => {
     setFormState((oldFormState) => ({
       ...oldFormState,
       values: {
         ...oldFormState.values,
-        name: '',
-        email: '',
-        password: '',
-        currency: 'USD',
-        country: '',
-        city: '',
-        lang: 'en_us',
-        balance: '0',
-        bonusBalance: '0',
+        trackingNumber: ''
       },
     }));
   }, [setFormState]);
 
   useEffect(() => {
-    formUser();
-  }, [formUser]);
+    formOrder();
+  }, [formOrder]);
 
   return (
     <Grid container spacing={2}>
