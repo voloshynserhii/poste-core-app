@@ -61,21 +61,21 @@ const SIDE_BAR_PRIVATE_ITEMS = [
     href: '/tracking',
     icon: 'game',
   },
-  // {
-  //   title: 'Operators',
-  //   href: '/operator',
-  //   icon: 'smile',
-  // },
-  // {
-  //   title: 'Providers',
-  //   href: '/provider',
-  //   icon: 'provider',
-  // },
-  // {
-  //   title: 'Categories',
-  //   href: '/category',
-  //   icon: 'category',
-  // },
+  {
+    title: 'Customers',
+    href: '/customer',
+    icon: 'smile',
+  },
+  {
+    title: 'Users',
+    href: '/dispatcher',
+    icon: 'provider',
+  },
+  {
+    title: 'Vehicles',
+    href: '/vehicle',
+    icon: 'category',
+  },
   {
     title: 'Profile',
     href: '/user',

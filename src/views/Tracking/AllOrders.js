@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { LinearProgress, Grid } from "@material-ui/core";
 
 import api from "../../api";
-import UsersTable from "./components/UsersTable";
+import OrdersTable from "./components/OrdersTable";
 import AddButton from "./components/AddButton";
 import OrderForm from "./components/OrderForm";
 
@@ -38,7 +38,7 @@ const AllOrdersView = () => {
 
   return (
     <>
-      <UsersTable data={orders} />
+      <OrdersTable data={orders} />
       <AddButton collection="users" onClick={handleAddOrder}>
         Add Order
       </AddButton>

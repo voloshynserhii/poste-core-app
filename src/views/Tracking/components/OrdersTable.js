@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import Switch from '@material-ui/core/Switch';
-import UsersToolbar from './UsersToolbar';
-import UsersTableHead from './UsersTableHead';
-import AppButton from '../../../components/AppButton';
+import OrdersToolbar from "./OrdersToolbar";
+import OrdersTableHead from "./OrdersTableHead";
+import AppButton from "../../../components/AppButton";
 
 // import USERS from '../utils';
 
@@ -27,7 +27,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -44,62 +44,93 @@ function stableSort(array, comparator) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 'calc(100vw - 256px)',
-    overflow: 'hidden',
+    width: "calc(100vw - 256px)",
+    overflow: "hidden",
   },
   paper: {
-    width: '100%',
+    width: "100%",
     marginBottom: theme.spacing(2),
   },
   table: {
     minWidth: 750,
-    width: 'max-content'
+    width: "max-content",
   },
   visuallyHidden: {
     border: 0,
-    clip: 'rect(0 0 0 0)',
+    clip: "rect(0 0 0 0)",
     height: 1,
     margin: -1,
-    overflow: 'hidden',
+    overflow: "hidden",
     padding: 0,
-    position: 'absolute',
+    position: "absolute",
     top: 20,
     width: 1,
   },
 }));
 
-export default function UsersTable( {data} ) {
+export default function OrdersTable({ data }) {
   const history = useHistory();
   const classes = useStyles();
   const [rows, setRows] = useState([]);
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('balance');
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("balance");
   const [page, setPage] = React.useState(0);
   // const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  function createData(trackingNumber, customer, collectionFrom, deliveryTo, date, weight, status, action) {
-    return {trackingNumber, customer, collectionFrom, deliveryTo, date, weight, status, action };
+  function createData(
+    id,
+    trackingNumber,
+    customer,
+    collectionFrom,
+    deliveryTo,
+    date,
+    weight,
+    status,
+    submissionSource,
+    submittedBy,
+    assignedCurier,
+    declaredValue
+  ) {
+    return {
+      id,
+      trackingNumber,
+      customer,
+      collectionFrom,
+      deliveryTo,
+      date,
+      weight,
+      status,
+      submissionSource,
+      submittedBy,
+      assignedCurier,
+      declaredValue,
+    };
   }
-console.log(data);
+
   useEffect(() => {
     const rows = data.map((order) => {
       return createData(
+        order._id,
         order.trackingNumber,
         order.customer,
         order.collectionData.city,
         order.deliveryData.city,
         order.createdAt,
+        order.status,
+        order.submissionSource,
+        order.submittedBy,
+        order.assignedCurier,
         order.weight,
-        order.status
+        order.declaredValue
       );
     });
     setRows(rows);
   }, [data]);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -137,19 +168,30 @@ console.log(data);
     setPage(0);
   };
 
-  const handleSingleUserView = (id) => {
+  const handleSingleOrderView = (id) => {
     history.push(`tracking/${id}`);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <UsersToolbar />
+        <OrdersToolbar />
         <TableContainer>
-          <Table className={classes.table} aria-labelledby="tableTitle" size={'small'} aria-label="enhanced table">
-            <UsersTableHead classes={classes} order={order} orderBy={orderBy} onRequestSort={handleRequestSort} />
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={"small"}
+            aria-label="enhanced table"
+          >
+            <OrdersTableHead
+              classes={classes}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+            />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -159,12 +201,17 @@ console.log(data);
                   return (
                     <TableRow
                       hover
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: "pointer" }}
                       key={row.id}
-                      onClick={() => handleSingleUserView(row.id)}
+                      onClick={() => handleSingleOrderView(row.id)}
                     >
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
                         {row.trackingNumber}
                       </TableCell>
                       <TableCell align="left">{row.customer}</TableCell>
@@ -173,13 +220,23 @@ console.log(data);
                       <TableCell align="left">{row.date}</TableCell>
                       <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">{row.submissionSource}</TableCell>
+                      <TableCell align="left">{row.submittedBy}</TableCell>
+                      <TableCell align="left">{row.assignedCurier}</TableCell>
+                      <TableCell align="left">{row.declaredValue}</TableCell>
                       <TableCell align="left">
                         {row.status ? (
-                          <AppButton color="error" onClick={() => handleDisable(row.id)}>
+                          <AppButton
+                            color="error"
+                            onClick={() => handleDisable(row.id)}
+                          >
                             Decline
                           </AppButton>
                         ) : (
-                          <AppButton color="success" onClick={() => handleEnable(row.id)}>
+                          <AppButton
+                            color="success"
+                            onClick={() => handleEnable(row.id)}
+                          >
                             Approve
                           </AppButton>
                         )}
@@ -201,8 +258,8 @@ console.log(data);
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+          onChangePage={handleChangePage}
+          // onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>

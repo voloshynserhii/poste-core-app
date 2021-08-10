@@ -2,12 +2,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Grid, TextField, Card, CardHeader, CardContent, LinearProgress, MenuItem } from '@material-ui/core';
 
+import api from "../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from '../../utils/form';
 import AppAlert from '../../components/AppAlert';
 import AppButton from '../../components/AppButton';
 import ChangeBalanceForm from './components/ChangeBalanceForm';
 
-import USERS, { languages } from './utils';
+import { languages } from './utils';
 
 const VALIDATE_FORM_USER = {
   name: {
@@ -53,11 +54,8 @@ const SingleOrderView = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  // const [order, setOrder] = useState('');
   const [change, setChange] = useState(false);
-  const [lang, setLang] = useState([]);
-  const [disabledName, setDisabledName] = useState(true);
-  const [disabledPassword, setDisabledPassword] = useState(true);
-  const [disabledLang, setDisabledLang] = useState(true);
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] = useAppForm({
     validationSchema: VALIDATE_FORM_USER,
     initialValues: { name: '', email: '', balance: 0 },
@@ -70,27 +68,18 @@ const SingleOrderView = () => {
       setLoading(true);
       setError('');
       try {
-        const res = USERS.find((item) => item.id === id);
+        const res = await api.orders.read(id);
+        console.log(res);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
               ...oldFormState.values,
-              name: res?.name || '',
-              email: res?.email || '',
-              password: res?.password || '',
-              currency: res?.currency || '',
-              country: res?.country || '',
-              city: res?.city || '',
-              lang: res?.lang || '',
-              balance: res?.balance || '',
-              bonusBalance: res?.bonusBalance || '',
+              trackingNumber: res?.trackingNumber || ''
             },
           }));
-        } else if (id === 'create-users') {
-          setError(null);
         } else {
-          setError(`User id: "${id}" not found`);
+          setError(`Order id: "${id}" not found`);
         }
       } catch (error) {
         log.error(error);
@@ -104,35 +93,32 @@ const SingleOrderView = () => {
 
   useEffect(() => {
     fetchUserById(id);
-    setLang(() => {
-      return [{ value: values.lang, label: values.lang }, ...languages];
-    });
-  }, [fetchUserById, id, values.lang]);
+  }, [fetchUserById]);
 
   const onAlertClose = useCallback(() => {
     setError('');
     history.replace('/tracking');
   }, [history]);
 
-  const handleChangeBalance = () => {
-    setChange(true);
-  };
+  // const handleChangeBalance = () => {
+  //   setChange(true);
+  // };
   const handleCancel = () => {
     history.replace('/tracking');
   };
   
-  const handleSave = useCallback(
-    (name, password, lang) => {
-      const user = USERS.find((item) => item.id === id);
-      const index = USERS.indexOf(user);
-      USERS.splice(index, 1);
-      const newUser = { ...user, name, password, lang };
-      USERS.push(newUser);
-      alert('User was saved successfully');
-      history.push('/tracking');
-    },
-    [history, id]
-  );
+  // const handleSave = useCallback(
+  //   (name, password, lang) => {
+  //     const user = USERS.find((item) => item.id === id);
+  //     const index = USERS.indexOf(user);
+  //     USERS.splice(index, 1);
+  //     const newUser = { ...user, name, password, lang };
+  //     USERS.push(newUser);
+  //     alert('User was saved successfully');
+  //     history.push('/tracking');
+  //   },
+  //   [history, id]
+  // );
 
   if (loading) return <LinearProgress />;
 
@@ -272,11 +258,11 @@ const SingleOrderView = () => {
                 {...SHARED_CONTROL_PROPS}
               /> */}
               <Grid container justifyContent="center" alignItems="center">
-                <AppButton color="primary" onClick={() => handleSave(values.name, values.password, values.lang)}>
+                <AppButton color="primary" onClick={() => {}}>
                   Save
                 </AppButton>
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
-                <AppButton color="error" id={params.id} payload={values} onClick={handleChangeBalance}>
+                <AppButton color="error" id={params.id} payload={values} onClick={() => {}}>
                   Change
                 </AppButton>
               </Grid>
