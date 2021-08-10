@@ -48,7 +48,7 @@ const VALIDATE_FORM_USER = {
   },
 };
 
-const SingleUserView = () => {
+const SingleOrderView = () => {
   const history = useHistory();
   const params = useParams();
   const [loading, setLoading] = useState(false);
@@ -147,29 +147,18 @@ const SingleUserView = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={9}>
           <Card>
-            <CardHeader title="User Details" />
+            <CardHeader title="Order Details" />
             <CardContent>
-              <div style={{ display: 'flex' }}>
-                <TextField
-                  disabled={disabledName}
-                  required
-                  label="Name editable"
-                  name="name"
-                  value={values.name}
-                  error={fieldHasError('name')}
-                  helperText={fieldGetError('name') || 'Display name of the User'}
-                  onChange={onFieldChange}
-                  {...SHARED_CONTROL_PROPS}
-                />
-                <AppButton 
-                style={{ height: 50, marginTop: 10 }} 
-                color={disabledName ? 'error' : 'secondary'}
-                onClick={() => setDisabledName((prev) => !prev)}
-                >
-                  {disabledName ? 'Change' : 'Confirm'}
-                </AppButton>
-              </div>
               <TextField
+                label="Tracking number"
+                name="trackingNumber"
+                value={values.trackingNumber}
+                error={fieldHasError('trackingNumber')}
+                helperText={fieldGetError('trackingNumber') || 'Display order tracking number'}
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              {/* <TextField
                 disabled
                 required
                 label="Email"
@@ -281,14 +270,14 @@ const SingleUserView = () => {
                 helperText={fieldGetError('bonusBalance') || 'Balance of the User account'}
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
-              />
+              /> */}
               <Grid container justifyContent="center" alignItems="center">
                 <AppButton color="primary" onClick={() => handleSave(values.name, values.password, values.lang)}>
                   Save
                 </AppButton>
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <AppButton color="error" id={params.id} payload={values} onClick={handleChangeBalance}>
-                  Change Balance
+                  Change
                 </AppButton>
               </Grid>
             </CardContent>
@@ -298,4 +287,4 @@ const SingleUserView = () => {
     </>
   );
 };
-export default SingleUserView;
+export default SingleOrderView;

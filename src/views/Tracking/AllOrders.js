@@ -2,13 +2,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import { LinearProgress, Grid } from "@material-ui/core";
 
 import api from "../../api";
-import {useAppStore} from '../../store/AppStore';
 import UsersTable from "./components/UsersTable";
 import AddButton from "./components/AddButton";
-import UserForm from "./components/UserForm";
+import OrderForm from "./components/OrderForm";
 
-const AllOperatorsView = () => {
-  const [state, dispatch] = useAppStore();
+const AllOrdersView = () => {
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [addOrder, setAddOrder] = useState(false);
@@ -26,7 +24,7 @@ const AllOperatorsView = () => {
   }, []);
 
 
-  const handleAddUser = () => {
+  const handleAddOrder = () => {
     setAddOrder(true);
   };
 
@@ -36,19 +34,15 @@ const AllOperatorsView = () => {
 
   if (loading) return <LinearProgress />;
 
-  // if (addUser) return <UserForm onCancel={handleCloseForm} />;
+  if (addOrder) return <OrderForm onCancel={handleCloseForm} />;
 
   return (
     <>
-      <Grid container direction="column" spacing={2}>
-        <Grid item>
-          <UsersTable data={orders} />
-          </Grid>
-      </Grid>
-      <AddButton collection="users" onClick={handleAddUser}>
+      <UsersTable data={orders} />
+      <AddButton collection="users" onClick={handleAddOrder}>
         Add Order
       </AddButton>
     </>
   );
 };
-export default AllOperatorsView;
+export default AllOrdersView;

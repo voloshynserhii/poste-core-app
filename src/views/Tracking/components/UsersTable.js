@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 // import Switch from '@material-ui/core/Switch';
 import UsersToolbar from './UsersToolbar';
 import UsersTableHead from './UsersTableHead';
-// import AppButton from '../../../components/AppButton';
+import AppButton from '../../../components/AppButton';
 
 // import USERS from '../utils';
 
@@ -44,7 +44,8 @@ function stableSort(array, comparator) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: 'calc(100vw - 256px)',
+    overflow: 'hidden',
   },
   paper: {
     width: '100%',
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
+    width: 'max-content'
   },
   visuallyHidden: {
     border: 0,
@@ -76,21 +78,20 @@ export default function UsersTable( {data} ) {
   // const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  function createData(id, name, email, currency, country, balance, bonusBalance, status) {
-    return { id, name, email, currency, country, balance, bonusBalance, status };
+  function createData(trackingNumber, customer, collectionFrom, deliveryTo, date, weight, status, action) {
+    return {trackingNumber, customer, collectionFrom, deliveryTo, date, weight, status, action };
   }
 console.log(data);
   useEffect(() => {
-    const rows = data.map((user) => {
+    const rows = data.map((order) => {
       return createData(
-        user.id,
-        user.name,
-        user.email,
-        user.currency,
-        user.country,
-        user.balance,
-        user.bonusBalance,
-        user.active
+        order.trackingNumber,
+        order.customer,
+        order.collectionData.city,
+        order.deliveryData.city,
+        order.createdAt,
+        order.weight,
+        order.status
       );
     });
     setRows(rows);
@@ -102,30 +103,30 @@ console.log(data);
     setOrderBy(property);
   };
 
-  // const handleDisable = (id) => {
-  //   let selectedItem = rows.find((item) => item.id === id);
-  //   selectedItem = {
-  //     ...selectedItem,
-  //     status: false,
-  //   };
-  //   const item = rows.findIndex((item) => item.id === selectedItem.id);
-  //   setRows((prev) => {
-  //     prev.splice(item, 1);
-  //     return [...prev, selectedItem];
-  //   });
-  // };
-  // const handleEnable = (id) => {
-  //   let selectedItem = rows.find((item) => item.id === id);
-  //   selectedItem = {
-  //     ...selectedItem,
-  //     status: true,
-  //   };
-  //   const item = rows.findIndex((item) => item.id === selectedItem.id);
-  //   setRows((prev) => {
-  //     prev.splice(item, 1);
-  //     return [...prev, selectedItem];
-  //   });
-  // };
+  const handleDisable = (id) => {
+    let selectedItem = rows.find((item) => item.id === id);
+    selectedItem = {
+      ...selectedItem,
+      status: false,
+    };
+    const item = rows.findIndex((item) => item.id === selectedItem.id);
+    setRows((prev) => {
+      prev.splice(item, 1);
+      return [...prev, selectedItem];
+    });
+  };
+  const handleEnable = (id) => {
+    let selectedItem = rows.find((item) => item.id === id);
+    selectedItem = {
+      ...selectedItem,
+      status: true,
+    };
+    const item = rows.findIndex((item) => item.id === selectedItem.id);
+    setRows((prev) => {
+      prev.splice(item, 1);
+      return [...prev, selectedItem];
+    });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -164,24 +165,25 @@ console.log(data);
                     >
                       <TableCell>{index + 1}</TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
+                        {row.trackingNumber}
                       </TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">{row.currency}</TableCell>
-                      <TableCell align="left">{row.country}</TableCell>
-                      <TableCell align="left">{row.balance}</TableCell>
-                      <TableCell align="left">{row.bonusBalance}</TableCell>
-                      {/* <TableCell align="left">
+                      <TableCell align="left">{row.customer}</TableCell>
+                      <TableCell align="left">{row.collectionFrom}</TableCell>
+                      <TableCell align="left">{row.deliveryTo}</TableCell>
+                      <TableCell align="left">{row.date}</TableCell>
+                      <TableCell align="left">{row.weight}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">
                         {row.status ? (
                           <AppButton color="error" onClick={() => handleDisable(row.id)}>
-                            Disable
+                            Decline
                           </AppButton>
                         ) : (
                           <AppButton color="success" onClick={() => handleEnable(row.id)}>
-                            Enable
+                            Approve
                           </AppButton>
                         )}
-                      </TableCell> */}
+                      </TableCell>
                     </TableRow>
                   );
                 })}

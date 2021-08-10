@@ -6,13 +6,14 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 const headCells = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-  { id: 'currency', numeric: false, disablePadding: false, label: 'Currency' },
-  { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
-  { id: 'balance', numeric: false, disablePadding: false, label: 'Balance' },
-  { id: 'bonusBalance', numeric: false, disablePadding: false, label: 'Bonus balance' },
-  // { id: 'action', numeric: false, disablePadding: false, label: 'Action' }
+  { id: 'trackingNumber', numeric: false, disablePadding: true, label: 'Tracking Number' },
+  { id: 'customer', numeric: false, disablePadding: false, label: 'Customer' },
+  { id: 'collectionFrom', numeric: false, disablePadding: false, label: 'Collection city' },
+  { id: 'deliveryTo', numeric: false, disablePadding: false, label: 'Delivery city' },
+  { id: 'date', numeric: false, disablePadding: false, label: 'Created' },
+  { id: 'weight', numeric: false, disablePadding: false, label: 'Weight' },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
+  { id: 'action', numeric: false, disablePadding: false, label: 'Actions' },
 ];
 
 export default function UsersTableHead(props) {

@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1, // Takes all possible space
     padding: theme.spacing(1),
+    overflow: 'hidden',
   },
   footer: {},
 }));

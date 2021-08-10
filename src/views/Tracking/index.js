@@ -1,6 +1,6 @@
 import { Route, Switch } from 'react-router-dom';
-import AllUsersView from './AllUsers';
-import SingleUserView from './SingleUser';
+import AllOrdersView from './AllOrders';
+import SingleOrderView from './SingleOrder';
 
 /**
  * Routes for "Users" view
@@ -9,9 +9,9 @@ import SingleUserView from './SingleUser';
 const UsersRoutes = () => {
   return (
     <Switch>
-      <Route path="/tracking/:id" component={SingleUserView} />
-      <Route path="/tracking" component={AllUsersView} />
-      <Route component={AllUsersView} />
+      <Route path="/tracking/:id" component={SingleOrderView} />
+      <Route path="/tracking" component={AllOrdersView} />
+      <Route component={AllOrdersView} />
     </Switch>
   );
 };
