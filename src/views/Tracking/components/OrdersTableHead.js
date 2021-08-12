@@ -17,7 +17,7 @@ const headCells = [
   { id: 'assignedCurier', numeric: false, disablePadding: false, label: 'Curier' },
   { id: 'weight', numeric: false, disablePadding: false, label: 'Weight' },
   { id: 'declaredValue', numeric: false, disablePadding: false, label: 'Value' },
-  { id: 'action', numeric: false, disablePadding: false, label: 'Actions' },
+  // { id: 'action', numeric: false, disablePadding: false, label: 'Actions' },
 ];
 
 export default function OrdersTableHead(props) {

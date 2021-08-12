@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "calc(100vw - 256px)",
     overflow: "hidden",
+    [theme.breakpoints.down('sm')]: {
+      width: "100vw",
+    },
   },
   paper: {
     width: "100%",
@@ -224,23 +227,14 @@ export default function OrdersTable({ data }) {
                       <TableCell align="left">{row.submittedBy}</TableCell>
                       <TableCell align="left">{row.assignedCurier}</TableCell>
                       <TableCell align="left">{row.declaredValue}</TableCell>
-                      <TableCell align="left">
-                        {row.status ? (
-                          <AppButton
-                            color="error"
-                            onClick={() => handleDisable(row.id)}
-                          >
-                            Decline
-                          </AppButton>
-                        ) : (
-                          <AppButton
-                            color="success"
-                            onClick={() => handleEnable(row.id)}
-                          >
-                            Approve
-                          </AppButton>
-                        )}
-                      </TableCell>
+                      {/* <TableCell align="left">
+                        <AppButton
+                          color="error"
+                          onClick={() => handleDisable(row.id)}
+                        >
+                          Delete
+                        </AppButton>
+                      </TableCell> */}
                     </TableRow>
                   );
                 })}
