@@ -1,12 +1,14 @@
 import { api } from '..';
 
-async function collectionUpdateByFirebase(collection, id, payload) {
-  delete payload.id;
-  await api.firebase.database().ref(`/${collection}/${id}`).update(payload);
+async function collectionUpdate(collection, id, payload) {
+  await api.axios.patch(`${process.env.REACT_APP_API_URL}/${collection}/${id}`, {
+    payload
+  });
+
   return {
     id,
     ...payload,
   };
 }
 
-export default collectionUpdateByFirebase;
+export default collectionUpdate;

@@ -186,7 +186,7 @@ const SingleOrderView = () => {
                 </TextField>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
-                <SaveButton collection="orders" color="primary">Save</SaveButton>
+                <SaveButton collection="orders" color="primary" id={id} payload={formState.values}>Save</SaveButton>
               </Grid>
             </CardContent>
           </Card>
