@@ -60,7 +60,7 @@ const SingleOrderView = () => {
       setError('');
       try {
         const res = await api.orders.read(id);
-        console.log(res);
+
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
@@ -100,13 +100,14 @@ const SingleOrderView = () => {
   };
   
   // const handleSave = useCallback(
-  //   (name, password, lang) => {
-  //     const user = USERS.find((item) => item.id === id);
-  //     const index = USERS.indexOf(user);
-  //     USERS.splice(index, 1);
-  //     const newUser = { ...user, name, password, lang };
-  //     USERS.push(newUser);
-  //     alert('User was saved successfully');
+  //   (payload) => {
+  //     api.orders.update()
+  //     // const user = USERS.find((item) => item.id === id);
+  //     // const index = USERS.indexOf(user);
+  //     // USERS.splice(index, 1);
+  //     // const newUser = { ...user, name, password, lang };
+  //     // USERS.push(newUser);
+  //     // alert('User was saved successfully');
   //     history.push('/tracking');
   //   },
   //   [history, id]
