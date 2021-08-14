@@ -1,75 +1,75 @@
-// import { useState, useCallback } from 'react';
-// import PropTypes from 'prop-types';
+import { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 
-// import api from "../../../api";
-// import { AppButton } from '../../../components/AppButton';
-// import { ConfirmationDialog } from '../../../components/Dialogs';
-// import USERS from '../utils';
-// /**
-//  * Renders "Save Collection" button with "Confirm Save" dialog
-//  * @class SaveButton
-//  * @param {string} collection - name of Collection in database
-//  * @param {string|number} id - the ID of the record in Collection in database to save
-//  */
-// const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
-//   const [modal, setModal] = useState();
+import api from "../../../api";
+import { AppButton } from '../../../components/AppButton';
+import { ConfirmationDialog } from '../../../components/Dialogs';
+import USERS from '../utils';
+/**
+ * Renders "Save Collection" button with "Confirm Save" dialog
+ * @class SaveButton
+ * @param {string} collection - name of Collection in database
+ * @param {string|number} id - the ID of the record in Collection in database to save
+ */
+const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
+  const [modal, setModal] = useState();
 
-//   const updateRecord = async () => {
-//     // save changes in BD
-//     await api.orders.update(collection, id, payload);
-//   };
+  const saveRecord = async () => {
+    // save changes in BD
+    await api.orders.create(collection, payload);
+  };
 
-//   const onDialogClose = useCallback((event, reason) => {
-//     setModal(null);
-//   }, []);
+  const onDialogClose = useCallback((event, reason) => {
+    setModal(null);
+  }, []);
 
-//   const onDialogConfirm = (data) => {
-//     // Don't use useCallback here!!! The updateData() will be called with initial .data
-//     updateRecord();
-//     setModal(null);
-//   };
+  const onDialogConfirm = (data) => {
+    // Don't use useCallback here!!! The updateData() will be called with initial .data
+    saveRecord();
+    setModal(null);
+  };
 
-//   const onButtonClick = () => {
-//     // Don't use useCallback here!!! The updateData() will be called with initial .data
-//     if (noConfirmation) {
-//       // Save without confirmation
-//       updateRecord();
-//       return;
-//     }
+  const onButtonClick = () => {
+    // Don't use useCallback here!!! The updateData() will be called with initial .data
+    if (noConfirmation) {
+      // Save without confirmation
+      saveRecord();
+      return;
+    }
 
-//     // Show Confirmation dialog
-//     const dialog = (
-//       <ConfirmationDialog
-//         open
-//         title={`Save ${collection}?`}
-//         body={`Do you really want to save the ${collection} data in the Database?`}
-//         confirmButtonText="Confirm and Save"
-//         confirmButtonColor="success"
-//         onClose={onDialogClose}
-//         onConfirm={onDialogConfirm}
-//       />
-//     );
-//     setModal(dialog);
-//   };
+    // Show Confirmation dialog
+    const dialog = (
+      <ConfirmationDialog
+        open
+        title={`Save ${collection}?`}
+        body={`Do you really want to save the ${collection} data in the Database?`}
+        confirmButtonText="Confirm and Save"
+        confirmButtonColor="success"
+        onClose={onDialogClose}
+        onConfirm={onDialogConfirm}
+      />
+    );
+    setModal(dialog);
+  };
 
-//   return (
-//     <>
-//       {modal}
-//       <AppButton
-//         color="success"
-//         payload={payload}
-//         disabled={disabled || Boolean(modal)}
-//         onClick={onButtonClick}
-//         {...restOfProps}
-//       />
-//     </>
-//   );
-// };
+  return (
+    <>
+      {modal}
+      <AppButton
+        color="success"
+        payload={payload}
+        disabled={disabled || Boolean(modal)}
+        onClick={onButtonClick}
+        {...restOfProps}
+      />
+    </>
+  );
+};
 
-// SaveButton.propTypes = {
-//   collection: PropTypes.string.isRequired,
-//   payload: PropTypes.object,
-//   noConfirmation: PropTypes.bool,
-// };
+SaveButton.propTypes = {
+  collection: PropTypes.string.isRequired,
+  payload: PropTypes.object,
+  noConfirmation: PropTypes.bool,
+};
 
-// export default SaveButton;
+export default SaveButton;

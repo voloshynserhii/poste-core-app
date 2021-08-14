@@ -6,48 +6,16 @@ import SaveButton from './SaveButton';
 import AppButton from '../../../components/AppButton';
 
 const VALIDATE_FORM_ORDER = {
-  trackingNumber: {
+  weight: {
     type: 'string',
     presence: { allowEmpty: true },
-  },
-  email: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  password: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  currency: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  country: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  city: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
-  lang: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  balance: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
-  bonusBalance: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
+  }
 };
 
-const UserForm = ({ onCancel }) => {
+const OrderForm = ({ onCancel }) => {
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] = useAppForm({
     validationSchema: VALIDATE_FORM_ORDER,
-    initialValues: { name: '', email: '', balance: '' },
+    initialValues: { weight: '' },
   });
   const values = formState.values;
 
@@ -56,7 +24,7 @@ const UserForm = ({ onCancel }) => {
       ...oldFormState,
       values: {
         ...oldFormState.values,
-        trackingNumber: ''
+        weight: ''
       },
     }));
   }, [setFormState]);
@@ -93,4 +61,4 @@ const UserForm = ({ onCancel }) => {
     </Grid>
   );
 };
-export default UserForm;
+export default OrderForm;
