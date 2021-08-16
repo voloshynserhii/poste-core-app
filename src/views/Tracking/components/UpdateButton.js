@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
 import api from "../../../api";
 import { AppButton } from '../../../components/AppButton';
@@ -15,6 +16,7 @@ import { capitalize } from '../../../utils/string';
 const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
   const [modal, setModal] = useState();
   const title = capitalize(collection);
+  const history = useHistory();
 
   const updateRecord = async () => {
     console.log(payload, id, collection)
@@ -29,6 +31,7 @@ const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = fals
     // Don't use useCallback here!!! The updateData() will be called with initial .data
     updateRecord();
     setModal(null);
+    history.replace(`/tracking`);
   };
 
   const onButtonClick = () => {
