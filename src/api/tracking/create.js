@@ -13,7 +13,7 @@ async function collectionCreateByFirebase(collection, payload) {
 
 async function collectionCreate(collection, payload) {
   console.log(JSON.stringify(payload));
-  await api.axios.post(`https://cors-anywhere.herokuapp.com/${process.env.REACT_APP_API_URL}/${collection}`, {
+  await api.axios.post(`${process.env.REACT_APP_API_URL}/api/${collection}`, {
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',

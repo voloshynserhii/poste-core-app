@@ -14,7 +14,7 @@ import api from "../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
-import SaveButton from "../../components/SaveButton";
+import UpdateButton from "./components/UpdateButton";
 
 import { statuses } from "./utils";
 
@@ -24,6 +24,10 @@ const VALIDATE_FORM_ORDER = {
     presence: { allowEmpty: false },
   },
   weight: {
+    type: "string",
+    presence: { allowEmpty: true },
+  },
+  declaredValue: {
     type: "string",
     presence: { allowEmpty: true },
   },
@@ -75,6 +79,7 @@ const SingleOrderView = () => {
               trackingNumber: res?.trackingNumber || "",
               weight: res?.weight || "0",
               status: res?.status || "Pending",
+              declaredValue: res?.declaredValue || "",
             },
           }));
         } else {
@@ -162,16 +167,29 @@ const SingleOrderView = () => {
                   </MenuItem>
                 ))}
               </TextField>
+              <TextField
+                label="Declared Value"
+                name="declaredValue"
+                value={values.declaredValue}
+                defaultValue={values.declaredValue}
+                error={fieldHasError("declaredValue")}
+                helperText={
+                  fieldGetError("declaredValue") ||
+                  "Display declared value of the Order"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
-                <SaveButton
+                <UpdateButton
                   collection="orders"
                   color="primary"
                   id={id}
                   payload={values}
                 >
-                  Save
-                </SaveButton>
+                  Update order
+                </UpdateButton>
               </Grid>
             </CardContent>
           </Card>
