@@ -6,7 +6,7 @@ import { useAppStore } from '../../store/AppStore';
 import { ErrorBoundary, AppIconButton, AppIcon } from '../../components';
 import SideBar from '../../components/SideBar';
 
-const TITLE_PUBLIC = 'Nothing Interesting Here';
+const TITLE_PUBLIC = 'Poste logistic system';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,13 +127,13 @@ const PublicLayout = ({ children }) => {
         <ErrorBoundary name="Content">{children}</ErrorBoundary>
       </Grid>
 
-      <Grid item className={classes.footer} component="footer">
+      {/* <Grid item className={classes.footer} component="footer">
         <BottomNavigation onChange={handleBottomNavigationChange} showLabels>
           <BottomNavigationAction label="Login" value="/auth/login" icon={<AppIcon icon="login" />} />
           <BottomNavigationAction label="Signup" value="/auth/signup" icon={<AppIcon icon="signup" />} />
           <BottomNavigationAction label="About" value="/about" icon={<AppIcon icon="info" />} />
         </BottomNavigation>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };

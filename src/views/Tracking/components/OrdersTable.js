@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "calc(100vw - 256px)",
     overflow: "hidden",
+    [theme.breakpoints.down('sm')]: {
+      width: "100vw",
+    },
   },
   paper: {
     width: "100%",
@@ -75,7 +78,6 @@ export default function OrdersTable({ data }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("balance");
   const [page, setPage] = React.useState(0);
-  // const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   function createData(
@@ -224,23 +226,14 @@ export default function OrdersTable({ data }) {
                       <TableCell align="left">{row.submittedBy}</TableCell>
                       <TableCell align="left">{row.assignedCurier}</TableCell>
                       <TableCell align="left">{row.declaredValue}</TableCell>
-                      <TableCell align="left">
-                        {row.status ? (
-                          <AppButton
-                            color="error"
-                            onClick={() => handleDisable(row.id)}
-                          >
-                            Decline
-                          </AppButton>
-                        ) : (
-                          <AppButton
-                            color="success"
-                            onClick={() => handleEnable(row.id)}
-                          >
-                            Approve
-                          </AppButton>
-                        )}
-                      </TableCell>
+                      {/* <TableCell align="left">
+                        <AppButton
+                          color="error"
+                          onClick={() => handleDisable(row.id)}
+                        >
+                          Delete
+                        </AppButton>
+                      </TableCell> */}
                     </TableRow>
                   );
                 })}

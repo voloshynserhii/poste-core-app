@@ -4,6 +4,7 @@ import { localStorageSet, localStorageGet, localStorageDelete } from '../../util
 const ACCESS_TOKEN_KEY = 'token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
 const EXPIRED_AT_KEY = 'tokenExpiresAt';
+const CURRENT_USER = 'user';
 
 /**
  * Removes token from "api" and all auth data from the local storage
@@ -116,4 +117,25 @@ export function fakeApiResponse() {
   return {
     data: { access_token: 'Leeloo Dallas Multipass', refresh_token: 'Korben Dallas Driver License', expires },
   };
+}
+
+/**
+ * Saves given "current user" into the local storage
+ */
+ export function saveCurrentUser(newUser) {
+  const filteredUser = {
+    id: newUser?.id,
+    country: newUser?.country,
+    currency: newUser?.currency,
+    lang: newUser?.lang,
+    name: newUser?.name,
+  };
+  localStorageSet(CURRENT_USER, filteredUser);
+}
+
+/**
+ * Loads "current user" from the local storage
+ */
+ export function loadCurrentUser() {
+  return localStorageGet(CURRENT_USER);
 }

@@ -1,21 +1,26 @@
 import { useState, useCallback } from 'react';
+import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
-
 import api from "../../../api";
 import { AppButton } from '../../../components/AppButton';
 import { ConfirmationDialog } from '../../../components/Dialogs';
+import { capitalize } from '../../../utils/string';
+
 /**
  * Renders "Save Collection" button with "Confirm Save" dialog
  * @class SaveButton
  * @param {string} collection - name of Collection in database
  * @param {string|number} id - the ID of the record in Collection in database to save
+ * @param {boolean} [noConfirmation] - open or not the Confirmation dialog
  */
-const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
+const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
   const [modal, setModal] = useState();
+  const title = capitalize(collection);
+  const history = useHistory();
 
-  const saveRecord = async () => {
-    // save changes in BD
-    await api.orders.create(collection, payload);
+  const updateRecord = async () => {
+    console.log(payload, id, collection)
+    await api.orders.update(collection, id, payload);
   };
 
   const onDialogClose = useCallback((event, reason) => {
@@ -24,15 +29,16 @@ const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false,
 
   const onDialogConfirm = (data) => {
     // Don't use useCallback here!!! The updateData() will be called with initial .data
-    saveRecord();
+    updateRecord();
     setModal(null);
+    history.replace(`/tracking`);
   };
 
   const onButtonClick = () => {
     // Don't use useCallback here!!! The updateData() will be called with initial .data
     if (noConfirmation) {
-      // Save without confirmation
-      saveRecord();
+      // Update without confirmation
+      updateRecord();
       return;
     }
 
@@ -40,8 +46,8 @@ const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false,
     const dialog = (
       <ConfirmationDialog
         open
-        title={`Save ${collection}?`}
-        body={`Do you really want to save the ${collection} data in the Database?`}
+        title={`Save ${title}?`}
+        body={`Do you really want to update the ${title} data in the Database?`}
         confirmButtonText="Confirm and Save"
         confirmButtonColor="success"
         onClose={onDialogClose}
@@ -54,21 +60,15 @@ const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false,
   return (
     <>
       {modal}
-      <AppButton
-        color="success"
-        payload={payload}
-        disabled={disabled || Boolean(modal)}
-        onClick={onButtonClick}
-        {...restOfProps}
-      />
+      <AppButton color="success" disabled={disabled || Boolean(modal)} onClick={onButtonClick} {...restOfProps} />
     </>
   );
 };
 
-SaveButton.propTypes = {
+UpdateButton.propTypes = {
   collection: PropTypes.string.isRequired,
   payload: PropTypes.object,
   noConfirmation: PropTypes.bool,
 };
 
-export default SaveButton;
+export default UpdateButton;

@@ -5,73 +5,33 @@ import { useAppForm, SHARED_CONTROL_PROPS } from '../../../utils/form';
 import SaveButton from './SaveButton';
 import AppButton from '../../../components/AppButton';
 
-const VALIDATE_FORM_USER = {
-  name: {
+const VALIDATE_FORM_ORDER = {
+  weight: {
     type: 'string',
     presence: { allowEmpty: true },
-  },
-  email: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  password: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  currency: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  country: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  city: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
-  lang: {
-    type: 'string',
-    presence: { allowEmpty: false },
-  },
-  balance: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
-  bonusBalance: {
-    type: 'string',
-    presence: { allowEmpty: true },
-  },
+  }
 };
 
-const UserForm = ({ onCancel }) => {
+const OrderForm = ({ onCancel }) => {
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] = useAppForm({
-    validationSchema: VALIDATE_FORM_USER,
-    initialValues: { name: '', email: '', balance: '' },
+    validationSchema: VALIDATE_FORM_ORDER,
+    initialValues: { weight: '' },
   });
   const values = formState.values;
 
-  const formUser = useCallback(() => {
+  const formOrder = useCallback(() => {
     setFormState((oldFormState) => ({
       ...oldFormState,
       values: {
         ...oldFormState.values,
-        name: '',
-        email: '',
-        password: '',
-        currency: 'USD',
-        country: '',
-        city: '',
-        lang: 'en_us',
-        balance: '0',
-        bonusBalance: '0',
+        weight: ''
       },
     }));
   }, [setFormState]);
 
   useEffect(() => {
-    formUser();
-  }, [formUser]);
+    formOrder();
+  }, [formOrder]);
 
   return (
     <Grid container spacing={2}>
@@ -101,4 +61,4 @@ const UserForm = ({ onCancel }) => {
     </Grid>
   );
 };
-export default UserForm;
+export default OrderForm;

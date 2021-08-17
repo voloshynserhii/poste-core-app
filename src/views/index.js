@@ -8,5 +8,6 @@ import NotImplementedView from './NotImplemented';
 
 const Welcome = withSuspense(React.lazy(() => import('./Welcome')));
 const Settings = () => <NotImplementedView name="Settings" />; // Sample of non-implemented View
+const MyProfile = withSuspense(React.lazy(() => import('./MyProfile')));
 
-export { NotFound, Welcome, Settings };
+export { MyProfile, NotFound, Welcome, Settings };

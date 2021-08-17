@@ -11,4 +11,18 @@ async function collectionCreateByFirebase(collection, payload) {
   };
 }
 
-export default collectionCreateByFirebase;
+async function collectionCreate(collection, payload) {
+  console.log(JSON.stringify(payload));
+  await api.axios.post(`${process.env.REACT_APP_API_URL}/api/${collection}`, {
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return {
+    ...payload,
+  };
+}
+
+export default collectionCreate;

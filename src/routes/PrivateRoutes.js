@@ -3,7 +3,7 @@ import SharedRoutes from './SharedRoutes';
 import { PrivateLayout } from './Layout';
 import UserRoutes from '../views/User';
 import Tracking from '../views/Tracking';
-import { Welcome } from '../views';
+import { Welcome, MyProfile } from '../views';
 
 /**
  * List of routes available only for authenticated users
@@ -16,6 +16,7 @@ const PrivateRoutes = () => {
         <Route path="/" exact component={Welcome} />
         <Route path="/user" component={UserRoutes} />
         <Route path="/tracking" component={Tracking} />
+        <Route path="/me" component={MyProfile} />,
         <SharedRoutes />
       </Switch>
     </PrivateLayout>

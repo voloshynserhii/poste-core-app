@@ -39,7 +39,7 @@ const AllOrdersView = () => {
   return (
     <>
       <OrdersTable data={orders} />
-      <AddButton collection="users" onClick={handleAddOrder}>
+      <AddButton collection="orders" onClick={handleAddOrder}>
         Add Order
       </AddButton>
     </>
