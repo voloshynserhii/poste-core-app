@@ -43,7 +43,7 @@ export default function OrdersTableHead(props) {
               onClick={createSortHandler(headCell.date)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {orderBy === headCell.date ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>

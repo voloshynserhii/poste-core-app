@@ -19,35 +19,27 @@ import UpdateButton from "./components/UpdateButton";
 import { statuses } from "./utils";
 
 const VALIDATE_FORM_ORDER = {
-  trackingNumber: {
+  weight: {
     type: "string",
     presence: { allowEmpty: false },
   },
-  weight: {
+  dimensions: {
     type: "string",
-    presence: { allowEmpty: true },
+    presence: { allowEmpty: false },
   },
   declaredValue: {
     type: "string",
     presence: { allowEmpty: true },
   },
-  collectionFrom: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
-  deliveryTo: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
   status: {
     type: "string",
     presence: { allowEmpty: false },
   },
-  submittedBy: {
+  comments: {
     type: "string",
-    presence: { allowEmpty: false },
+    presence: { allowEmpty: true },
   },
-  assignedCurier: {
+  description: {
     type: "string",
     presence: { allowEmpty: true },
   },
@@ -78,14 +70,21 @@ const SingleOrderView = () => {
             values: {
               ...oldFormState.values,
               trackingNumber: res?.trackingNumber || "",
-              weight: res?.weight || "0",
+              referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
               declaredValue: res?.declaredValue || "",
+              weight: res?.weight || "",
               dimensions: res?.dimensions || "",
               quantity: res?.quantity || "",
               description: res?.description || "",
               comments: res?.comments || "",
-              updateDate: Date.now()
+              updateDate: Date.now(),
+              collectionData: {
+                city: res?.collectionData?.city || "",
+              },
+              deliveryData: {
+                city: res?.deliveryData?.city || "",
+              },
             },
           }));
         } else {
@@ -142,13 +141,14 @@ const SingleOrderView = () => {
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
-                required
-                label="Weight"
-                name="weight"
-                value={values.weight}
-                error={fieldHasError("weight")}
+                disabled
+                label="Reference number"
+                name="referenceNumber"
+                value={values.referenceNumber}
+                error={fieldHasError("referenceNumber")}
                 helperText={
-                  fieldGetError("weight") || "Display weight of the order"
+                  fieldGetError("referenceNumber") ||
+                  "Display order reference number"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
@@ -186,13 +186,75 @@ const SingleOrderView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
+              <TextField
+                required
+                label="Weight"
+                name="weight"
+                value={values.weight}
+                error={fieldHasError("weight")}
+                helperText={
+                  fieldGetError("weight") || "Display weight of the order"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              <TextField
+                label="Dimensions"
+                name="dimensions"
+                value={values.dimensions}
+                defaultValue={values.dimensions}
+                error={fieldHasError("dimensions")}
+                helperText={
+                  fieldGetError("dimensions") ||
+                  "Display dimensions of the Order"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              <TextField
+                label="Quantity"
+                name="quantity"
+                value={values.quantity}
+                defaultValue={values.quantity}
+                error={fieldHasError("quantity")}
+                helperText={
+                  fieldGetError("quantity") || "Display quantity of the Order"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              <TextField
+                label="Description"
+                name="description"
+                value={values.description}
+                defaultValue={values.description}
+                error={fieldHasError("description")}
+                helperText={
+                  fieldGetError("description") ||
+                  "Display description of the Order"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              <TextField
+                label="Comments"
+                name="comments"
+                value={values.comments}
+                defaultValue={values.comments}
+                error={fieldHasError("comments")}
+                helperText={
+                  fieldGetError("comments") || "Display comments of the Order"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
               <div>
                 <h3>Collection Address</h3>
-
+                <span>{values?.collectionData?.city}</span>
               </div>
               <div>
                 <h3>Delivery Address</h3>
-
+                <span>{values?.deliveryData?.city}</span>
               </div>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>

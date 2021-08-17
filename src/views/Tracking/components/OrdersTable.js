@@ -8,13 +8,9 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import Switch from '@material-ui/core/Switch';
 import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
-import AppButton from "../../../components/AppButton";
 
-// import USERS from '../utils';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -68,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
-  },
+  }
 }));
 
 export default function OrdersTable({ data }) {
@@ -116,8 +112,8 @@ export default function OrdersTable({ data }) {
         order._id,
         order.trackingNumber,
         order.customer,
-        order.collectionData.city,
-        order.deliveryData.city,
+        order.collectionData?.city || "no address",
+        order.deliveryData?.city || "no address",
         order.createdAt,
         order.status,
         order.submissionSource,
@@ -136,38 +132,8 @@ export default function OrdersTable({ data }) {
     setOrderBy(property);
   };
 
-  const handleDisable = (id) => {
-    let selectedItem = rows.find((item) => item.id === id);
-    selectedItem = {
-      ...selectedItem,
-      status: false,
-    };
-    const item = rows.findIndex((item) => item.id === selectedItem.id);
-    setRows((prev) => {
-      prev.splice(item, 1);
-      return [...prev, selectedItem];
-    });
-  };
-  const handleEnable = (id) => {
-    let selectedItem = rows.find((item) => item.id === id);
-    selectedItem = {
-      ...selectedItem,
-      status: true,
-    };
-    const item = rows.findIndex((item) => item.id === selectedItem.id);
-    setRows((prev) => {
-      prev.splice(item, 1);
-      return [...prev, selectedItem];
-    });
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const handleSingleOrderView = (id) => {
@@ -219,7 +185,7 @@ export default function OrdersTable({ data }) {
                       <TableCell align="left">{row.customer}</TableCell>
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
-                      <TableCell align="left">{row.date}</TableCell>
+                      <TableCell align="left">{row.date.replace('T', ' ').replace('Z', ' ')}</TableCell>
                       <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left">{row.submissionSource}</TableCell>
@@ -246,13 +212,12 @@ export default function OrdersTable({ data }) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          // rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
-          // onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>
