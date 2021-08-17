@@ -197,7 +197,13 @@ const SingleOrderView = () => {
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
-              />
+              >
+                {statuses.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 label="Dimensions"
                 name="dimensions"
