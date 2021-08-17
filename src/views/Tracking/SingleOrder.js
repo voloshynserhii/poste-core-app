@@ -72,6 +72,7 @@ const SingleOrderView = () => {
       try {
         const res = await api.orders.read(id);
         if (res) {
+          console.log(res);
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
@@ -80,6 +81,11 @@ const SingleOrderView = () => {
               weight: res?.weight || "0",
               status: res?.status || "Pending",
               declaredValue: res?.declaredValue || "",
+              dimensions: res?.dimensions || "",
+              quantity: res?.quantity || "",
+              description: res?.description || "",
+              comments: res?.comments || "",
+              updateDate: Date.now()
             },
           }));
         } else {
@@ -180,6 +186,14 @@ const SingleOrderView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
+              <div>
+                <h3>Collection Address</h3>
+
+              </div>
+              <div>
+                <h3>Delivery Address</h3>
+
+              </div>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton

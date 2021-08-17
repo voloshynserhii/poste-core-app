@@ -78,7 +78,6 @@ export default function OrdersTable({ data }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("balance");
   const [page, setPage] = React.useState(0);
-  // const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   function createData(
