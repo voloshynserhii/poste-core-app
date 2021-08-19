@@ -12,10 +12,10 @@ export const formStyle = (theme) => ({
  */
 export const paperStyles = (theme) => ({
   paper: {
-    // paddingTop: theme.spacing(1),
-    // paddingBottom: theme.spacing(1),
-    // paddingLeft: theme.spacing(2),
-    // paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   },
 });
 
@@ -24,8 +24,8 @@ export const paperStyles = (theme) => ({
  */
 export const valuesStyles = (theme) => ({
   values: {
-    // paddingTop: theme.spacing(1),
-    // paddingBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
   },
 });
 
@@ -34,25 +34,25 @@ export const valuesStyles = (theme) => ({
  */
 export const dialogStyles = (theme) => ({
   xButton: {
-    // position: 'absolute',
-    // right: theme.spacing(1) / 2,
-    // top: theme.spacing(1) / 2,
+    position: 'absolute',
+    right: theme.spacing(1) / 2,
+    top: theme.spacing(1) / 2,
   },
   paper: {
-    // [theme.breakpoints.up('md')]: {
-    //   minWidth: theme.breakpoints.values.md / 2,
-    // },
-    // [theme.breakpoints.down('sm')]: {
-    //   minWidth: theme.breakpoints.values.sm / 2,
-    // },
+    [theme.breakpoints.up('md')]: {
+      minWidth: theme.breakpoints.values.md / 2,
+    },
+    [theme.breakpoints.down('sm')]: {
+      minWidth: theme.breakpoints.values.sm / 2,
+    },
   },
   formControl: {
-    // marginTop: theme.spacing(1),
-    // marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   },
   actions: {
-    // paddingLeft: theme.spacing(3),
-    // paddingRight: theme.spacing(3),
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
   },
 });
 

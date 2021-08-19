@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { makeStyles } from '@material-ui/styles';
-import AppButton from '../AppButton';
+import { AppButton } from '..';
 import AppDialogTitle from './AppDialogTitle';
 import { dialogStyles } from '../../utils/styles';
 
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
  * @param {function} props.onClose - event for Close and Cancel buttons and the backdrop
  */
 const CommonDialog = ({
+  disabled = false,
   open = false, // Don't show dialog by default
   data, // optional data passed to onConfirm callback
   title = 'Missing title...',
@@ -54,7 +55,7 @@ const CommonDialog = ({
       <DialogContent>{body || text}</DialogContent>
       <DialogActions className={classes.actions}>
         {!hideCancelButton && <AppButton onClick={onClose}>Cancel</AppButton>}
-        <AppButton onClick={handleOnConfirm} color={confirmButtonColor} mr={0}>
+        <AppButton disabled={disabled} onClick={handleOnConfirm} color={confirmButtonColor} mr={0}>
           {confirmButtonText}
         </AppButton>
       </DialogActions>

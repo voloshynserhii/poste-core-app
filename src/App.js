@@ -1,36 +1,29 @@
-import { useContext } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { AppStore } from './store';
+import { AppRouter, AllRoutes } from './routes';
+import { ErrorBoundary } from './components';
+import { AppThemeProvider } from './theme';
+import { AppSnackBarProvider } from './components/AppSnackBar';
+import AppIdleTimer from './components/AppIdleTimer';
 
-import Layout from './components/Layout/Layout';
-import UserProfile from './components/Profile/UserProfile';
-import AuthPage from './pages/AuthPage';
-import HomePage from './pages/HomePage';
-import AuthContext from './store/auth-context';
-
-function App() {
-  const authCtx = useContext(AuthContext);
-
+/**
+ * Root Application Component
+ * @class App
+ */
+const App = () => {
   return (
-    <Layout>
-      <Switch>
-        <Route path='/' exact>
-          <HomePage />
-        </Route>
-        {!authCtx.isLoggedIn && (
-          <Route path='/auth'>
-            <AuthPage />
-          </Route>
-        )}
-        <Route path='/profile'>
-          {authCtx.isLoggedIn && <UserProfile />}
-          {!authCtx.isLoggedIn && <Redirect to='/auth' />}
-        </Route>
-        <Route path='*'>
-          <Redirect to='/' />
-        </Route>
-      </Switch>
-    </Layout>
+    <ErrorBoundary name="App">
+      <AppStore>
+        <AppIdleTimer />
+        <AppThemeProvider>
+          <AppSnackBarProvider>
+            <AppRouter>
+              <AllRoutes />
+            </AppRouter>
+          </AppSnackBarProvider>
+        </AppThemeProvider>
+      </AppStore>
+    </ErrorBoundary>
   );
-}
+};
 
 export default App;

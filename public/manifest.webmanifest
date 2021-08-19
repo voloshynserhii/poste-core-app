@@ -1,0 +1,8 @@
+{
+  "name": "Control panel for Poste Logistics",
+  "short_name": "Admin Panel",
+  "start_url": ".",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

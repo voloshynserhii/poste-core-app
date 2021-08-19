@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-// import api from '../../api';
+import api from '../../api';
 import { AppButton } from '../AppButton';
 import { ConfirmationDialog } from '../Dialogs';
 import { capitalize } from '../../utils/string';
@@ -19,13 +19,13 @@ const AddButton = ({ collection, noConfirmation = false, redirectTo = '', disabl
   const title = capitalize(collection);
 
   const createRecord = useCallback(async () => {
-    // const res = await api.collection.create(collection, { name: `New ${title}`, slug: `new-${collection}` });
-    // const url = redirectTo
-    //   ? redirectTo
-    //   : collection[collection.length - 1] === 's'
-    //   ? '/' + collection.slice(0, -1) 
-    //   : '/' + collection;
-    // history.push(`${url}/${res?.id}`);
+    const res = await api.collection.create(collection, { name: `New ${title}`, slug: `new-${collection}` });
+    const url = redirectTo
+      ? redirectTo
+      : collection[collection.length - 1] === 's'
+      ? '/' + collection.slice(0, -1) // remove ending s: games -> game, etc.
+      : '/' + collection;
+    history.push(`${url}/${res?.id}`);
   }, [history, collection, title, redirectTo]);
 
   const onDialogClose = useCallback((event, reason) => {
@@ -37,7 +37,7 @@ const AddButton = ({ collection, noConfirmation = false, redirectTo = '', disabl
       createRecord();
       setModal(null);
     },
-    []
+    [createRecord]
   );
 
   const onButtonClick = useCallback(() => {
@@ -60,7 +60,7 @@ const AddButton = ({ collection, noConfirmation = false, redirectTo = '', disabl
       />
     );
     setModal(dialog);
-  }, [noConfirmation, title, onDialogClose, onDialogConfirm]);
+  }, [noConfirmation, title, createRecord, onDialogClose, onDialogConfirm]);
 
   return (
     <>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { AppIconButton } from '../AppIconButton';
+import { AppIconButton } from '../../components';
 import { dialogStyles } from '../../utils/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,9 +18,9 @@ const AppDialogTitle = ({ children, onClose, ...props }) => {
   return (
     <DialogTitle {...props}>
       {children}
-      {/* {Boolean(onClose) ? (
+      {Boolean(onClose) ? (
         <AppIconButton className={classes.xButton} icon="close" aria-label="Close" title="Close" onClick={onClose} />
-      ) : null} */}
+      ) : null}
     </DialogTitle>
   );
 };
