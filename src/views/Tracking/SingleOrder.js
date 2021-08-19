@@ -112,6 +112,15 @@ const SingleOrderView = () => {
   const handleCancel = () => {
     history.replace("/tracking");
   };
+  
+  const handleDelete = async (id) => {
+    //show modal do you really want to delete order?
+    const res = await api.orders.delete(id);
+    if(res.status === 200) {
+      //show modal
+    }
+    alert(res.data.message);
+  }
 
   if (loading) return <LinearProgress />;
 
@@ -272,6 +281,7 @@ const SingleOrderView = () => {
                 >
                   Update order
                 </UpdateButton>
+                <AppButton color="error" onClick={() => handleDelete(id)}>Delete order</AppButton>
               </Grid>
             </CardContent>
           </Card>

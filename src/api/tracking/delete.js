@@ -1,7 +1,9 @@
 import { api } from '..';
 
-async function collectionDeleteByFirebase(collection, id) {
-  await api.firebase.database().ref(`${collection}/${id}`).remove();
+async function orderDelete(id) {
+  const res = await api.axios.delete(`${process.env.REACT_APP_API_URL}/api/orders/${id}`);
+  console.log(res);
+  return res
 }
 
-export default collectionDeleteByFirebase;
+export default orderDelete;
