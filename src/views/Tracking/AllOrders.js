@@ -11,7 +11,6 @@ const AllOrdersView = () => {
   const [orders, setOrders] = useState([]);
   const [addOrder, setAddOrder] = useState(false);
 
-
   useEffect(() => {
     async function fetchData() {
       const res = await api.orders.read(); // List of All orders
@@ -23,7 +22,6 @@ const AllOrdersView = () => {
     fetchData();
   }, []);
 
-
   const handleAddOrder = () => {
     setAddOrder(true);
   };
@@ -34,10 +32,9 @@ const AllOrdersView = () => {
 
   if (loading) return <LinearProgress />;
 
-  if (addOrder) return <OrderForm onCancel={handleCloseForm} />;
-
   return (
     <>
+      {addOrder && <OrderForm onCancel={handleCloseForm} />}
       <OrdersTable data={orders} />
       <AddButton collection="orders" onClick={handleAddOrder}>
         Add Order
