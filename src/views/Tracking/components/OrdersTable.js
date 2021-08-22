@@ -64,6 +64,12 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 20,
     width: 1,
+  },
+  red: {
+    background: 'rgba(255,0,0,.2)'
+  },
+  green: {
+    background: 'rgba(0,128,0,.2)'
   }
 }));
 
@@ -74,7 +80,7 @@ export default function OrdersTable({ data }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("balance");
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, ] = React.useState(10);
 
   function createData(
     id,
@@ -83,11 +89,11 @@ export default function OrdersTable({ data }) {
     collectionFrom,
     deliveryTo,
     date,
-    weight,
     status,
     submissionSource,
     submittedBy,
     assignedCurier,
+    weight,
     declaredValue
   ) {
     return {
@@ -97,11 +103,11 @@ export default function OrdersTable({ data }) {
       collectionFrom,
       deliveryTo,
       date,
-      weight,
       status,
       submissionSource,
       submittedBy,
       assignedCurier,
+      weight,
       declaredValue,
     };
   }
@@ -168,6 +174,7 @@ export default function OrdersTable({ data }) {
 
                   return (
                     <TableRow
+                      className={row.status === 'Cancelled' ? classes.red : (row.status === 'Pending' ? classes.green : null)}
                       hover
                       style={{ cursor: "pointer" }}
                       key={row.id}
@@ -186,11 +193,11 @@ export default function OrdersTable({ data }) {
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
                       <TableCell align="left">{row.date.replace('T', ' ').replace('Z', ' ')}</TableCell>
-                      <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left">{row.submissionSource}</TableCell>
                       <TableCell align="left">{row.submittedBy}</TableCell>
                       <TableCell align="left">{row.assignedCurier}</TableCell>
+                      <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.declaredValue}</TableCell>
                       {/* <TableCell align="left">
                         <AppButton
@@ -217,7 +224,7 @@ export default function OrdersTable({ data }) {
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
+          onPageChange={handleChangePage}
         />
       </Paper>
     </div>

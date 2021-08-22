@@ -45,12 +45,17 @@ const OrderForm = ({ onCancel }) => {
       initialValues: { weight: "" },
     });
   const values = formState.values;
-
+  
+  const random = () => {
+    return Math.floor(100000 + Math.random() * 900000);
+  };
+  
   const formOrder = useCallback(() => {
     setFormState((oldFormState) => ({
       ...oldFormState,
       values: {
         ...oldFormState.values,
+        trackingNumber: random(),
         referenceNumber: "",
         declaredValue: "",
         weight: "",
@@ -58,7 +63,6 @@ const OrderForm = ({ onCancel }) => {
         quantity: "",
         description: "",
         comments: "",
-
         collectionData: {
           city: "",
         },
@@ -72,6 +76,7 @@ const OrderForm = ({ onCancel }) => {
   useEffect(() => {
     formOrder();
   }, [formOrder]);
+  console.log(formState.values);
 
   return (
     <Grid container spacing={2}>
@@ -79,6 +84,19 @@ const OrderForm = ({ onCancel }) => {
         <Card>
           <CardHeader title="Add Order" />
           <CardContent>
+            <TextField
+              disabled
+              label="Tracking number"
+              name="trackingNumber"
+              value={values.trackingNumber}
+              error={fieldHasError("referenceNumber")}
+              helperText={
+                fieldGetError("trackingNumber") ||
+                "Display order tracking number"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
             <TextField
               label="Reference number"
               name="referenceNumber"
@@ -105,7 +123,7 @@ const OrderForm = ({ onCancel }) => {
               {...SHARED_CONTROL_PROPS}
             />
             <TextField
-            required
+              required
               label="Weight"
               name="weight"
               value={values.weight}
@@ -117,7 +135,7 @@ const OrderForm = ({ onCancel }) => {
               {...SHARED_CONTROL_PROPS}
             />
             <TextField
-            required
+              required
               label="Dimensions"
               name="dimensions"
               value={values.dimensions}

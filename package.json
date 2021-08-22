@@ -1,40 +1,36 @@
 {
   "name": "admin-panel",
   "version": "0.3.11",
-  "description": "Control panel for Online Casino Games",
-  "author": "Anton Karpenko <i@karpolan.com> (https://karpolan.com)",
+  "description": "Control panel for Poste logistic system",
+  "author": "Serhii Voloshyn <vosquery@gmail.com>",
   "private": "true",
   "keywords": [
     "react",
     "mui",
     "material"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/OCasinoGames/admin-panel"
-  },
   "dependencies": {
-    "@material-ui/core": "^4.11.4",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.58",
-    "axios": "^0.21.1",
-    "clsx": "^1.1.1",
-    "date-fns": "^2.21.3",
-    "firebase": "^8.6.2",
-    "loglevel": "^1.7.1",
-    "notistack": "^1.0.9",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-idle-timer": "^4.6.2",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^4.0.3",
-    "validate.js": "^0.13.1"
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "latest",
+    "@material-ui/lab": "latest",
+    "axios": "latest",
+    "clsx": "latest",
+    "date-fns": "latest",
+    "firebase": "latest",
+    "loglevel": "latest",
+    "notistack": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-idle-timer": "latest",
+    "react-router-dom": "latest",
+    "react-scripts": "latest",
+    "validate.js": "latest"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "prettier": "^2.3.0"
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@testing-library/user-event": "latest",
+    "prettier": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

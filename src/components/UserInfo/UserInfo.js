@@ -56,7 +56,6 @@ const UserInfo = ({ className, showAvatar = false, user: propsUser, ...restOfPro
 
   const fullName = user?.name?.trim() || [user?.nameFirst || '', user?.nameLast || ''].join(' ').trim();
   const srcAvatar = user?.avatar ? `${process.env.REACT_APP_API}/assets/${user?.avatar}` : undefined;
-  const userPhoneOrEmail = user?.phone || user?.email;
 
   return (
     <div {...restOfProps} className={clsx(classes.root, className)}>
@@ -66,9 +65,8 @@ const UserInfo = ({ className, showAvatar = false, user: propsUser, ...restOfPro
         </AppLink>
       ) : null}
       <Typography className={classes.name} variant="h6">
-        {fullName || 'Dispatcher'}
+        {user || 'Dispatcher'}
       </Typography>
-      <Typography variant="body2">{userPhoneOrEmail || 'Undefined email'}</Typography>
     </div>
   );
 };
@@ -76,14 +74,14 @@ const UserInfo = ({ className, showAvatar = false, user: propsUser, ...restOfPro
 UserInfo.propTypes = {
   className: PropTypes.string,
   showAvatar: PropTypes.bool,
-  user: PropTypes.shape({
-    name: PropTypes.string,
-    nameFirst: PropTypes.string,
-    nameLast: PropTypes.string,
-    avatar: PropTypes.string,
-    email: PropTypes.string,
-    phone: PropTypes.string,
-  }),
+  // user: PropTypes.shape({
+  //   name: PropTypes.string,
+  //   nameFirst: PropTypes.string,
+  //   nameLast: PropTypes.string,
+  //   avatar: PropTypes.string,
+  //   email: PropTypes.string,
+  //   phone: PropTypes.string,
+  // }),
 };
 
 export default UserInfo;

@@ -1,9 +1,9 @@
 # Admin Panel
 
-Control panel for Online Casino Games
+Control panel for Poste logistic system
 
-- [Prod](https://admin-leeloo.netlify.app/)
-- [Dev](https://dev-admin-leeloo.netlify.app/)
+- [Prod](https://)
+- [Dev](https://)
 
 ## Based on [React + Material UI Professional starter](https://github.com/karpolan/react-mui-pro-starter)
 

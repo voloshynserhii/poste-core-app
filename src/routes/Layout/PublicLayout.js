@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, BottomNavigation, BottomNavigationAction, Grid } from '@material-ui/core/';
+import { AppBar, Toolbar, Typography, Grid } from '@material-ui/core/';
 import { useAppStore } from '../../store/AppStore';
-import { ErrorBoundary, AppIconButton, AppIcon } from '../../components';
+import { ErrorBoundary, AppIconButton } from '../../components';
 import SideBar from '../../components/SideBar';
 
 const TITLE_PUBLIC = 'Poste logistic system';
@@ -65,7 +65,7 @@ const PublicLayout = ({ children }) => {
   const classes = useStyles();
   const [openSideBar, setOpenSideBar] = useState(false);
   const [state, dispatch] = useAppStore();
-  const history = useHistory();
+  // const history = useHistory();
 
   const title = TITLE_PUBLIC;
   document.title = title; // Also Update Tab Title
@@ -86,9 +86,9 @@ const PublicLayout = ({ children }) => {
     if (openSideBar) setOpenSideBar(false);
   }, [openSideBar]);
 
-  const handleBottomNavigationChange = (event, value) => {
-    history.push(value);
-  };
+  // const handleBottomNavigationChange = (event, value) => {
+  //   history.push(value);
+  // };
 
   return (
     <Grid container direction="column" className={classes.root}>

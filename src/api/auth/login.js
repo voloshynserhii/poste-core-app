@@ -19,7 +19,9 @@ export async function loginByFirebase({ email, password }) {
     });
     const data = await res?.json();
     log.warn(`${METHOD} -`, data);
-
+    if (res.ok) {
+      localStorage.setItem("posteUser", email)
+    }
     saveToken(data?.idToken);
     saveRefreshToken(data?.refreshToken);
     setRefreshTimeout(data?.expires);

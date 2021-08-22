@@ -13,8 +13,8 @@ export async function me() {
     };
 
   try {
-    const res = await api.axios.get(ENDPOINT);
-    const { data } = res;
+    // const res = await api.axios.get(ENDPOINT);
+    const data = localStorage.getItem('posteUser')
     log.warn(`${METHOD} -`, data);
     return data;
   } catch (error) {

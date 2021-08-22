@@ -4,7 +4,7 @@
  * Martial Color tool: https://material.io/resources/color
  */
 import React from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { useAppStore } from './store/AppStore';
 
@@ -73,7 +73,7 @@ const DARK_THEME = {
 const AppThemeProvider = ({ children }) => {
   const [state] = useAppStore();
   // const theme = useMemo(() => (state.darkMode ? createMuiTheme(DARK_THEME) : createMuiTheme(LIGHT_THEME)));
-  const theme = state.darkMode ? createMuiTheme(DARK_THEME) : createMuiTheme(LIGHT_THEME);
+  const theme = state.darkMode ? createTheme(DARK_THEME) : createTheme(LIGHT_THEME);
 
   return (
     <ThemeProvider theme={theme}>
