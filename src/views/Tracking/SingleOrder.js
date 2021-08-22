@@ -117,6 +117,7 @@ const SingleOrderView = () => {
     //show modal do you really want to delete order?
     const res = await api.orders.delete(id);
     if(res.status === 200) {
+      history.replace("/tracking");
       //show modal
     }
     alert(res.data.message);
