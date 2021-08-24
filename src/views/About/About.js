@@ -74,7 +74,7 @@ const AboutView = () => {
 
       <Grid item xs={12} sm={6}>
         <AppSection title="SnackBars">
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <AppSnackBar autoOpen message={'By default the SnackBar shown for 5 seconds only'} />
 
             <AppButton label="Show Info SnackBar" onClick={() => handleSnackBarShow('info')} />

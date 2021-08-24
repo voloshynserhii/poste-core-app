@@ -99,7 +99,7 @@ const SingleOrderView = () => {
     },
     [setFormState]
   ); // Don't pass formState here !!!
-
+  console.log(values);
   useEffect(() => {
     fetchOrderById(id);
   }, [fetchOrderById, id]);
@@ -112,16 +112,56 @@ const SingleOrderView = () => {
   const handleCancel = () => {
     history.replace("/tracking");
   };
-  
+
   const handleDelete = async (id) => {
     //show modal do you really want to delete order?
     const res = await api.orders.delete(id);
-    if(res.status === 200) {
+    if (res.status === 200) {
       history.replace("/tracking");
       //show modal
     }
     alert(res.data.message);
-  }
+  };
+  
+  const onFieldChangeCollection = useCallback((event) => {
+
+    const name = event.target?.name;
+    const value = event.target?.value
+
+    setFormState((formState) => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        collectionData: {
+          [name]: value
+        }
+      },
+      touched: {
+        ...formState.touched,
+        [name]: true,
+      },
+    }));
+  }, [setFormState]);
+  
+  const onFieldChangeDelivery = useCallback((event) => {
+
+    const name = event.target?.name;
+    const value = event.target?.value
+
+    setFormState((formState) => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        deliveryData: {
+          [name]: value
+        }
+      },
+      touched: {
+        ...formState.touched,
+        [name]: true,
+      },
+    }));
+  }, [setFormState]);
 
   if (loading) return <LinearProgress />;
 
@@ -141,7 +181,7 @@ const SingleOrderView = () => {
                 disabled
                 label="Tracking number"
                 name="trackingNumber"
-                value={values.trackingNumber}
+                value={values?.trackingNumber}
                 error={fieldHasError("trackingNumber")}
                 helperText={
                   fieldGetError("trackingNumber") ||
@@ -154,7 +194,7 @@ const SingleOrderView = () => {
                 disabled
                 label="Reference number"
                 name="referenceNumber"
-                value={values.referenceNumber}
+                value={values?.referenceNumber}
                 error={fieldHasError("referenceNumber")}
                 helperText={
                   fieldGetError("referenceNumber") ||
@@ -168,8 +208,7 @@ const SingleOrderView = () => {
                 required
                 label="Status"
                 name="status"
-                value={values.status}
-                defaultValue={values.status}
+                value={values?.status}
                 error={fieldHasError("status")}
                 helperText={
                   fieldGetError("status") || "Display status of the Order"
@@ -186,8 +225,7 @@ const SingleOrderView = () => {
               <TextField
                 label="Declared Value"
                 name="declaredValue"
-                value={values.declaredValue}
-                defaultValue={values.declaredValue}
+                value={values?.declaredValue}
                 error={fieldHasError("declaredValue")}
                 helperText={
                   fieldGetError("declaredValue") ||
@@ -200,7 +238,7 @@ const SingleOrderView = () => {
                 required
                 label="Weight"
                 name="weight"
-                value={values.weight}
+                value={values?.weight}
                 error={fieldHasError("weight")}
                 helperText={
                   fieldGetError("weight") || "Display weight of the order"
@@ -217,8 +255,7 @@ const SingleOrderView = () => {
               <TextField
                 label="Dimensions"
                 name="dimensions"
-                value={values.dimensions}
-                defaultValue={values.dimensions}
+                value={values?.dimensions}
                 error={fieldHasError("dimensions")}
                 helperText={
                   fieldGetError("dimensions") ||
@@ -230,8 +267,7 @@ const SingleOrderView = () => {
               <TextField
                 label="Quantity"
                 name="quantity"
-                value={values.quantity}
-                defaultValue={values.quantity}
+                value={values?.quantity}
                 error={fieldHasError("quantity")}
                 helperText={
                   fieldGetError("quantity") || "Display quantity of the Order"
@@ -242,8 +278,7 @@ const SingleOrderView = () => {
               <TextField
                 label="Description"
                 name="description"
-                value={values.description}
-                defaultValue={values.description}
+                value={values?.description}
                 error={fieldHasError("description")}
                 helperText={
                   fieldGetError("description") ||
@@ -255,8 +290,7 @@ const SingleOrderView = () => {
               <TextField
                 label="Comments"
                 name="comments"
-                value={values.comments}
-                defaultValue={values.comments}
+                value={values?.comments}
                 error={fieldHasError("comments")}
                 helperText={
                   fieldGetError("comments") || "Display comments of the Order"
@@ -266,11 +300,31 @@ const SingleOrderView = () => {
               />
               <div>
                 <h3>Collection Address</h3>
-                <span>{values?.collectionData?.city}</span>
+                <TextField
+                  label="City"
+                  name="city"
+                  value={values?.collectionData?.city || ""}
+                  error={fieldHasError("comments")}
+                  helperText={
+                    fieldGetError("city") || "Display city of the Order"
+                  }
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                />
               </div>
               <div>
                 <h3>Delivery Address</h3>
-                <span>{values?.deliveryData?.city}</span>
+                <TextField
+                  label="City"
+                  name="city"
+                  value={values?.deliveryData?.city || ""}
+                  error={fieldHasError("comments")}
+                  helperText={
+                    fieldGetError("city") || "Display city of the Order"
+                  }
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                />
               </div>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
@@ -282,7 +336,9 @@ const SingleOrderView = () => {
                 >
                   Update order
                 </UpdateButton>
-                <AppButton color="error" onClick={() => handleDelete(id)}>Delete order</AppButton>
+                <AppButton color="error" onClick={() => handleDelete(id)}>
+                  Delete order
+                </AppButton>
               </Grid>
             </CardContent>
           </Card>

@@ -95,7 +95,7 @@ const LoginEmailView = () => {
                   ),
                 }}
               />
-              <Grid container justify="center" alignItems="center">
+              <Grid container justifyContent="center" alignItems="center">
                 <AppButton type="submit" disabled={!formState.isValid}>
                   Login with Email
                 </AppButton>
