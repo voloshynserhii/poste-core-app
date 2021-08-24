@@ -63,6 +63,7 @@ const SingleOrderView = () => {
       setError("");
       try {
         const res = await api.orders.read(id);
+        console.log(res);
         if (res) {
           console.log(res);
           setFormState((oldFormState) => ({
@@ -80,10 +81,20 @@ const SingleOrderView = () => {
               comments: res?.comments || "",
               updateDate: Date.now(),
               collectionData: {
+                region: res?.collectionData?.region || "",
                 city: res?.collectionData?.city || "",
+                address1: res?.collectionData?.address1 || "",
+                contactName: res?.collectionData?.contactName || "",
+                contactPhone: res?.collectionData?.contactPhone || "",
+                contactEmail: res?.collectionData?.contactEmail || "",
               },
               deliveryData: {
+                region: res?.deliveryData?.region || "",
                 city: res?.deliveryData?.city || "",
+                address1: res?.deliveryData?.address1 || "",
+                contactName: res?.deliveryData?.contactName || "",
+                contactPhone: res?.deliveryData?.contactPhone || "",
+                contactEmail: res?.deliveryData?.contactEmail || "",
               },
             },
           }));
@@ -99,7 +110,7 @@ const SingleOrderView = () => {
     },
     [setFormState]
   ); // Don't pass formState here !!!
-  console.log(values);
+
   useEffect(() => {
     fetchOrderById(id);
   }, [fetchOrderById, id]);
@@ -122,46 +133,53 @@ const SingleOrderView = () => {
     }
     alert(res.data.message);
   };
-  
-  const onFieldChangeCollection = useCallback((event) => {
 
-    const name = event.target?.name;
-    const value = event.target?.value
+  const onFieldChangeCollection = useCallback(
+    (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+      console.log(name, value);
 
-    setFormState((formState) => ({
-      ...formState,
-      values: {
-        ...formState.values,
-        collectionData: {
-          [name]: value
-        }
-      },
-      touched: {
-        ...formState.touched,
-        [name]: true,
-      },
-    }));
-  }, [setFormState]);
-  
-  const onFieldChangeDelivery = useCallback((event) => {
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          collectionData: {
+            ...formState.values.collectionData,
+            [name]: value,
+          },
+        },
+        touched: {
+          ...formState.touched,
+          [name]: true,
+        },
+      }));
+    },
+    [setFormState]
+  );
 
-    const name = event.target?.name;
-    const value = event.target?.value
+  const onFieldChangeDelivery = useCallback(
+    (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
 
-    setFormState((formState) => ({
-      ...formState,
-      values: {
-        ...formState.values,
-        deliveryData: {
-          [name]: value
-        }
-      },
-      touched: {
-        ...formState.touched,
-        [name]: true,
-      },
-    }));
-  }, [setFormState]);
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          deliveryData: {
+            ...formState.values.deliveryData,
+            [name]: value,
+          },
+        },
+        touched: {
+          ...formState.touched,
+          [name]: true,
+        },
+      }));
+    },
+    [setFormState]
+  );
 
   if (loading) return <LinearProgress />;
 
@@ -208,7 +226,7 @@ const SingleOrderView = () => {
                 required
                 label="Status"
                 name="status"
-                value={values?.status}
+                value={values?.status || ''}
                 error={fieldHasError("status")}
                 helperText={
                   fieldGetError("status") || "Display status of the Order"
@@ -301,12 +319,70 @@ const SingleOrderView = () => {
               <div>
                 <h3>Collection Address</h3>
                 <TextField
+                  label="Region"
+                  name="region"
+                  value={values?.collectionData?.region || ""}
+                  error={fieldHasError("region")}
+                  helperText={
+                    fieldGetError("region") || "Display region of the Order"
+                  }
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
                   label="City"
                   name="city"
                   value={values?.collectionData?.city || ""}
-                  error={fieldHasError("comments")}
+                  error={fieldHasError("city")}
                   helperText={
                     fieldGetError("city") || "Display city of the Order"
+                  }
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Address"
+                  name="address1"
+                  value={values?.collectionData?.address1 || ""}
+                  error={fieldHasError("address1")}
+                  helperText={
+                    fieldGetError("address1") || "Display address of the Order"
+                  }
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Contact name"
+                  name="contactName"
+                  value={values?.collectionData?.contactName || ""}
+                  error={fieldHasError("contactName")}
+                  helperText={
+                    fieldGetError("contactName") ||
+                    "Display contactName of the Order"
+                  }
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Contact phone"
+                  name="contactPhone"
+                  value={values?.collectionData?.contactPhone || ""}
+                  error={fieldHasError("contactPhone")}
+                  helperText={
+                    fieldGetError("contactPhone") ||
+                    "Display contactPhone of the Order"
+                  }
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Contact email"
+                  name="contactEmail"
+                  value={values?.collectionData?.contactEmail || ""}
+                  error={fieldHasError("contactEmail")}
+                  helperText={
+                    fieldGetError("contactEmail") ||
+                    "Display contactEmail of the Order"
                   }
                   onChange={onFieldChangeCollection}
                   {...SHARED_CONTROL_PROPS}
@@ -315,12 +391,70 @@ const SingleOrderView = () => {
               <div>
                 <h3>Delivery Address</h3>
                 <TextField
+                  label="Region"
+                  name="region"
+                  value={values?.deliveryData?.region || ""}
+                  error={fieldHasError("region")}
+                  helperText={
+                    fieldGetError("region") || "Display region of the Order"
+                  }
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
                   label="City"
                   name="city"
                   value={values?.deliveryData?.city || ""}
-                  error={fieldHasError("comments")}
+                  error={fieldHasError("city")}
                   helperText={
                     fieldGetError("city") || "Display city of the Order"
+                  }
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Address"
+                  name="address1"
+                  value={values?.deliveryData?.address1 || ""}
+                  error={fieldHasError("address1")}
+                  helperText={
+                    fieldGetError("address1") || "Display address of the Order"
+                  }
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Contact name"
+                  name="contactName"
+                  value={values?.deliveryData?.contactName || ""}
+                  error={fieldHasError("contactName")}
+                  helperText={
+                    fieldGetError("contactName") ||
+                    "Display contactName of the Order"
+                  }
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Contact phone"
+                  name="contactPhone"
+                  value={values?.deliveryData?.contactPhone || ""}
+                  error={fieldHasError("contactPhone")}
+                  helperText={
+                    fieldGetError("contactPhone") ||
+                    "Display contactPhone of the Order"
+                  }
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                />
+                <TextField
+                  label="Contact email"
+                  name="contactEmail"
+                  value={values?.deliveryData?.contactEmail || ""}
+                  error={fieldHasError("contactEmail")}
+                  helperText={
+                    fieldGetError("contactEmail") ||
+                    "Display contactEmail of the Order"
                   }
                   onChange={onFieldChangeDelivery}
                   {...SHARED_CONTROL_PROPS}
