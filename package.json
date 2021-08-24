@@ -10,21 +10,21 @@
     "material"
   ],
   "dependencies": {
-    "@material-ui/core": "latest",
-    "@material-ui/icons": "latest",
-    "@material-ui/lab": "latest",
-    "axios": "latest",
-    "clsx": "latest",
-    "date-fns": "latest",
-    "firebase": "latest",
-    "loglevel": "latest",
-    "notistack": "latest",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "axios": "^0.21.1",
+    "clsx": "^1.1.1",
+    "date-fns": "^2.23.0",
+    "firebase": "^8.10.0",
+    "loglevel": "^1.7.1",
+    "notistack": "^1.0.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-idle-timer": "latest",
+    "react-idle-timer": "^4.6.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.3",
-    "validate.js": "latest"
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "latest",
