@@ -4,9 +4,9 @@ import SingleOrderView from './SingleOrder';
 
 /**
  * Routes for "Users" view
- * url: /user/*
+ * url: /tracking/*
  */
-const UsersRoutes = () => {
+const TrackingRoutes = () => {
   return (
     <Switch>
       <Route path="/tracking/:id" component={SingleOrderView} />
@@ -16,4 +16,4 @@ const UsersRoutes = () => {
   );
 };
 
-export default UsersRoutes;
+export default TrackingRoutes;

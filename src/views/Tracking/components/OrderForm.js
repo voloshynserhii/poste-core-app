@@ -63,26 +63,11 @@ const VALIDATE_FORM_ORDER = {
 const OrderForm = ({ onCancel }) => {
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
-  
+
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
       validationSchema: VALIDATE_FORM_ORDER,
-      initialValues: {
-        trackingNumber: "",
-        referenceNumber: "",
-        declaredValue: "",
-        weight: "",
-        dimensions: "",
-        quantity: "",
-        description: "",
-        comments: "",
-        collectionData: {
-          city: "",
-        },
-        deliveryData: {
-          city: "",
-        },
-      },
+      initialValues: {},
     });
   const values = formState.values;
 
@@ -104,10 +89,20 @@ const OrderForm = ({ onCancel }) => {
         description: "",
         comments: "",
         collectionData: {
+          region: "",
           city: "",
+          address1: "",
+          contactName: "",
+          contactPhone: "",
+          contactEmail: "",
         },
         deliveryData: {
+          region: "",
           city: "",
+          address1: "",
+          contactName: "",
+          contactPhone: "",
+          contactEmail: "",
         },
       },
     }));
@@ -119,7 +114,7 @@ const OrderForm = ({ onCancel }) => {
 
   const saveRecord = async () => {
     // save changes in BD
-    await api.orders.create('orders', formState.values);
+    await api.orders.create("orders", formState.values);
     setOrderSaved(true);
   };
   const handleSave = () => {
@@ -127,11 +122,58 @@ const OrderForm = ({ onCancel }) => {
     saveRecord();
     return;
   };
+  
+  const onFieldChangeCollection = useCallback(
+    (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+      console.log(name, value);
+
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          collectionData: {
+            ...formState.values.collectionData,
+            [name]: value,
+          },
+        },
+        touched: {
+          ...formState.touched,
+          [name]: true,
+        },
+      }));
+    },
+    [setFormState]
+  );
+
+  const onFieldChangeDelivery = useCallback(
+    (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          deliveryData: {
+            ...formState.values.deliveryData,
+            [name]: value,
+          },
+        },
+        touched: {
+          ...formState.touched,
+          [name]: true,
+        },
+      }));
+    },
+    [setFormState]
+  );
 
   if (orderSaved) return null;
-  
+
   return (
-    <div className={classes.layer} >
+    <div className={classes.layer}>
       <Card className={classes.root}>
         <CardHeader title="Add Order" />
         <CardContent>
@@ -233,6 +275,146 @@ const OrderForm = ({ onCancel }) => {
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
+          <div>
+            <h3>Collection Address</h3>
+            <TextField
+              label="Region"
+              name="region"
+              value={values?.collectionData?.region || ""}
+              error={fieldHasError("region")}
+              helperText={
+                fieldGetError("region") || "Display region of the Order"
+              }
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="City"
+              name="city"
+              value={values?.collectionData?.city || ""}
+              error={fieldHasError("city")}
+              helperText={fieldGetError("city") || "Display city of the Order"}
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Address"
+              name="address1"
+              value={values?.collectionData?.address1 || ""}
+              error={fieldHasError("address1")}
+              helperText={
+                fieldGetError("address1") || "Display address of the Order"
+              }
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact name"
+              name="contactName"
+              value={values?.collectionData?.contactName || ""}
+              error={fieldHasError("contactName")}
+              helperText={
+                fieldGetError("contactName") ||
+                "Display contactName of the Order"
+              }
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact phone"
+              name="contactPhone"
+              value={values?.collectionData?.contactPhone || ""}
+              error={fieldHasError("contactPhone")}
+              helperText={
+                fieldGetError("contactPhone") ||
+                "Display contactPhone of the Order"
+              }
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact email"
+              name="contactEmail"
+              value={values?.collectionData?.contactEmail || ""}
+              error={fieldHasError("contactEmail")}
+              helperText={
+                fieldGetError("contactEmail") ||
+                "Display contactEmail of the Order"
+              }
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+          </div>
+          <div>
+            <h3>Delivery Address</h3>
+            <TextField
+              label="Region"
+              name="region"
+              value={values?.deliveryData?.region || ""}
+              error={fieldHasError("region")}
+              helperText={
+                fieldGetError("region") || "Display region of the Order"
+              }
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="City"
+              name="city"
+              value={values?.deliveryData?.city || ""}
+              error={fieldHasError("city")}
+              helperText={fieldGetError("city") || "Display city of the Order"}
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Address"
+              name="address1"
+              value={values?.deliveryData?.address1 || ""}
+              error={fieldHasError("address1")}
+              helperText={
+                fieldGetError("address1") || "Display address of the Order"
+              }
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact name"
+              name="contactName"
+              value={values?.deliveryData?.contactName || ""}
+              error={fieldHasError("contactName")}
+              helperText={
+                fieldGetError("contactName") ||
+                "Display contactName of the Order"
+              }
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact phone"
+              name="contactPhone"
+              value={values?.deliveryData?.contactPhone || ""}
+              error={fieldHasError("contactPhone")}
+              helperText={
+                fieldGetError("contactPhone") ||
+                "Display contactPhone of the Order"
+              }
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact email"
+              name="contactEmail"
+              value={values?.deliveryData?.contactEmail || ""}
+              error={fieldHasError("contactEmail")}
+              helperText={
+                fieldGetError("contactEmail") ||
+                "Display contactEmail of the Order"
+              }
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+          </div>
           <Grid container justifyContent="center" alignItems="center">
             <AppButton onClick={onCancel}>Cancel</AppButton>
             <AppButton
