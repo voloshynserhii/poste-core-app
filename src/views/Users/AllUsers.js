@@ -4,40 +4,40 @@ import { LinearProgress } from "@material-ui/core";
 import AppButton from "../../components/AppButton";
 import api from "../../api";
 
-const AllCustomersView = () => {
+const AllUsersView = () => {
   const [loading, setLoading] = useState(true);
-  const [customers, setCustomers] = useState([]);
-  const [addCustomer, setAddCustomer] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [addUser, setAddUser] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
-      const res = await api.customers.read(); // List of All users
+      const res = await api.users.read(); // List of All users
       if (res) {
-        setCustomers(res);
+        setUsers(res);
       }
       setLoading(false);
     }
     fetchData();
   }, []);
 
-  const handleAddCustomer = () => {
-    setAddCustomer(true);
+  const handleAddUser = () => {
+    setAddUser(true);
   };
   
   if (loading) return <LinearProgress />;
 
   return (
     <div>
-      {customers?.map((customer, index) => (
-        <div key={customer._id}>
+      {users?.map((user, index) => (
+        <div key={user._id}>
           <span> {index + 1}. </span>
-          <span>{customer.name}</span>
+          <span>{user.name}</span>
         </div>
       ))}
-      <AppButton color="success" onClick={handleAddCustomer}>
-        Add Customer
+      <AppButton color="success" onClick={handleAddUser}>
+        Add User
       </AppButton>
     </div>
   );
 };
-export default AllCustomersView;
+export default AllUsersView;

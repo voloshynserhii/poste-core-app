@@ -1,9 +1,10 @@
 import { Route, Switch } from 'react-router-dom';
 import SharedRoutes from './SharedRoutes';
 import { PrivateLayout } from './Layout';
-import UserRoutes from '../views/User';
+// import UserRoutes from '../views/User';
 import Tracking from '../views/Tracking';
 import Customers from '../views/Customers';
+import Users from '../views/Users';
 import { Welcome, MyProfile } from '../views';
 
 /**
@@ -15,9 +16,10 @@ const PrivateRoutes = () => {
     <PrivateLayout>
       <Switch>
         <Route path="/" exact component={Welcome} />
-        <Route path="/user" component={UserRoutes} />
+        {/* <Route path="/user" component={UserRoutes} /> */}
         <Route path="/tracking" component={Tracking} />
         <Route path="/customer" component={Customers} />
+        <Route path="/user" component={Users} />
         <Route path="/me" component={MyProfile} />,
         <SharedRoutes />
       </Switch>

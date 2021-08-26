@@ -68,7 +68,7 @@ const SIDE_BAR_PRIVATE_ITEMS = [
   },
   {
     title: 'Users',
-    href: '/dispatcher',
+    href: '/user',
     icon: 'provider',
   },
   {
