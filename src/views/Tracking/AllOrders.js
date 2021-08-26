@@ -3,8 +3,8 @@ import { LinearProgress } from "@material-ui/core";
 
 import api from "../../api";
 import OrdersTable from "./components/OrdersTable";
-import AddButton from "./components/AddButton";
 import OrderForm from "./components/OrderForm";
+import AppButton from "../../components/AppButton";
 
 const AllOrdersView = () => {
   const [loading, setLoading] = useState(true);
@@ -36,9 +36,9 @@ const AllOrdersView = () => {
     <>
       {addOrder && <OrderForm onCancel={handleCloseForm} />}
       <OrdersTable data={orders} />
-      <AddButton collection="orders" onClick={handleAddOrder}>
+      <AppButton color="success" onClick={handleAddOrder}>
         Add Order
-      </AddButton>
+      </AppButton>
     </>
   );
 };

@@ -120,7 +120,7 @@ export default function OrdersTable({ data }) {
         order.declaredValue
       );
     });
-    setRows(rows);
+    setRows(rows.reverse());
   }, [data]);
 
   const handleRequestSort = (event, property) => {

@@ -6,6 +6,7 @@ import * as info from './info';
 import * as collection from './collection';
 import * as orders from './tracking';
 import * as users from './users';
+import * as customers from './customers';
 
 const api = {
   // Pre-configured HTTP request instances
@@ -24,7 +25,8 @@ const api = {
   info,
   collection,
   orders,
-  users
+  users,
+  customers
 };
 
 export default api;

@@ -108,7 +108,7 @@ const OrderForm = ({ onCancel }) => {
         },
       },
     }));
-  }, [setFormState]);
+  }, [setFormState, customer]);
 
   useEffect(() => {
     formOrder();
