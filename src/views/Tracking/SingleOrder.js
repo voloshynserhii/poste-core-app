@@ -65,11 +65,13 @@ const SingleOrderView = () => {
         const res = await api.orders.read(id);
         console.log(res);
         if (res) {
-          console.log(res);
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
               ...oldFormState.values,
+              customer: {
+                name: res?.customer.name || ""
+              },
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
@@ -195,6 +197,18 @@ const SingleOrderView = () => {
           <Card>
             <CardHeader title="Order Details" />
             <CardContent>
+              <TextField
+                disabled
+                label="Customer"
+                name="name"
+                value={values?.customer?.name}
+                error={fieldHasError("name")}
+                helperText={
+                  fieldGetError("name") ||
+                  "Display the name of a customer"
+                }
+                {...SHARED_CONTROL_PROPS}
+              />
               <TextField
                 disabled
                 label="Tracking number"

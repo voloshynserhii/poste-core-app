@@ -80,6 +80,9 @@ const OrderForm = ({ onCancel }) => {
       ...oldFormState,
       values: {
         ...oldFormState.values,
+        // customer: {
+        //   name: ""
+        // },
         trackingNumber: random(),
         referenceNumber: "",
         declaredValue: "",
@@ -169,6 +172,29 @@ const OrderForm = ({ onCancel }) => {
     },
     [setFormState]
   );
+  
+  // const onFieldChangeCustomer = useCallback(
+  //   (event) => {
+  //     const name = event.target?.name;
+  //     const value = event.target?.value;
+
+  //     setFormState((formState) => ({
+  //       ...formState,
+  //       values: {
+  //         ...formState.values,
+  //         customer: {
+  //           ...formState.values.customer,
+  //           [name]: value,
+  //         },
+  //       },
+  //       touched: {
+  //         ...formState.touched,
+  //         [name]: true,
+  //       },
+  //     }));
+  //   },
+  //   [setFormState]
+  // );
 
   if (orderSaved) return null;
 
@@ -177,6 +203,17 @@ const OrderForm = ({ onCancel }) => {
       <Card className={classes.root}>
         <CardHeader title="Add Order" />
         <CardContent>
+          {/* <TextField
+              label="Customer name"
+              name="name"
+              value={values?.customer?.name || ""}
+              error={fieldHasError("name")}
+              helperText={
+                fieldGetError("name") || "Display name of the Customer"
+              }
+              onChange={onFieldChangeCustomer}
+              {...SHARED_CONTROL_PROPS}
+            /> */}
           <TextField
             disabled
             label="Tracking number"

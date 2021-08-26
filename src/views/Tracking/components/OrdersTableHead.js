@@ -7,14 +7,11 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 const headCells = [
   { id: 'trackingNumber', numeric: false, disablePadding: true, label: 'Tracking Number' },
-  { id: 'customer', numeric: false, disablePadding: false, label: 'Customer' },
   { id: 'collectionFrom', numeric: false, disablePadding: false, label: 'Collection from' },
   { id: 'deliveryTo', numeric: false, disablePadding: false, label: 'Delivery to' },
   { id: 'date', numeric: false, disablePadding: false, label: 'Created' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
   { id: 'submissionSource', numeric: false, disablePadding: false, label: 'Source' },
-  { id: 'submittedBy', numeric: false, disablePadding: false, label: 'Submitted By' },
-  { id: 'assignedCurier', numeric: false, disablePadding: false, label: 'Curier' },
   { id: 'weight', numeric: false, disablePadding: false, label: 'Weight' },
   { id: 'declaredValue', numeric: false, disablePadding: false, label: 'Value' },
   // { id: 'action', numeric: false, disablePadding: false, label: 'Actions' },

@@ -85,28 +85,22 @@ export default function OrdersTable({ data }) {
   function createData(
     id,
     trackingNumber,
-    customer,
     collectionFrom,
     deliveryTo,
     date,
     status,
     submissionSource,
-    submittedBy,
-    assignedCurier,
     weight,
     declaredValue
   ) {
     return {
       id,
       trackingNumber,
-      customer,
       collectionFrom,
       deliveryTo,
       date,
       status,
       submissionSource,
-      submittedBy,
-      assignedCurier,
       weight,
       declaredValue,
     };
@@ -114,17 +108,15 @@ export default function OrdersTable({ data }) {
 
   useEffect(() => {
     const rows = data.map((order) => {
+      console.log(order)
       return createData(
         order._id,
         order.trackingNumber,
-        order.customer,
         order.collectionData?.city || "no address",
         order.deliveryData?.city || "no address",
         order.createdAt,
         order.status,
         order.submissionSource,
-        order.submittedBy,
-        order.assignedCurier,
         order.weight,
         order.declaredValue
       );
@@ -189,14 +181,11 @@ export default function OrdersTable({ data }) {
                       >
                         {row.trackingNumber}
                       </TableCell>
-                      <TableCell align="left">{row.customer}</TableCell>
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
                       <TableCell align="left">{row.date.replace('T', ' ').replace('Z', ' ')}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left">{row.submissionSource}</TableCell>
-                      <TableCell align="left">{row.submittedBy}</TableCell>
-                      <TableCell align="left">{row.assignedCurier}</TableCell>
                       <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.declaredValue}</TableCell>
                       {/* <TableCell align="left">
