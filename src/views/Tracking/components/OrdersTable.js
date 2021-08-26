@@ -108,7 +108,6 @@ export default function OrdersTable({ data }) {
 
   useEffect(() => {
     const rows = data.map((order) => {
-      console.log(order)
       return createData(
         order._id,
         order.trackingNumber,

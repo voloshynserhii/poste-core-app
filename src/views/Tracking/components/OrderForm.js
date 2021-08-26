@@ -63,6 +63,7 @@ const VALIDATE_FORM_ORDER = {
 const OrderForm = ({ onCancel }) => {
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
+  const [customer, setCustomer] = useState({taxNumber: '65363747'});
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -80,9 +81,7 @@ const OrderForm = ({ onCancel }) => {
       ...oldFormState,
       values: {
         ...oldFormState.values,
-        // customer: {
-        //   name: ""
-        // },
+        customer: customer,
         trackingNumber: random(),
         referenceNumber: "",
         declaredValue: "",
@@ -203,17 +202,17 @@ const OrderForm = ({ onCancel }) => {
       <Card className={classes.root}>
         <CardHeader title="Add Order" />
         <CardContent>
-          {/* <TextField
-              label="Customer name"
-              name="name"
-              value={values?.customer?.name || ""}
-              error={fieldHasError("name")}
+          <TextField
+              label="Customer TAX number"
+              name="taxNumber"
+              value={customer?.taxNumber || ""}
+              error={fieldHasError("taxNumber")}
               helperText={
-                fieldGetError("name") || "Display name of the Customer"
+                fieldGetError("taxNumber") || "Display tax number of the Customer"
               }
-              onChange={onFieldChangeCustomer}
+              // onChange={onFieldChangeCustomer}
               {...SHARED_CONTROL_PROPS}
-            /> */}
+            />
           <TextField
             disabled
             label="Tracking number"

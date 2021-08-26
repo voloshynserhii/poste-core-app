@@ -49,6 +49,7 @@ const SingleOrderView = () => {
   const history = useHistory();
   const params = useParams();
   const [loading, setLoading] = useState(false);
+  const [customer, setCustomer] = useState('');
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -65,13 +66,11 @@ const SingleOrderView = () => {
         const res = await api.orders.read(id);
         console.log(res);
         if (res) {
+          setCustomer(res?.customer);
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
               ...oldFormState.values,
-              customer: {
-                name: res?.customer.name || ""
-              },
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
@@ -198,10 +197,9 @@ const SingleOrderView = () => {
             <CardHeader title="Order Details" />
             <CardContent>
               <TextField
-                disabled
                 label="Customer"
                 name="name"
-                value={values?.customer?.name}
+                value={customer?.name || 'undefined'}
                 error={fieldHasError("name")}
                 helperText={
                   fieldGetError("name") ||
