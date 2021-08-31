@@ -3,6 +3,8 @@ import { LinearProgress } from "@material-ui/core";
 
 import AppButton from "../../components/AppButton";
 import api from "../../api";
+import RegisterCustomerForm from "./components/RegisterCustomerForm";
+import CustomersTable from "./components/CustomersTable";
 
 const AllCustomersView = () => {
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,7 @@ const AllCustomersView = () => {
   useEffect(() => {
     async function fetchData() {
       const res = await api.customers.read(); // List of All users
+      console.log(res);
       if (res) {
         setCustomers(res);
       }
@@ -19,21 +22,20 @@ const AllCustomersView = () => {
     }
     fetchData();
   }, []);
-
+  
   const handleAddCustomer = () => {
     setAddCustomer(true);
   };
-  
+  const handleCloseForm = () => {
+    setAddCustomer(false);
+  };
+
   if (loading) return <LinearProgress />;
 
   return (
     <div>
-      {customers?.map((customer, index) => (
-        <div key={customer._id}>
-          <span> {index + 1}. </span>
-          <span>{customer.name}</span>
-        </div>
-      ))}
+      {addCustomer && <RegisterCustomerForm onCancel={handleCloseForm} />}
+      <CustomersTable data={customers} />
       <AppButton color="success" onClick={handleAddCustomer}>
         Add Customer
       </AppButton>

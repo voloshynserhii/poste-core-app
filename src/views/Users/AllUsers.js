@@ -7,7 +7,7 @@ import api from "../../api";
 const AllUsersView = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
-  const [addUser, setAddUser] = useState(false);
+  const [, setAddUser] = useState(false);
 
   useEffect(() => {
     async function fetchData() {

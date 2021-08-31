@@ -63,7 +63,7 @@ const VALIDATE_FORM_ORDER = {
 const OrderForm = ({ onCancel }) => {
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
-  const [customer, setCustomer] = useState({taxNumber: '65363747'});
+  const [customer, ] = useState({taxNumber: '65363747'});
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({

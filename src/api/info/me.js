@@ -1,6 +1,6 @@
-import { api } from '..';
+// import { api } from '..';
 
-const ENDPOINT = 'me';
+// const ENDPOINT = 'me';
 const METHOD = 'me()';
 
 export async function me() {
