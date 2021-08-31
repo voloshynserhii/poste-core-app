@@ -10,6 +10,8 @@ const initialAppState = {
   isAuthenticated: false,
   currentUser: null,
   orders: [],
+  customers: [],
+  users: []
 };
 
 /**

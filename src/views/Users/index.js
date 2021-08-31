@@ -9,7 +9,7 @@ import AllUsersView from './AllUsers';
 const CustomersRoutes = () => {
   return (
     <Switch>
-      {/* <Route path="/customer/:id" component={SingleCustomerView} /> */}
+      {/* <Route path="/user/:id" component={SingleCustomerView} /> */}
       <Route path="/users" component={AllUsersView} />
       <Route component={AllUsersView} />
     </Switch>

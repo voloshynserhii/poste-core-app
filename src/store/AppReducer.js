@@ -37,6 +37,16 @@ const AppReducer = (state, action) => {
         ...state,
         orders: action?.orders || action?.payload,
       };
+    case 'SET_USERS':
+      return {
+        ...state,
+        users: action?.users || action?.payload,
+      };
+    case 'SET_CUSTOMERS':
+      return {
+        ...state,
+        customers: action?.customers || action?.payload,
+      };
     case 'SET_ERROR':
       return {
         ...state,

@@ -1,25 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { LinearProgress } from "@material-ui/core";
 
+import { AppContext } from '../../store'
 import AppButton from "../../components/AppButton";
 import api from "../../api";
+import RegisterUserForm from './components/RegisterUserForm';
+import UsersTable from './components/UsersTable';
 
 const AllUsersView = () => {
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useState([]);
-  const [, setAddUser] = useState(false);
+  const [addUser, setAddUser] = useState(false);
+  const [state, dispatch] = useContext(AppContext);
 
   useEffect(() => {
     async function fetchData() {
       const res = await api.users.read(); // List of All users
       if (res) {
-        setUsers(res);
+        dispatch({ type: 'SET_USERS', users: res });
       }
       setLoading(false);
     }
     fetchData();
-  }, []);
-
+  }, [dispatch]);
+  
+  const handleCloseForm = () => {
+    setAddUser(false);
+  };
+  
   const handleAddUser = () => {
     setAddUser(true);
   };
@@ -28,12 +35,8 @@ const AllUsersView = () => {
 
   return (
     <div>
-      {users?.map((user, index) => (
-        <div key={user._id}>
-          <span> {index + 1}. </span>
-          <span>{user.name}</span>
-        </div>
-      ))}
+      {addUser && <RegisterUserForm onCancel={handleCloseForm} />}
+      <UsersTable data={state.users} />
       <AppButton color="success" onClick={handleAddUser}>
         Add User
       </AppButton>

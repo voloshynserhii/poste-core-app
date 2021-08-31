@@ -15,13 +15,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomersToolbar = (props) => {
+const UsersToolbar = (props) => {
   const classes = useToolbarStyles();
 
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-        Customers List
+        Users List
       </Typography>
       <Tooltip title="Filter list">
         <IconButton aria-label="filter list" onClick={props.onFilter}>
@@ -32,4 +32,4 @@ const CustomersToolbar = (props) => {
   );
 };
 
-export default CustomersToolbar;
+export default UsersToolbar;

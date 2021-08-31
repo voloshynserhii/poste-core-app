@@ -1,10 +1,10 @@
 import { api } from '../';
 
 async function collectionCreate(payload) {
-  const newUser = JSON.stringify(payload);
-  console.log(newUser);
+  const newCustomer = JSON.stringify(payload);
+  console.log(newCustomer);
   await api.axios.post(`${process.env.REACT_APP_API_URL}/api/customers`, {
-    body: newUser,
+    body: newCustomer,
     headers: {
       'Content-Type': 'application/json',
     },

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { LinearProgress } from "@material-ui/core";
 
+import { AppContext } from '../../store'
 import AppButton from "../../components/AppButton";
 import api from "../../api";
 import RegisterCustomerForm from "./components/RegisterCustomerForm";
@@ -8,20 +9,19 @@ import CustomersTable from "./components/CustomersTable";
 
 const AllCustomersView = () => {
   const [loading, setLoading] = useState(true);
-  const [customers, setCustomers] = useState([]);
   const [addCustomer, setAddCustomer] = useState(false);
+  const [state, dispatch] = useContext(AppContext);
 
   useEffect(() => {
     async function fetchData() {
       const res = await api.customers.read(); // List of All users
-      console.log(res);
       if (res) {
-        setCustomers(res);
+        dispatch({ type: 'SET_CUSTOMERS', customers: res });
       }
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [dispatch]);
   
   const handleAddCustomer = () => {
     setAddCustomer(true);
@@ -35,7 +35,7 @@ const AllCustomersView = () => {
   return (
     <div>
       {addCustomer && <RegisterCustomerForm onCancel={handleCloseForm} />}
-      <CustomersTable data={customers} />
+      <CustomersTable data={state.customers} />
       <AppButton color="success" onClick={handleAddCustomer}>
         Add Customer
       </AppButton>
