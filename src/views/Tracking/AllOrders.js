@@ -13,15 +13,19 @@ const AllOrdersView = () => {
   const [state, dispatch] = useContext(AppContext);
 
   useEffect(() => {
-    async function fetchData() {
-      const res = await api.orders.read(); // List of All orders
-      if (res) {
-        dispatch({ type: 'SET_ORDERS', orders: res });
+    if (state.orders.length) {
+      setLoading(false)
+    } else {
+      async function fetchData() {
+        const res = await api.orders.read(); // List of All orders
+        if (res) {
+          dispatch({ type: 'SET_ORDERS', orders: res });
+          setLoading(false);
+        } 
       }
-      setLoading(false);
-    }
-    fetchData();
-  }, [dispatch]);
+      fetchData();
+    };
+  }, [dispatch, state.orders.length]);
 
   const handleAddOrder = () => {
     setAddOrder(true);

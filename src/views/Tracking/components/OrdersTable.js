@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -8,9 +8,10 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+
+import { AppContext } from "../../../store";
 import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "calc(100vw - 256px)",
     overflow: "hidden",
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       width: "100vw",
     },
   },
@@ -66,25 +67,27 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   red: {
-    background: 'rgba(255,0,0,.2)'
+    background: "rgba(255,0,0,.2)",
   },
   green: {
-    background: 'rgba(0,128,0,.2)'
-  }
+    background: "rgba(0,128,0,.2)",
+  },
 }));
 
 export default function OrdersTable({ data }) {
+  const [state] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("balance");
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, ] = React.useState(10);
+  const [rowsPerPage] = React.useState(10);
 
   function createData(
     id,
     trackingNumber,
+    customer,
     collectionFrom,
     deliveryTo,
     date,
@@ -96,6 +99,7 @@ export default function OrdersTable({ data }) {
     return {
       id,
       trackingNumber,
+      customer,
       collectionFrom,
       deliveryTo,
       date,
@@ -108,9 +112,11 @@ export default function OrdersTable({ data }) {
 
   useEffect(() => {
     const rows = data.map((order) => {
+      const customer = state.customers.find((c) => c._id === order.customer);
       return createData(
         order._id,
         order.trackingNumber,
+        customer?.name || "no customer",
         order.collectionData?.city || "no address",
         order.deliveryData?.city || "no address",
         order.createdAt,
@@ -121,7 +127,7 @@ export default function OrdersTable({ data }) {
       );
     });
     setRows(rows.reverse());
-  }, [data]);
+  }, [data, state.customers]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -165,7 +171,13 @@ export default function OrdersTable({ data }) {
 
                   return (
                     <TableRow
-                      className={row.status === 'Cancelled' ? classes.red : (row.status === 'Pending' ? classes.green : null)}
+                      className={
+                        row.status === "Cancelled"
+                          ? classes.red
+                          : row.status === "Pending"
+                          ? classes.green
+                          : null
+                      }
                       hover
                       style={{ cursor: "pointer" }}
                       key={row.id}
@@ -180,9 +192,12 @@ export default function OrdersTable({ data }) {
                       >
                         {row.trackingNumber}
                       </TableCell>
+                      <TableCell align="left">{row.customer}</TableCell>
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
-                      <TableCell align="left">{row.date.replace('T', ' ').replace('Z', ' ')}</TableCell>
+                      <TableCell align="left">
+                        {row.date.replace("T", " ").replace("Z", " ")}
+                      </TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left">{row.submissionSource}</TableCell>
                       <TableCell align="left">{row.weight}</TableCell>

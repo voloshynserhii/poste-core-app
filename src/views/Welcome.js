@@ -1,12 +1,12 @@
-import React from 'react';
 import Grid from '@material-ui/core/Grid';
+
 import { FinalMessage } from '../components';
 
 /**
  * Renders Welcome page/view
  * Url: /welcome and /
  */
-const Welcome = () => {
+const Welcome = () => {  
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>

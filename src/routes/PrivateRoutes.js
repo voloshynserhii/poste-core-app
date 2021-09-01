@@ -1,4 +1,9 @@
+import React, {useState, useEffect, useContext} from 'react';
+import { LinearProgress } from "@material-ui/core";
 import { Route, Switch } from 'react-router-dom';
+
+import { AppContext } from '../store';
+import api from "../api";
 import SharedRoutes from './SharedRoutes';
 import { PrivateLayout } from './Layout';
 // import UserRoutes from '../views/User';
@@ -12,6 +17,30 @@ import { Welcome, MyProfile } from '../views';
  * Also renders the "Layout" composition for logged users
  */
 const PrivateRoutes = () => {
+  const [, dispatch] = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    async function fetchData() {
+      const orders = await api.orders.read(); // List of All orders
+      const customers = await api.customers.read(); // List of All customers
+      const users = await api.users.read(); // List of All users
+      if (orders) {
+        dispatch({ type: 'SET_ORDERS', orders: orders });
+      }
+      if (customers) {
+        dispatch({ type: 'SET_CUSTOMERS', customers: customers });
+      }
+      if (users) {
+        dispatch({ type: 'SET_USERS', users: users });
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, [dispatch]);
+  
+  if (loading) return <LinearProgress />;
+  
   return (
     <PrivateLayout>
       <Switch>

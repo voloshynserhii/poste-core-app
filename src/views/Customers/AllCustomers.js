@@ -11,17 +11,21 @@ const AllCustomersView = () => {
   const [loading, setLoading] = useState(true);
   const [addCustomer, setAddCustomer] = useState(false);
   const [state, dispatch] = useContext(AppContext);
-
+  
   useEffect(() => {
-    async function fetchData() {
-      const res = await api.customers.read(); // List of All users
-      if (res) {
-        dispatch({ type: 'SET_CUSTOMERS', customers: res });
+    if (state.customers.length) {
+      setLoading(false)
+    } else {
+      async function fetchData() {
+        const res = await api.customers.read(); // List of All customers
+        if (res) {
+          dispatch({ type: 'SET_CUSTOMERS', customers: res });
+          setLoading(false);
+        } 
       }
-      setLoading(false);
-    }
-    fetchData();
-  }, [dispatch]);
+      fetchData();
+    };
+  }, [dispatch, state.customers.length]);
   
   const handleAddCustomer = () => {
     setAddCustomer(true);

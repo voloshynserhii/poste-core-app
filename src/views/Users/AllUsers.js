@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { LinearProgress } from "@material-ui/core";
 
 import { AppContext } from '../../store'
-import AppButton from "../../components/AppButton";
 import api from "../../api";
+import AppButton from "../../components/AppButton";
 import RegisterUserForm from './components/RegisterUserForm';
 import UsersTable from './components/UsersTable';
 
@@ -13,15 +13,19 @@ const AllUsersView = () => {
   const [state, dispatch] = useContext(AppContext);
 
   useEffect(() => {
-    async function fetchData() {
-      const res = await api.users.read(); // List of All users
-      if (res) {
-        dispatch({ type: 'SET_USERS', users: res });
+    if (state.users.length) {
+      setLoading(false)
+    } else {
+      async function fetchData() {
+        const res = await api.users.read(); // List of All users
+        if (res) {
+          dispatch({ type: 'SET_USERS', users: res });
+          setLoading(false);
+        } 
       }
-      setLoading(false);
-    }
-    fetchData();
-  }, [dispatch]);
+      fetchData();
+    };
+  }, [dispatch, state.users.length]);
   
   const handleCloseForm = () => {
     setAddUser(false);
