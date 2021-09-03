@@ -52,7 +52,7 @@ function updateDocumentTitle(title = '') {
  */
 const SIDE_BAR_PRIVATE_ITEMS = [
   {
-    title: 'Download data',
+    title: 'Home',
     href: '/',
     icon: 'home',
   },

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import {
   makeStyles,
   Grid,
@@ -8,6 +8,7 @@ import {
   CardContent,
 } from "@material-ui/core";
 
+import { AppContext } from "../../../store";
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
@@ -61,9 +62,10 @@ const VALIDATE_FORM_ORDER = {
 };
 
 const OrderForm = ({ onCancel }) => {
+  const [state] = useContext(AppContext);
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
-  const [customer, ] = useState({taxNumber: '65363747'});
+  const [foundCustomer, setFoundCustomer] = useState({});
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -81,7 +83,9 @@ const OrderForm = ({ onCancel }) => {
       ...oldFormState,
       values: {
         ...oldFormState.values,
-        customer: customer,
+        customer: {
+          taxId: "",
+        },
         trackingNumber: random(),
         referenceNumber: "",
         declaredValue: "",
@@ -108,15 +112,19 @@ const OrderForm = ({ onCancel }) => {
         },
       },
     }));
-  }, [setFormState, customer]);
+  }, [setFormState]);
 
   useEffect(() => {
     formOrder();
   }, [formOrder]);
 
   const saveRecord = async () => {
+    const savedOrder = {
+      ...formState.values,
+      customer: foundCustomer._id,
+    };
     // save changes in BD
-    await api.orders.create("orders", formState.values);
+    await api.orders.create(savedOrder);
     setOrderSaved(true);
   };
   const handleSave = () => {
@@ -124,12 +132,11 @@ const OrderForm = ({ onCancel }) => {
     saveRecord();
     return;
   };
-  
+
   const onFieldChangeCollection = useCallback(
     (event) => {
       const name = event.target?.name;
       const value = event.target?.value;
-      console.log(name, value);
 
       setFormState((formState) => ({
         ...formState,
@@ -171,29 +178,36 @@ const OrderForm = ({ onCancel }) => {
     },
     [setFormState]
   );
-  
-  // const onFieldChangeCustomer = useCallback(
-  //   (event) => {
-  //     const name = event.target?.name;
-  //     const value = event.target?.value;
 
-  //     setFormState((formState) => ({
-  //       ...formState,
-  //       values: {
-  //         ...formState.values,
-  //         customer: {
-  //           ...formState.values.customer,
-  //           [name]: value,
-  //         },
-  //       },
-  //       touched: {
-  //         ...formState.touched,
-  //         [name]: true,
-  //       },
-  //     }));
-  //   },
-  //   [setFormState]
-  // );
+  const onFieldChangeCustomer = useCallback(
+    (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+
+      const existingCustomer = state?.customers?.find(
+        (customer) => customer.taxId === value
+      );
+      if (existingCustomer) {
+        alert(`Customer ${existingCustomer.name} found in DATABASE`);
+        setFoundCustomer(existingCustomer);
+      }
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          customer: {
+            ...formState.values.customer,
+            [name]: value,
+          },
+        },
+        touched: {
+          ...formState.touched,
+          [name]: true,
+        },
+      }));
+    },
+    [setFormState, state?.customers]
+  );
 
   if (orderSaved) return null;
 
@@ -203,16 +217,16 @@ const OrderForm = ({ onCancel }) => {
         <CardHeader title="Add Order" />
         <CardContent>
           <TextField
-              label="Customer TAX number"
-              name="taxNumber"
-              value={customer?.taxNumber || ""}
-              error={fieldHasError("taxNumber")}
-              helperText={
-                fieldGetError("taxNumber") || "Display tax number of the Customer"
-              }
-              // onChange={onFieldChangeCustomer}
-              {...SHARED_CONTROL_PROPS}
-            />
+            label="Customer TAX ID"
+            name="taxId"
+            value={values.customer?.taxId || ""}
+            error={fieldHasError("taxId")}
+            helperText={
+              fieldGetError("taxId") || "Display tax ID of the Customer"
+            }
+            onChange={onFieldChangeCustomer}
+            {...SHARED_CONTROL_PROPS}
+          />
           <TextField
             disabled
             label="Tracking number"

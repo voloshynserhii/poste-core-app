@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   Grid,
@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
+import { AppContext } from "../../store";
 import api from "../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
@@ -48,8 +49,9 @@ const VALIDATE_FORM_ORDER = {
 const SingleOrderView = () => {
   const history = useHistory();
   const params = useParams();
+  const [state] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
-  const [customer, setCustomer] = useState('');
+  const [customer, setCustomer] = useState("");
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -196,17 +198,39 @@ const SingleOrderView = () => {
           <Card>
             <CardHeader title="Order Details" />
             <CardContent>
-              <TextField
-                label="Customer"
-                name="name"
-                value={customer?.name || 'undefined'}
-                error={fieldHasError("name")}
-                helperText={
-                  fieldGetError("name") ||
-                  "Display the name of a customer"
-                }
-                {...SHARED_CONTROL_PROPS}
-              />
+              {customer?.name ? (
+                <TextField
+                  label="Customer"
+                  name="name"
+                  value={customer?.name}
+                  error={fieldHasError("name")}
+                  helperText={
+                    fieldGetError("name") || "Display the name of a customer"
+                  }
+                  {...SHARED_CONTROL_PROPS}
+                />
+              ) : (
+                <TextField
+                  select
+                  required
+                  label="Customer"
+                  name="customer"
+                  defaultValue={""}
+                  error={fieldHasError("customer")}
+                  helperText={
+                    fieldGetError("customer") ||
+                    "Display the name of a customer"
+                  }
+                  onChange={onFieldChange}
+                  {...SHARED_CONTROL_PROPS}
+                >
+                  {state.customers?.map((option) => (
+                    <MenuItem key={option.name} value={option.name}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
               <TextField
                 disabled
                 label="Tracking number"
@@ -238,7 +262,7 @@ const SingleOrderView = () => {
                 required
                 label="Status"
                 name="status"
-                value={values?.status || ''}
+                value={values?.status || ""}
                 error={fieldHasError("status")}
                 helperText={
                   fieldGetError("status") || "Display status of the Order"
@@ -275,13 +299,7 @@ const SingleOrderView = () => {
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
-              >
-                {statuses.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              />
               <TextField
                 label="Dimensions"
                 name="dimensions"

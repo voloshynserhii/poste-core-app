@@ -188,11 +188,11 @@ export default function OrdersTable({ data }) {
                         component="th"
                         id={labelId}
                         scope="row"
-                        padding="none"
+                        // padding="none"
                       >
                         {row.trackingNumber}
                       </TableCell>
-                      <TableCell align="left">{row.customer}</TableCell>
+                      <TableCell align="left" padding="none">{row.customer}</TableCell>
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
                       <TableCell align="left">
