@@ -19,7 +19,6 @@ const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = fals
   const history = useHistory();
 
   const updateRecord = async () => {
-    console.log(payload, id)
     await api.users.update(id, payload);
   };
 

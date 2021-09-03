@@ -3,7 +3,7 @@ import AllOrdersView from './AllOrders';
 import SingleOrderView from './SingleOrder';
 
 /**
- * Routes for "Users" view
+ * Routes for "Orders" view
  * url: /tracking/*
  */
 const TrackingRoutes = () => {

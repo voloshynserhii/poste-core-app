@@ -1,19 +1,19 @@
 import { Route, Switch } from 'react-router-dom';
 import AllUsersView from './AllUsers';
-// import SingleCustomerView from './SingleCustomer';
+import SingleUserView from './SingleUser';
 
 /**
  * Routes for "Users" view
  * url: /users/*
  */
-const CustomersRoutes = () => {
+const UsersRoutes = () => {
   return (
     <Switch>
-      {/* <Route path="/user/:id" component={SingleCustomerView} /> */}
-      <Route path="/users" component={AllUsersView} />
+      <Route path="/user/:id" component={SingleUserView} />
+      <Route path="/user" component={AllUsersView} />
       <Route component={AllUsersView} />
     </Switch>
   );
 };
 
-export default CustomersRoutes;
+export default UsersRoutes;

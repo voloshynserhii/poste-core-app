@@ -6,6 +6,8 @@ import {
   Card,
   CardHeader,
   CardContent,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 
 import api from "../../../api";
@@ -45,17 +47,15 @@ const VALIDATE_FORM_USER = {
   email: {
     type: "string",
     presence: { allowEmpty: false },
-  },
-  role: {
-    type: "string",
-    presence: { allowEmpty: false },
   }
 };
 
 const RegisterUserForm = ({ onCancel }) => {
   const classes = userForm();
   const [userSaved, setUserSaved] = useState(false);
-
+  const [curier, setCurier] = useState(false);
+  const [dispatcher, setDispatcher] = useState(false);
+  
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
       validationSchema: VALIDATE_FORM_USER,
@@ -71,7 +71,6 @@ const RegisterUserForm = ({ onCancel }) => {
         name: "",
         email: "",
         phone: "",
-        role: "",
       },
     }));
   }, [setFormState]);
@@ -115,9 +114,7 @@ const RegisterUserForm = ({ onCancel }) => {
             value={values?.email}
             defaultValue={values.email}
             error={fieldHasError("email")}
-            helperText={
-              fieldGetError("email") || "Display email of the user"
-            }
+            helperText={fieldGetError("email") || "Display email of the user"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
@@ -126,22 +123,41 @@ const RegisterUserForm = ({ onCancel }) => {
             name="phone"
             value={values?.phone}
             error={fieldHasError("phone")}
-            helperText={
-              fieldGetError("phone") || "Display phone of the user"
-            }
+            helperText={fieldGetError("phone") || "Display phone of the user"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
-          <TextField
-            label="Role"
-            name="role"
-            value={values?.role}
-            error={fieldHasError("role")}
-            helperText={
-              fieldGetError("role") || "Display role of the user"
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={curier}
+                onChange={() => {
+                  setCurier(old => !old)
+                  if(dispatcher) {
+                    setDispatcher(false)
+                  }
+                }}
+                name="curier"
+                color="primary"
+              />
             }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
+            label="Curier"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={dispatcher}
+                onChange={() => {
+                  setDispatcher(prev => !prev)
+                  if (curier) {
+                    setCurier(false)
+                  }
+                }}
+                name="curier"
+                color="primary"
+              />
+            }
+            label="Dispatcher"
           />
           <Grid container justifyContent="center" alignItems="center">
             <AppButton onClick={onCancel}>Cancel</AppButton>

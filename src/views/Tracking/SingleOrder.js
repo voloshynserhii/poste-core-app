@@ -51,7 +51,12 @@ const SingleOrderView = () => {
   const params = useParams();
   const [state] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
-  const [customer, setCustomer] = useState("");
+  const [customer, setCustomer] = useState({});
+  const [assignedCurier, setAssignedCurier] = useState({});
+  const [dispatcher, setDispatcher] = useState({});
+  const [lastModifiedBy, setLastModifiedBy] = useState({});
+  const [submittedBy, setSubmittedBy] = useState({});
+
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -69,6 +74,10 @@ const SingleOrderView = () => {
         console.log(res);
         if (res) {
           setCustomer(res?.customer);
+          setAssignedCurier(res?.assignedCurier);
+          setDispatcher(res?.dispatcher);
+          setLastModifiedBy(res?.lastModifiedBy);
+          setSubmittedBy(res?.submittedBy);
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
@@ -141,7 +150,6 @@ const SingleOrderView = () => {
     (event) => {
       const name = event.target?.name;
       const value = event.target?.value;
-      console.log(name, value);
 
       setFormState((formState) => ({
         ...formState,
@@ -200,6 +208,7 @@ const SingleOrderView = () => {
             <CardContent>
               {customer?.name ? (
                 <TextField
+                  disabled
                   label="Customer"
                   name="name"
                   value={customer?.name}
@@ -231,6 +240,26 @@ const SingleOrderView = () => {
                   ))}
                 </TextField>
               )}
+              <TextField
+                select
+                required
+                label="Assigned Curier"
+                name="assignedCurier"
+                defaultValue={""}
+                error={fieldHasError("assignedCurier")}
+                helperText={
+                  fieldGetError("assignedCurier") ||
+                  "Display the name of assigned curier"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              >
+                {state.users?.map((option) => (
+                  <MenuItem key={option.name} value={option.name}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
               <TextField
                 disabled
                 label="Tracking number"

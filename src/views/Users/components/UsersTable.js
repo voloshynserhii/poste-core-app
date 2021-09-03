@@ -124,8 +124,8 @@ export default function UsersTable({ data }) {
     setPage(newPage);
   };
 
-  const handleSingleCustomerView = (id) => {
-    history.push(`customer/${id}`);
+  const handleSingleUserView = (id) => {
+    history.push(`user/${id}`);
   };
 
   const emptyRows =
@@ -160,7 +160,7 @@ export default function UsersTable({ data }) {
                       hover
                       style={{ cursor: "pointer" }}
                       key={row.id}
-                      onClick={() => handleSingleCustomerView(row.id)}
+                      onClick={() => handleSingleUserView(row.id)}
                     >
                       <TableCell>{index + 1}</TableCell>
                       <TableCell

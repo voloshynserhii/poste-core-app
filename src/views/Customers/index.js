@@ -3,8 +3,8 @@ import AllCustomersView from './AllCustomers';
 import SingleCustomerView from './SingleCustomer';
 
 /**
- * Routes for "Users" view
- * url: /user/*
+ * Routes for "Customers" view
+ * url: /customer/*
  */
 const CustomersRoutes = () => {
   return (
