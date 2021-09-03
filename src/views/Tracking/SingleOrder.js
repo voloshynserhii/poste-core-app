@@ -55,7 +55,8 @@ const SingleOrderView = () => {
   const [assignedCurier, setAssignedCurier] = useState({});
   const [dispatcher, setDispatcher] = useState({});
   const [lastModifiedBy, setLastModifiedBy] = useState({});
-  const [submittedBy, setSubmittedBy] = useState({});
+
+  console.log(dispatcher, lastModifiedBy);
 
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
@@ -77,11 +78,17 @@ const SingleOrderView = () => {
           setAssignedCurier(res?.assignedCurier);
           setDispatcher(res?.dispatcher);
           setLastModifiedBy(res?.lastModifiedBy);
-          setSubmittedBy(res?.submittedBy);
+
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
               ...oldFormState.values,
+              customer: {
+                _id: res?.customer?._id || "",
+              },
+              assignedCurier: {
+                _id: res?.assignedCurier?._id || "",
+              },
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
@@ -224,7 +231,7 @@ const SingleOrderView = () => {
                   required
                   label="Customer"
                   name="customer"
-                  defaultValue={""}
+                  defaultValue=""
                   error={fieldHasError("customer")}
                   helperText={
                     fieldGetError("customer") ||
@@ -234,7 +241,7 @@ const SingleOrderView = () => {
                   {...SHARED_CONTROL_PROPS}
                 >
                   {state.customers?.map((option) => (
-                    <MenuItem key={option.name} value={option.name}>
+                    <MenuItem key={option.name} value={option._id}>
                       {option.name}
                     </MenuItem>
                   ))}
@@ -245,7 +252,7 @@ const SingleOrderView = () => {
                 required
                 label="Assigned Curier"
                 name="assignedCurier"
-                defaultValue={""}
+                defaultValue={assignedCurier._id}
                 error={fieldHasError("assignedCurier")}
                 helperText={
                   fieldGetError("assignedCurier") ||
@@ -255,7 +262,7 @@ const SingleOrderView = () => {
                 {...SHARED_CONTROL_PROPS}
               >
                 {state.users?.map((option) => (
-                  <MenuItem key={option.name} value={option.name}>
+                  <MenuItem key={option.name} value={option._id}>
                     {option.name}
                   </MenuItem>
                 ))}
