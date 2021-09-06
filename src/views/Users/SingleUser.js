@@ -6,7 +6,7 @@ import {
   Card,
   CardHeader,
   CardContent,
-  LinearProgress
+  LinearProgress,
 } from "@material-ui/core";
 
 import api from "../../api";
@@ -14,7 +14,6 @@ import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
 import UpdateButton from "./components/UpdateButton";
-
 
 const VALIDATE_FORM_USER = {
   name: {
@@ -28,7 +27,7 @@ const VALIDATE_FORM_USER = {
   phone: {
     type: "string",
     presence: { allowEmpty: true },
-  }
+  },
 };
 
 const SingleUserView = () => {
@@ -58,6 +57,9 @@ const SingleUserView = () => {
               name: res?.name || "",
               email: res?.email || "",
               phone: res?.phone || "",
+              password: "",
+              confirmPassword: "",
+              role: res?.role || "",
             },
           }));
         } else {
@@ -95,8 +97,7 @@ const SingleUserView = () => {
     }
     alert(res.data.message);
   };
-
-
+  
   if (loading) return <LinearProgress />;
 
   return (
@@ -109,17 +110,14 @@ const SingleUserView = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={9}>
           <Card>
-            <CardHeader title="User Details" />
+            <CardHeader title={`${values?.role?.toUpperCase()} DETAILS`} />
             <CardContent>
               <TextField
                 label="Name"
                 name="name"
                 value={values?.name}
                 error={fieldHasError("name")}
-                helperText={
-                  fieldGetError("name") ||
-                  "Display name of the User"
-                }
+                helperText={fieldGetError("name") || "Display name of the User"}
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
@@ -129,8 +127,7 @@ const SingleUserView = () => {
                 value={values?.email}
                 error={fieldHasError("email")}
                 helperText={
-                  fieldGetError("email") ||
-                  "Display email of the User"
+                  fieldGetError("email") || "Display email of the User"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
@@ -141,8 +138,33 @@ const SingleUserView = () => {
                 value={values?.phone}
                 error={fieldHasError("phone")}
                 helperText={
-                  fieldGetError("phone") ||
-                  "Display phone of the User"
+                  fieldGetError("phone") || "Display phone of the User"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              <TextField
+                required
+                label="New password"
+                name="password"
+                value={values?.password}
+                defaultValue={values.password}
+                error={fieldHasError("password")}
+                helperText={
+                  fieldGetError("password") || "Provide a new password of the user"
+                }
+                onChange={onFieldChange}
+                {...SHARED_CONTROL_PROPS}
+              />
+              <TextField
+                required
+                label="Confirm password"
+                name="confirmPassword"
+                value={values?.confirmPassword}
+                defaultValue={values.confirmPassword}
+                error={fieldHasError("confirmPassword")}
+                helperText={
+                  fieldGetError("confirmPassword") || "Confirm a new password of the user"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}

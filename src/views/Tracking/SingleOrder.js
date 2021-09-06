@@ -56,8 +56,6 @@ const SingleOrderView = () => {
   const [dispatcher, setDispatcher] = useState({});
   const [lastModifiedBy, setLastModifiedBy] = useState({});
 
-  console.log(dispatcher, lastModifiedBy);
-
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -261,7 +259,7 @@ const SingleOrderView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               >
-                {state.users?.map((option) => (
+                {state.users?.filter(user => user.role === "curier").map((option) => (
                   <MenuItem key={option.name} value={option._id}>
                     {option.name}
                   </MenuItem>

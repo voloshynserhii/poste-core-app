@@ -38,16 +38,20 @@ const userForm = makeStyles((theme) => ({
 const VALIDATE_FORM_USER = {
   name: {
     type: "string",
-    presence: { allowEmpty: true },
+    presence: { allowEmpty: false },
   },
   phone: {
     type: "string",
-    presence: { allowEmpty: false },
+    presence: { allowEmpty: true },
   },
   email: {
     type: "string",
     presence: { allowEmpty: false },
-  }
+  },  
+  password: {
+    type: "string",
+    presence: { allowEmpty: false },
+  },
 };
 
 const RegisterUserForm = ({ onCancel }) => {
@@ -55,7 +59,7 @@ const RegisterUserForm = ({ onCancel }) => {
   const [userSaved, setUserSaved] = useState(false);
   const [curier, setCurier] = useState(false);
   const [dispatcher, setDispatcher] = useState(false);
-  
+
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
       validationSchema: VALIDATE_FORM_USER,
@@ -70,6 +74,7 @@ const RegisterUserForm = ({ onCancel }) => {
         ...oldFormState.values,
         name: "",
         email: "",
+        password: "",
         phone: "",
       },
     }));
@@ -80,8 +85,16 @@ const RegisterUserForm = ({ onCancel }) => {
   }, [formUser]);
 
   const saveRecord = async () => {
+    let role;
+    if (curier) role = "curier";
+    if (dispatcher) role = "dispatcher";
+    
+    const newUser = {
+      ...formState.values,
+      role: role,
+    }
     // save changes in BD
-    await api.users.create(formState.values);
+    await api.users.create(newUser);
     setUserSaved(true);
   };
   const handleSave = () => {
@@ -103,7 +116,7 @@ const RegisterUserForm = ({ onCancel }) => {
             name="name"
             value={values?.name}
             error={fieldHasError("name")}
-            helperText={fieldGetError("name") || "Display name of the user"}
+            helperText={fieldGetError("name") || "Provide a name of the user"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
@@ -114,7 +127,18 @@ const RegisterUserForm = ({ onCancel }) => {
             value={values?.email}
             defaultValue={values.email}
             error={fieldHasError("email")}
-            helperText={fieldGetError("email") || "Display email of the user"}
+            helperText={fieldGetError("email") || "Provide email of the user"}
+            onChange={onFieldChange}
+            {...SHARED_CONTROL_PROPS}
+          />
+          <TextField
+            required
+            label="Password"
+            name="password"
+            value={values?.password}
+            defaultValue={values.password}
+            error={fieldHasError("password")}
+            helperText={fieldGetError("password") || "Provide a password of the user"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
@@ -123,7 +147,7 @@ const RegisterUserForm = ({ onCancel }) => {
             name="phone"
             value={values?.phone}
             error={fieldHasError("phone")}
-            helperText={fieldGetError("phone") || "Display phone of the user"}
+            helperText={fieldGetError("phone") || "Provide a phone of the user"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
@@ -132,9 +156,9 @@ const RegisterUserForm = ({ onCancel }) => {
               <Checkbox
                 checked={curier}
                 onChange={() => {
-                  setCurier(old => !old)
-                  if(dispatcher) {
-                    setDispatcher(false)
+                  setCurier((old) => !old);
+                  if (dispatcher) {
+                    setDispatcher(false);
                   }
                 }}
                 name="curier"
@@ -148,9 +172,9 @@ const RegisterUserForm = ({ onCancel }) => {
               <Checkbox
                 checked={dispatcher}
                 onChange={() => {
-                  setDispatcher(prev => !prev)
+                  setDispatcher((prev) => !prev);
                   if (curier) {
-                    setCurier(false)
+                    setCurier(false);
                   }
                 }}
                 name="curier"
