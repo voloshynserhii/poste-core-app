@@ -88,46 +88,53 @@ export default function OrdersTable({ data }) {
     id,
     trackingNumber,
     customer,
+    assignedCurier,
     collectionFrom,
     deliveryTo,
-    date,
     status,
     submissionSource,
     weight,
-    declaredValue
+    declaredValue,
+    date,
+    updateDate
   ) {
     return {
       id,
       trackingNumber,
       customer,
+      assignedCurier,
       collectionFrom,
       deliveryTo,
-      date,
       status,
       submissionSource,
       weight,
       declaredValue,
+      date,
+      updateDate
     };
   }
 
   useEffect(() => {
     const rows = data.map((order) => {
-      const customer = state.customers.find((c) => c._id === order.customer);
+      const customer = state.customers?.find((c) => c._id === order.customer);
+      const assignedCurier = state.users?.find((c) => c._id === order.assignedCurier);
       return createData(
         order._id,
         order.trackingNumber,
         customer?.name || "no customer",
+        assignedCurier?.name || "no assigned curier",
         order.collectionData?.city || "no address",
         order.deliveryData?.city || "no address",
+        order.status || "no status",
+        order.submissionSource || "no submission source",
+        order.weight || 0,
+        order.declaredValue || 0,
         order.createdAt,
-        order.status,
-        order.submissionSource,
-        order.weight,
-        order.declaredValue
+        order.updateDate
       );
     });
     setRows(rows.reverse());
-  }, [data, state.customers]);
+  }, [data, state.customers, state.assignedCurier]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -192,16 +199,20 @@ export default function OrdersTable({ data }) {
                       >
                         {row.trackingNumber}
                       </TableCell>
-                      <TableCell align="left" padding="none">{row.customer}</TableCell>
+                      <TableCell style={{ minWidth: 200 }} align="left" padding="none">{row.customer}</TableCell>
+                      <TableCell style={{ minWidth: 200 }} align="left" padding="none">{row.assignedCurier}</TableCell>
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
-                      <TableCell align="left">
-                        {row.date.replace("T", " ").replace("Z", " ")}
-                      </TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left">{row.submissionSource}</TableCell>
                       <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.declaredValue}</TableCell>
+                      <TableCell align="left">
+                        {row.date.replace("T", " ").replace("Z", " ").slice(0, 16)}
+                      </TableCell>
+                      <TableCell align="left">
+                        {row.updateDate.replace("T", " ").replace("Z", " ").slice(0, 16)}
+                      </TableCell>
                       {/* <TableCell align="left">
                         <AppButton
                           color="error"
