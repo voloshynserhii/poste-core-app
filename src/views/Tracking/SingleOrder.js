@@ -53,8 +53,8 @@ const SingleOrderView = () => {
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState({});
   const [assignedCurier, setAssignedCurier] = useState({});
-  const [dispatcher, setDispatcher] = useState({});
-  const [lastModifiedBy, setLastModifiedBy] = useState({});
+  const [, setDispatcher] = useState({});
+  const [, setLastModifiedBy] = useState({});
 
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =

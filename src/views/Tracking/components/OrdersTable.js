@@ -134,7 +134,7 @@ export default function OrdersTable({ data }) {
       );
     });
     setRows(rows.reverse());
-  }, [data, state.customers, state.assignedCurier]);
+  }, [data, state.customers, state.users]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
