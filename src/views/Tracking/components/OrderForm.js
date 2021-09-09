@@ -12,6 +12,7 @@ import { AppContext } from "../../../store";
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
+import AppAlert from '../../../components/AppAlert';
 
 const orderForm = makeStyles((theme) => ({
   root: {
@@ -27,27 +28,11 @@ const orderForm = makeStyles((theme) => ({
 }));
 
 const VALIDATE_FORM_ORDER = {
-  referenceNumber: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
   weight: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  dimensions: {
     type: "string",
     presence: { allowEmpty: false },
   },
   declaredValue: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  comments: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  description: {
     type: "string",
     presence: { allowEmpty: true },
   },
@@ -57,7 +42,7 @@ const OrderForm = ({ onCancel }) => {
   const [state] = useContext(AppContext);
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
-  const [foundCustomer, setFoundCustomer] = useState({});
+  const [foundCustomer, setFoundCustomer] = useState(null);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -111,13 +96,20 @@ const OrderForm = ({ onCancel }) => {
   }, [formOrder]);
 
   const saveRecord = async () => {
-    const savedOrder = {
-      ...formState.values,
-      customer: foundCustomer._id,
-    };
-    // save changes in BD
-    await api.orders.create(savedOrder);
-    setOrderSaved(true);
+    if (foundCustomer) {
+      const savedOrder = {
+        ...formState.values,
+        customer: foundCustomer._id,
+      };
+      // save changes in BD
+      await api.orders.create(savedOrder);
+      setOrderSaved(true);
+    } else {
+      return (
+        <AppAlert severity="No customer found in DB"/>
+      )
+    }
+
   };
   const handleSave = () => {
     // Save without confirmation
@@ -180,7 +172,6 @@ const OrderForm = ({ onCancel }) => {
         (customer) => customer.taxId === value
       );
       if (existingCustomer) {
-        alert(`Customer ${existingCustomer.name} found in DATABASE`);
         setFoundCustomer(existingCustomer);
       }
       setFormState((formState) => ({
@@ -205,12 +196,15 @@ const OrderForm = ({ onCancel }) => {
 
   return (
     <Card className={classes.root}>
+      {!foundCustomer && <AppAlert severity="error">No Customer found in DB</AppAlert>}
+      {foundCustomer && <AppAlert severity="info">{`Customer ${foundCustomer.name} found`}</AppAlert>}
       <CardHeader title="Add Order" />
       <CardContent className={classes.grid}>
         <TextField
+          required
           label="Customer TAX ID"
           name="taxId"
-          value={values.customer?.taxId || ""}
+          value={values.customer?.taxId}
           error={fieldHasError("taxId")}
           helperText={
             fieldGetError("taxId") || "Display tax ID of the Customer"
