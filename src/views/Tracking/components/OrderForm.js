@@ -22,8 +22,7 @@ const orderForm = makeStyles((theme) => ({
   grid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    columnGap: "3%",
-    // padding: 0,
+    columnGap: "3%"
   },
 }));
 

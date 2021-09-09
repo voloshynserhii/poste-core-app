@@ -11,41 +11,21 @@ import {
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
+import AddressForm from "./AddressForm";
 
 const orderForm = makeStyles((theme) => ({
   root: {
-    position: "absolute",
-    width: "50%",
-    left: "23vw",
-    top: "10%",
-    paddingBottom: 100,
-    zIndex: 10001,
+    width: "100%",
+    padding: "50px 0",
   },
-  layer: {
-    position: "fixed",
-    left: 0,
-    top: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    zIndex: 10000,
-    overflow: "scroll",
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    columnGap: "3%",
   },
 }));
 
-const VALIDATE_FORM_ORDER = {
-  company: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  name: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  phone: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
+const VALIDATE_FORM_CUSTOMER = {
   email: {
     type: "string",
     presence: { allowEmpty: false },
@@ -58,28 +38,21 @@ const VALIDATE_FORM_ORDER = {
     type: "string",
     presence: { allowEmpty: true },
   },
-  //   comments: {
-  //     type: "string",
-  //     presence: { allowEmpty: true },
-  //   },
-  //   description: {
-  //     type: "string",
-  //     presence: { allowEmpty: true },
-  //   },
 };
 
 const RegisterCustomerForm = ({ onCancel }) => {
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
+  const [addressList, setAddressList] = useState([]);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
-      validationSchema: VALIDATE_FORM_ORDER,
+      validationSchema: VALIDATE_FORM_CUSTOMER,
       initialValues: {},
     });
   const values = formState.values;
 
-  const formOrder = useCallback(() => {
+  const formCustomer = useCallback(() => {
     setFormState((oldFormState) => ({
       ...oldFormState,
       values: {
@@ -88,19 +61,37 @@ const RegisterCustomerForm = ({ onCancel }) => {
         name: "",
         email: "",
         password: "",
-        // weight: "",
-        // dimensions: "",
-        // quantity: "",
-        // description: "",
-        // comments: "",
-      },
+        phone: "",
+        taxId: "",
+      }
     }));
   }, [setFormState]);
-console.log(formState.values)
+  
+console.log(formState)
   useEffect(() => {
-    formOrder();
-  }, [formOrder]);
+    formCustomer();
+  }, [formCustomer]);
 
+  const onChangeAddress = useCallback(
+    (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+
+      setFormState((formState) => ({
+        ...formState,
+        address: {
+          ...formState.address,
+            [name]: value,
+        },
+        touched: {
+          ...formState.touched,
+          [name]: true,
+        },
+      }));
+    },
+    [setFormState]
+  );
+  
   const saveRecord = async () => {
     // save changes in BD
     await api.customers.create(formState.values);
@@ -115,10 +106,10 @@ console.log(formState.values)
   if (orderSaved) return null;
 
   return (
-    <div className={classes.layer}>
-      <Card className={classes.root}>
-        <CardHeader title="Register new customer" />
-        <CardContent>
+    <Card className={classes.root}>
+      <CardHeader title="Register new customer" />
+      <CardContent className={classes.grid}>
+        <div>
           <TextField
             required
             label="Name"
@@ -154,6 +145,8 @@ console.log(formState.values)
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
+        </div>
+        <div>
           <TextField
             label="Phone"
             name="phone"
@@ -187,19 +180,20 @@ console.log(formState.values)
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
-          <Grid container justifyContent="center" alignItems="center">
-            <AppButton onClick={onCancel}>Cancel</AppButton>
-            <AppButton
-              color="success"
-              disabled={!formState.isValid}
-              onClick={handleSave}
-            >
-              Save Customer
-            </AppButton>
-          </Grid>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+      <AddressForm />
+      <Grid container justifyContent="center" alignItems="center">
+        <AppButton onClick={onCancel}>Cancel</AppButton>
+        <AppButton
+          color="success"
+          disabled={!formState.isValid}
+          onClick={handleSave}
+        >
+          Save Customer
+        </AppButton>
+      </Grid>
+    </Card>
   );
 };
 export default RegisterCustomerForm;
