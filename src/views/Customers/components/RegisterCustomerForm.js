@@ -63,44 +63,31 @@ const RegisterCustomerForm = ({ onCancel }) => {
         password: "",
         phone: "",
         taxId: "",
-      }
+      },
     }));
   }, [setFormState]);
-  
-console.log(formState)
+
   useEffect(() => {
     formCustomer();
   }, [formCustomer]);
 
-  const onChangeAddress = useCallback(
-    (event) => {
-      const name = event.target?.name;
-      const value = event.target?.value;
-
-      setFormState((formState) => ({
-        ...formState,
-        address: {
-          ...formState.address,
-            [name]: value,
-        },
-        touched: {
-          ...formState.touched,
-          [name]: true,
-        },
-      }));
-    },
-    [setFormState]
-  );
-  
   const saveRecord = async () => {
     // save changes in BD
     await api.customers.create(formState.values);
     setOrderSaved(true);
   };
+
   const handleSave = () => {
     // Save without confirmation
     saveRecord();
     return;
+  };
+
+  const getAddresValues = (val) => {
+    let list = [];
+    list.push(val);
+    setAddressList(list);
+    console.log(list);
   };
 
   if (orderSaved) return null;
@@ -182,7 +169,11 @@ console.log(formState)
           />
         </div>
       </CardContent>
-      <AddressForm />
+      <h3>Added addresses</h3>
+      {addressList.map((address) => (
+        <span>{address.title}</span>
+      ))}
+      <AddressForm onAddAddress={getAddresValues} />
       <Grid container justifyContent="center" alignItems="center">
         <AppButton onClick={onCancel}>Cancel</AppButton>
         <AppButton

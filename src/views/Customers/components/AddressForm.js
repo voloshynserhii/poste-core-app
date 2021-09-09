@@ -1,20 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import {
   makeStyles,
-  Grid,
   TextField,
-  Card,
   CardHeader,
   CardContent,
 } from "@material-ui/core";
 
-import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
 
 const orderForm = makeStyles((theme) => ({
   root: {
-    border: 'none'
+    border: "none",
   },
   grid: {
     display: "grid",
@@ -24,7 +21,7 @@ const orderForm = makeStyles((theme) => ({
 }));
 
 const VALIDATE_FORM_ADDRESS = {
-  name: {
+  title: {
     type: "string",
     presence: { allowEmpty: false },
   },
@@ -39,10 +36,10 @@ const VALIDATE_FORM_ADDRESS = {
   contactPhone: {
     type: "string",
     presence: { allowEmpty: false },
-  }
+  },
 };
 
-const RegisterCustomerForm = ({ onCancel, onAddAddress }) => {
+const RegisterCustomerForm = (props) => {
   const classes = orderForm();
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
@@ -60,8 +57,6 @@ const RegisterCustomerForm = ({ onCancel, onAddAddress }) => {
     }));
   }, [setFormState]);
 
-  console.log(formState);
-  
   useEffect(() => {
     formAddress();
   }, [formAddress]);
@@ -153,13 +148,9 @@ const RegisterCustomerForm = ({ onCancel, onAddAddress }) => {
           />
         </div>
       </CardContent>
-        <AppButton
-          color="light"
-          disabled={!formState.isValid}
-          onClick={onAddAddress}
-        >
-          Add address
-        </AppButton>
+      <AppButton color="light" disabled={!formState.isValid} onClick={() => props.onAddAddress(formState.values)}>
+        Add address
+      </AppButton>
     </>
   );
 };
