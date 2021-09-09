@@ -66,7 +66,7 @@ export function tokenExpireAt() {
  * The "token refresh timer" to refresh token before it expires
  */
 let _timeout_refresh_token = 0;
-const REFRESH_TIMEOUT = 15 * 60 * 1000; // 15 minutes
+const REFRESH_TIMEOUT = 150 * 60 * 1000; // 15 minutes
 
 export function clearRefreshTimeout() {
   if (_timeout_refresh_token) {
