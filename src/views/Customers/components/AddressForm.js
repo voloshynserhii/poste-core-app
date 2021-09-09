@@ -1,24 +1,13 @@
 import { useEffect, useCallback } from "react";
 import {
-  makeStyles,
   TextField,
   CardHeader,
   CardContent,
+  Grid,
 } from "@material-ui/core";
 
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
-
-const orderForm = makeStyles((theme) => ({
-  root: {
-    border: "none",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    columnGap: "3%",
-  },
-}));
 
 const VALIDATE_FORM_ADDRESS = {
   title: {
@@ -40,7 +29,6 @@ const VALIDATE_FORM_ADDRESS = {
 };
 
 const RegisterCustomerForm = (props) => {
-  const classes = orderForm();
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -64,91 +52,98 @@ const RegisterCustomerForm = (props) => {
   return (
     <>
       <CardHeader title="Add New Address" />
-      <CardContent className={classes.grid}>
-        <div>
-          <TextField
-            required
-            label="Address name"
-            name="title"
-            error={fieldHasError("title")}
-            helperText={
-              fieldGetError("title") || "Display name of the Address object"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Region"
-            name="region"
-            error={fieldHasError("region")}
-            helperText={fieldGetError("region") || "Display the region"}
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            required
-            label="City"
-            name="city"
-            error={fieldHasError("city")}
-            helperText={fieldGetError("city") || "Display the city"}
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            required
-            label="Address"
-            name="address1"
-            error={fieldHasError("address1")}
-            helperText={fieldGetError("address1") || "Display main address"}
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-        </div>
-        <div>
-          <TextField
-            label="Secondary dddress"
-            name="address2"
-            error={fieldHasError("address2")}
-            helperText={
-              fieldGetError("address2") || "Display secondary address"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Contact name"
-            name="contactName"
-            error={fieldHasError("contactName")}
-            helperText={
-              fieldGetError("contactName") || "Display contactName of the Order"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            required
-            label="Contact phone"
-            name="contactPhone"
-            error={fieldHasError("contactPhone")}
-            helperText={
-              fieldGetError("contactPhone") || "Display contact phone"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Contact email"
-            name="contactEmail"
-            error={fieldHasError("contactEmail")}
-            helperText={
-              fieldGetError("contactEmail") || "Display contact Email"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-        </div>
+      <CardContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              label="Address name"
+              name="title"
+              error={fieldHasError("title")}
+              helperText={
+                fieldGetError("title") || "Display name of the Address object"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Region"
+              name="region"
+              error={fieldHasError("region")}
+              helperText={fieldGetError("region") || "Display the region"}
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              required
+              label="City"
+              name="city"
+              error={fieldHasError("city")}
+              helperText={fieldGetError("city") || "Display the city"}
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              required
+              label="Address"
+              name="address1"
+              error={fieldHasError("address1")}
+              helperText={fieldGetError("address1") || "Display main address"}
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Secondary dddress"
+              name="address2"
+              error={fieldHasError("address2")}
+              helperText={
+                fieldGetError("address2") || "Display secondary address"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact name"
+              name="contactName"
+              error={fieldHasError("contactName")}
+              helperText={
+                fieldGetError("contactName") ||
+                "Display contactName of the Order"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              required
+              label="Contact phone"
+              name="contactPhone"
+              error={fieldHasError("contactPhone")}
+              helperText={
+                fieldGetError("contactPhone") || "Display contact phone"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Contact email"
+              name="contactEmail"
+              error={fieldHasError("contactEmail")}
+              helperText={
+                fieldGetError("contactEmail") || "Display contact Email"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+          </Grid>
+        </Grid>
       </CardContent>
-      <AppButton color="light" disabled={!formState.isValid} onClick={() => props.onAddAddress(formState.values)}>
+      <AppButton
+        color="light"
+        disabled={!formState.isValid}
+        onClick={() => props.onAddAddress(formState.values)}
+      >
         Add address
       </AppButton>
     </>

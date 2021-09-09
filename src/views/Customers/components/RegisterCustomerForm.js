@@ -16,13 +16,8 @@ import AddressForm from "./AddressForm";
 const orderForm = makeStyles((theme) => ({
   root: {
     width: "100%",
-    padding: "50px 0",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    columnGap: "3%",
-  },
+    padding: "20px 0 50px 0",
+  }
 }));
 
 const VALIDATE_FORM_CUSTOMER = {
@@ -42,7 +37,6 @@ const VALIDATE_FORM_CUSTOMER = {
 
 const RegisterCustomerForm = ({ onCancel }) => {
   const classes = orderForm();
-  const [orderSaved, setOrderSaved] = useState(false);
   const [addressList, setAddressList] = useState([]);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
@@ -74,7 +68,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
   const saveRecord = async () => {
     // save changes in BD
     await api.customers.create(formState.values);
-    setOrderSaved(true);
+
   };
 
   const handleSave = () => {
@@ -90,84 +84,87 @@ const RegisterCustomerForm = ({ onCancel }) => {
     console.log(list);
   };
 
-  if (orderSaved) return null;
-
   return (
     <Card className={classes.root}>
       <CardHeader title="Register new customer" />
-      <CardContent className={classes.grid}>
-        <div>
-          <TextField
-            required
-            label="Name"
-            name="name"
-            value={values.name}
-            error={fieldHasError("name")}
-            helperText={fieldGetError("name") || "Display name of the customer"}
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            required
-            label="Email"
-            name="email"
-            value={values.email}
-            defaultValue={values.email}
-            error={fieldHasError("email")}
-            helperText={
-              fieldGetError("email") || "Display email of the customer"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            required
-            label="Password"
-            name="password"
-            value={values.password}
-            error={fieldHasError("password")}
-            helperText={
-              fieldGetError("password") || "Display password of the customer"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-        </div>
-        <div>
-          <TextField
-            label="Phone"
-            name="phone"
-            value={values.phone}
-            error={fieldHasError("phone")}
-            helperText={
-              fieldGetError("phone") || "Display phone of the customer"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Tax ID"
-            name="taxId"
-            value={values.taxId}
-            error={fieldHasError("taxId")}
-            helperText={
-              fieldGetError("taxId") || "Display tax ID of the customer"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Company"
-            name="company"
-            value={values.company}
-            error={fieldHasError("company")}
-            helperText={
-              fieldGetError("company") || "Display company name of the customer"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-        </div>
+      <CardContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              label="Name"
+              name="name"
+              value={values.name}
+              error={fieldHasError("name")}
+              helperText={
+                fieldGetError("name") || "Display name of the customer"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              required
+              label="Email"
+              name="email"
+              value={values.email}
+              defaultValue={values.email}
+              error={fieldHasError("email")}
+              helperText={
+                fieldGetError("email") || "Display email of the customer"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              required
+              label="Password"
+              name="password"
+              value={values.password}
+              error={fieldHasError("password")}
+              helperText={
+                fieldGetError("password") || "Display password of the customer"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              label="Phone"
+              name="phone"
+              value={values.phone}
+              error={fieldHasError("phone")}
+              helperText={
+                fieldGetError("phone") || "Display phone of the customer"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Tax ID"
+              name="taxId"
+              value={values.taxId}
+              error={fieldHasError("taxId")}
+              helperText={
+                fieldGetError("taxId") || "Display tax ID of the customer"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Company"
+              name="company"
+              value={values.company}
+              error={fieldHasError("company")}
+              helperText={
+                fieldGetError("company") ||
+                "Display company name of the customer"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+          </Grid>
+        </Grid>
       </CardContent>
       <h3>Added addresses</h3>
       {addressList.map((address) => (
