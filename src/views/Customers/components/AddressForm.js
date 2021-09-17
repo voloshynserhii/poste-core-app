@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useContext } from "react";
 import {
   TextField,
   CardHeader,
@@ -6,6 +6,7 @@ import {
   Grid,
 } from "@material-ui/core";
 
+import { AppContext } from '../../../store'
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
 
@@ -35,6 +36,14 @@ const RegisterCustomerForm = (props) => {
       validationSchema: VALIDATE_FORM_ADDRESS,
       initialValues: {},
     });
+  const [state, dispatch] = useContext(AppContext);
+  
+  const findCustomerAddress = (id) => {
+    const customer = state.customers.find(c => c.id === id)
+    console.log("CURRENT CUSTOMER IS", customer);
+  }
+  findCustomerAddress()
+console.log("Addresses for customer#", props.customerId);
 
   const formAddress = useCallback(() => {
     setFormState((oldFormState) => ({
@@ -51,7 +60,7 @@ const RegisterCustomerForm = (props) => {
 
   return (
     <>
-      <CardHeader title="Add New Address" />
+      <CardHeader title={props.title} />
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

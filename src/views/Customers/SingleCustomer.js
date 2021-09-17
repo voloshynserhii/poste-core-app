@@ -14,6 +14,7 @@ import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
 import UpdateButton from "./components/UpdateButton";
+import AddressForm from "./components/AddressForm";
 
 
 const VALIDATE_FORM_ORDER = {
@@ -122,7 +123,7 @@ const SingleCustomerView = () => {
         </AppAlert>
       )}
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={9}>
+        <Grid item xs={12}>
           <Card>
             <CardHeader title="Customer Details" />
             <CardContent>
@@ -185,6 +186,7 @@ const SingleCustomerView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
+              <AddressForm title="Address" customerId={id}/>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton

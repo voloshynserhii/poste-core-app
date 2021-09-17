@@ -252,7 +252,9 @@ const OrderForm = ({ onCancel }) => {
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             />
-            <TextField
+          </Grid>
+          <Grid item xs={12} sm={6}>
+          <TextField
               required
               label="Weight"
               name="weight"
@@ -264,8 +266,6 @@ const OrderForm = ({ onCancel }) => {
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <TextField
               label="Dimensions"
               name="dimensions"

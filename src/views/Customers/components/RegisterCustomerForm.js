@@ -17,7 +17,7 @@ const orderForm = makeStyles((theme) => ({
   root: {
     width: "100%",
     padding: "20px 0 50px 0",
-  }
+  },
 }));
 
 const VALIDATE_FORM_CUSTOMER = {
@@ -68,7 +68,6 @@ const RegisterCustomerForm = ({ onCancel }) => {
   const saveRecord = async () => {
     // save changes in BD
     await api.customers.create(formState.values);
-
   };
 
   const handleSave = () => {
@@ -77,11 +76,8 @@ const RegisterCustomerForm = ({ onCancel }) => {
     return;
   };
 
-  const getAddresValues = (val) => {
-    let list = [];
-    list.push(val);
-    setAddressList(list);
-    console.log(list);
+  const getAddressValues = (val) => {
+    setAddressList(prev => ([...prev, val]));
   };
 
   return (
@@ -166,11 +162,24 @@ const RegisterCustomerForm = ({ onCancel }) => {
           </Grid>
         </Grid>
       </CardContent>
-      <h3>Added addresses</h3>
-      {addressList.map((address) => (
-        <span>{address.title}</span>
-      ))}
-      <AddressForm onAddAddress={getAddresValues} />
+      <CardContent>
+        <h3>Added addresses</h3>
+        <Grid container flex="true" spacing={3}>
+        {addressList.map((address, index) => (
+          <Grid item key={address.address1}>
+            <div>TITLE:{address.title}</div>
+            <div>REGION:{address.region}</div>
+            <div>CITY:{address.city}</div>
+            <div>ADDRESS1:{address.address1}</div>
+            <div>PHONE:{address.contactPhone}</div>
+            <div>EMAIL:{address.contactEmail}</div>
+            <div>CONTACT NAME{address.contactName}</div>
+          </Grid>
+        ))}
+        </Grid>
+      </CardContent>
+
+      <AddressForm title="Add new address" onAddAddress={getAddressValues} />
       <Grid container justifyContent="center" alignItems="center">
         <AppButton onClick={onCancel}>Cancel</AppButton>
         <AppButton
