@@ -1,10 +1,10 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 import { useHistory } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import api from "../../../api";
-import { AppButton } from '../../../components/AppButton';
-import { ConfirmationDialog } from '../../../components/Dialogs';
-import { capitalize } from '../../../utils/string';
+import { AppButton } from "../../../components/AppButton";
+import { ConfirmationDialog } from "../../../components/Dialogs";
+import { capitalize } from "../../../utils/string";
 
 /**
  * Renders "Save Collection" button with "Confirm Save" dialog
@@ -13,14 +13,22 @@ import { capitalize } from '../../../utils/string';
  * @param {string|number} id - the ID of the record in Collection in database to save
  * @param {boolean} [noConfirmation] - open or not the Confirmation dialog
  */
-const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
+const UpdateButton = ({
+  collection,
+  id,
+  payload,
+  disabled,
+  noConfirmation = false,
+  ...restOfProps
+}) => {
   const [modal, setModal] = useState();
   const title = capitalize(collection);
   const history = useHistory();
 
   const updateRecord = async () => {
-    console.log(payload, id)
+    console.log("UPDATE CUSTOMER", payload, id);
     await api.customers.update(id, payload);
+    history.push("/customer");
   };
 
   const onDialogClose = useCallback((event, reason) => {
@@ -60,7 +68,12 @@ const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = fals
   return (
     <>
       {modal}
-      <AppButton color="success" disabled={disabled || Boolean(modal)} onClick={onButtonClick} {...restOfProps} />
+      <AppButton
+        color="success"
+        disabled={disabled || Boolean(modal)}
+        onClick={onButtonClick}
+        {...restOfProps}
+      />
     </>
   );
 };

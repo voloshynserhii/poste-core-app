@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
   Grid,
@@ -6,16 +6,16 @@ import {
   Card,
   CardHeader,
   CardContent,
-  LinearProgress
+  LinearProgress,
 } from "@material-ui/core";
 
+import { AppContext } from "../../store";
 import api from "../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
 import UpdateButton from "./components/UpdateButton";
 import AddressForm from "./components/AddressForm";
-
 
 const VALIDATE_FORM_ORDER = {
   weight: {
@@ -45,9 +45,11 @@ const VALIDATE_FORM_ORDER = {
 };
 
 const SingleCustomerView = () => {
+  const [state, ] = useContext(AppContext);
   const history = useHistory();
   const params = useParams();
   const [loading, setLoading] = useState(false);
+  const [addressList, setAddressList] = useState([]);
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -55,15 +57,15 @@ const SingleCustomerView = () => {
     });
   const values = formState.values;
   const id = params?.id;
-
+  
   const fetchCustomerById = useCallback(
     async (id) => {
       setLoading(true);
       setError("");
       try {
-        const res = await api.customers.read(id);
-        console.log(res);
+        const res = await state.customers.find(c => c._id === id);
         if (res) {
+          setAddressList(res.addressList)
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
@@ -73,7 +75,7 @@ const SingleCustomerView = () => {
               phone: res?.phone || "Pending",
               company: res?.company || "",
               taxId: res?.taxId || "",
-              updateDate: Date.now(),
+              updateDate: Date.now()
             },
           }));
         } else {
@@ -86,7 +88,7 @@ const SingleCustomerView = () => {
         setLoading(false);
       }
     },
-    [setFormState]
+    [setFormState, state.customers]
   ); // Don't pass formState here !!!
 
   useEffect(() => {
@@ -112,6 +114,12 @@ const SingleCustomerView = () => {
     alert(res.data.message);
   };
 
+  const getAddressValues = useCallback(
+    (val) => {
+      setAddressList((prev) => [...prev, val]);
+    },
+    []
+  );
 
   if (loading) return <LinearProgress />;
 
@@ -133,8 +141,7 @@ const SingleCustomerView = () => {
                 value={values?.name}
                 error={fieldHasError("name")}
                 helperText={
-                  fieldGetError("name") ||
-                  "Display name of the Customer"
+                  fieldGetError("name") || "Display name of the Customer"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
@@ -145,8 +152,7 @@ const SingleCustomerView = () => {
                 value={values?.email}
                 error={fieldHasError("email")}
                 helperText={
-                  fieldGetError("email") ||
-                  "Display email of the Customer"
+                  fieldGetError("email") || "Display email of the Customer"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
@@ -157,8 +163,7 @@ const SingleCustomerView = () => {
                 value={values?.phone}
                 error={fieldHasError("phone")}
                 helperText={
-                  fieldGetError("phone") ||
-                  "Display phone of the Customer"
+                  fieldGetError("phone") || "Display phone of the Customer"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
@@ -186,14 +191,34 @@ const SingleCustomerView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
-              <AddressForm title="Address" customerId={id}/>
+              <CardContent>
+                <h3>Added addresses</h3>
+                <Grid container flex="true" spacing={3}>
+                  {addressList?.map((address, index) => (
+                    <Grid item key={address.title}>
+                      <div>TITLE:{address.title}</div>
+                      <div>REGION:{address.region}</div>
+                      <div>CITY:{address.city}</div>
+                      <div>ADDRESS1:{address.address1}</div>
+                      <div>PHONE:{address.contactPhone}</div>
+                      <div>EMAIL:{address.contactEmail}</div>
+                      <div>CONTACT NAME{address.contactName}</div>
+                    </Grid>
+                  ))}
+                </Grid>
+              </CardContent>
+              <AddressForm
+                title="Address"
+                customerId={id}
+                onAddAddress={getAddressValues}
+              />
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton
                   collection="customers"
                   color="primary"
                   id={id}
-                  payload={values}
+                  payload={{...values, addressList: addressList}}
                 >
                   Update customer
                 </UpdateButton>

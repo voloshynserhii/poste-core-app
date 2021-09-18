@@ -57,9 +57,10 @@ const RegisterCustomerForm = ({ onCancel }) => {
         password: "",
         phone: "",
         taxId: "",
+        addressList: addressList
       },
     }));
-  }, [setFormState]);
+  }, [setFormState, addressList]);
 
   useEffect(() => {
     formCustomer();
@@ -178,7 +179,6 @@ const RegisterCustomerForm = ({ onCancel }) => {
         ))}
         </Grid>
       </CardContent>
-
       <AddressForm title="Add new address" onAddAddress={getAddressValues} />
       <Grid container justifyContent="center" alignItems="center">
         <AppButton onClick={onCancel}>Cancel</AppButton>
