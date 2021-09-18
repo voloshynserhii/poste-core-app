@@ -57,10 +57,10 @@ const RegisterCustomerForm = ({ onCancel }) => {
         password: "",
         phone: "",
         taxId: "",
-        addressList: addressList
       },
     }));
-  }, [setFormState, addressList]);
+    return;
+  }, [setFormState]);
 
   useEffect(() => {
     formCustomer();
@@ -68,7 +68,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
 
   const saveRecord = async () => {
     // save changes in BD
-    await api.customers.create(formState.values);
+    await api.customers.create({...formState.values, addressList});
   };
 
   const handleSave = () => {
@@ -78,7 +78,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
   };
 
   const getAddressValues = (val) => {
-    setAddressList(prev => ([...prev, val]));
+    setAddressList((prev) => [...prev, val]);
   };
 
   return (
@@ -166,17 +166,17 @@ const RegisterCustomerForm = ({ onCancel }) => {
       <CardContent>
         <h3>Added addresses</h3>
         <Grid container flex="true" spacing={3}>
-        {addressList.map((address, index) => (
-          <Grid item key={address.address1}>
-            <div>TITLE:{address.title}</div>
-            <div>REGION:{address.region}</div>
-            <div>CITY:{address.city}</div>
-            <div>ADDRESS1:{address.address1}</div>
-            <div>PHONE:{address.contactPhone}</div>
-            <div>EMAIL:{address.contactEmail}</div>
-            <div>CONTACT NAME{address.contactName}</div>
-          </Grid>
-        ))}
+          {addressList.map((address, index) => (
+            <Grid item key={address.address1}>
+              <div>TITLE:{address.title}</div>
+              <div>REGION:{address.region}</div>
+              <div>CITY:{address.city}</div>
+              <div>ADDRESS1:{address.address1}</div>
+              <div>PHONE:{address.contactPhone}</div>
+              <div>EMAIL:{address.contactEmail}</div>
+              <div>CONTACT NAME{address.contactName}</div>
+            </Grid>
+          ))}
         </Grid>
       </CardContent>
       <AddressForm title="Add new address" onAddAddress={getAddressValues} />
