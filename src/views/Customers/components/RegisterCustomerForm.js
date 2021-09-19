@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import {
   makeStyles,
   Grid,
@@ -36,6 +37,7 @@ const VALIDATE_FORM_CUSTOMER = {
 };
 
 const RegisterCustomerForm = ({ onCancel }) => {
+  const history = useHistory();
   const classes = orderForm();
   const [addressList, setAddressList] = useState([]);
 
@@ -69,6 +71,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
   const saveRecord = async () => {
     // save changes in BD
     await api.customers.create({...formState.values, addressList});
+    history.push('/customer');
   };
 
   const handleSave = () => {

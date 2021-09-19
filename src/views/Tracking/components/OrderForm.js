@@ -6,8 +6,9 @@ import {
   Card,
   CardHeader,
   CardContent,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 import { AppContext } from "../../../store";
 import api from "../../../api";
@@ -39,6 +40,7 @@ const VALIDATE_FORM_ORDER = {
 };
 
 const OrderForm = ({ onCancel }) => {
+  const history = useHistory();
   const [state] = useContext(AppContext);
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
@@ -111,6 +113,7 @@ const OrderForm = ({ onCancel }) => {
   const handleSave = () => {
     // Save without confirmation
     saveRecord();
+    history.push("/tracking");
     return;
   };
 
@@ -207,7 +210,7 @@ const OrderForm = ({ onCancel }) => {
               contactName: "",
               contactPhone: "",
               contactEmail: "",
-            }
+            },
           },
           touched: {
             ...formState.touched,
@@ -232,7 +235,7 @@ const OrderForm = ({ onCancel }) => {
               contactName: curAddress?.contactName || "",
               contactPhone: curAddress?.contactPhone || "",
               contactEmail: curAddress?.contactEmail || "",
-            }
+            },
           },
           touched: {
             ...formState.touched,
@@ -240,8 +243,10 @@ const OrderForm = ({ onCancel }) => {
           },
         }));
       }
-  }, [setFormState, foundCustomer]);
-  
+    },
+    [setFormState, foundCustomer]
+  );
+
   const onAddressDeliveryChange = useCallback(
     async (event) => {
       const name = event.target?.name;
@@ -260,7 +265,7 @@ const OrderForm = ({ onCancel }) => {
               contactName: "",
               contactPhone: "",
               contactEmail: "",
-            }
+            },
           },
           touched: {
             ...formState.touched,
@@ -285,7 +290,7 @@ const OrderForm = ({ onCancel }) => {
               contactName: curAddress?.contactName || "",
               contactPhone: curAddress?.contactPhone || "",
               contactEmail: curAddress?.contactEmail || "",
-            }
+            },
           },
           touched: {
             ...formState.touched,
@@ -293,8 +298,10 @@ const OrderForm = ({ onCancel }) => {
           },
         }));
       }
-  }, [setFormState, foundCustomer]);
-  
+    },
+    [setFormState, foundCustomer]
+  );
+
   if (orderSaved) return null;
 
   return (
@@ -361,7 +368,7 @@ const OrderForm = ({ onCancel }) => {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-          <TextField
+            <TextField
               required
               label="Weight"
               name="weight"
@@ -430,23 +437,25 @@ const OrderForm = ({ onCancel }) => {
           <Grid item xs={12} sm={6}>
             <h3>Collection Address</h3>
             <TextField
-            select
-            required
-            label="Choose address"
-            name="_id"
-            defaultValue=""
-            error={fieldHasError("_id")}
-            helperText={fieldGetError("_id") || "Display the _id of a address"}
-            onChange={onAddressCollectionChange}
-            {...SHARED_CONTROL_PROPS}
-          >
-            <MenuItem value="new">Add new address</MenuItem>
-            {foundCustomer?.addressList?.map((option) => (
-              <MenuItem key={option.title} value={option._id}>
-                {option.title}
-              </MenuItem>
-            ))}
-          </TextField>
+              select
+              required
+              label="Choose address"
+              name="_id"
+              defaultValue=""
+              error={fieldHasError("_id")}
+              helperText={
+                fieldGetError("_id") || "Display the _id of a address"
+              }
+              onChange={onAddressCollectionChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="new">Add new address</MenuItem>
+              {foundCustomer?.addressList?.map((option) => (
+                <MenuItem key={option.title} value={option._id}>
+                  {option.title}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               label="Region"
               name="region"
@@ -518,23 +527,25 @@ const OrderForm = ({ onCancel }) => {
           <Grid item xs={12} sm={6}>
             <h3>Delivery Address</h3>
             <TextField
-            select
-            required
-            label="Choose address"
-            name="_id"
-            defaultValue=""
-            error={fieldHasError("_id")}
-            helperText={fieldGetError("_id") || "Display the _id of a address"}
-            onChange={onAddressDeliveryChange}
-            {...SHARED_CONTROL_PROPS}
-          >
-            <MenuItem value="new">Add new address</MenuItem>
-            {foundCustomer?.addressList?.map((option) => (
-              <MenuItem key={option.title} value={option._id}>
-                {option.title}
-              </MenuItem>
-            ))}
-          </TextField>
+              select
+              required
+              label="Choose address"
+              name="_id"
+              defaultValue=""
+              error={fieldHasError("_id")}
+              helperText={
+                fieldGetError("_id") || "Display the _id of a address"
+              }
+              onChange={onAddressDeliveryChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="new">Add new address</MenuItem>
+              {foundCustomer?.addressList?.map((option) => (
+                <MenuItem key={option.title} value={option._id}>
+                  {option.title}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               label="Region"
               name="region"

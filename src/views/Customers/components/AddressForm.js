@@ -130,7 +130,14 @@ const RegisterCustomerForm = (props) => {
     );
     const index = addressList.indexOf(curAddress);
     addressList.splice(index, 1);
-    await api.customers.update(props.customerId, { addressList: addressList });
+    try {
+      await api.customers.update(props.customerId, {
+        addressList: addressList,
+      });
+      alert("Address deleted");
+    } catch (error) {
+      alert(error.message);
+    }
   }, [addressList, props.customerId, updatedAddressID]);
 
   return (
@@ -149,6 +156,7 @@ const RegisterCustomerForm = (props) => {
             onChange={onAddressChange}
             {...SHARED_CONTROL_PROPS}
           >
+            <MenuItem value="">---</MenuItem>
             <MenuItem value="new">Add new address</MenuItem>
             {currentCustomer?.addressList?.map((option) => (
               <MenuItem key={option.title} value={option._id}>
