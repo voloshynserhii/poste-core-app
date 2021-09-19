@@ -117,9 +117,7 @@ const SingleCustomerView = () => {
   const getAddressValues = useCallback(
     (val) => {
       setAddressList((prev) => [...prev, val]);
-    },
-    []
-  );
+    },[]);
 
   if (loading) return <LinearProgress />;
 

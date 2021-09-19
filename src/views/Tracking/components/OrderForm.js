@@ -6,6 +6,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  MenuItem
 } from "@material-ui/core";
 
 import { AppContext } from "../../../store";
@@ -188,6 +189,112 @@ const OrderForm = ({ onCancel }) => {
     [setFormState, state?.customers]
   );
 
+  const onAddressCollectionChange = useCallback(
+    async (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+
+      if (value === "new") {
+        setFormState((formState) => ({
+          ...formState,
+          values: {
+            ...formState.values,
+            collectionData: {
+              region: "",
+              city: "",
+              address1: "",
+              address2: "",
+              contactName: "",
+              contactPhone: "",
+              contactEmail: "",
+            }
+          },
+          touched: {
+            ...formState.touched,
+            [name]: false,
+          },
+        }));
+      }
+      const curAddress = await foundCustomer.addressList?.find(
+        (address) => address._id === value
+      );
+
+      if (curAddress) {
+        setFormState((formState) => ({
+          ...formState,
+          values: {
+            ...formState.values,
+            collectionData: {
+              region: curAddress?.region || "",
+              city: curAddress?.city || "",
+              address1: curAddress?.address1 || "",
+              address2: curAddress?.address2 || "",
+              contactName: curAddress?.contactName || "",
+              contactPhone: curAddress?.contactPhone || "",
+              contactEmail: curAddress?.contactEmail || "",
+            }
+          },
+          touched: {
+            ...formState.touched,
+            [name]: true,
+          },
+        }));
+      }
+  }, [setFormState, foundCustomer]);
+  
+  const onAddressDeliveryChange = useCallback(
+    async (event) => {
+      const name = event.target?.name;
+      const value = event.target?.value;
+
+      if (value === "new") {
+        setFormState((formState) => ({
+          ...formState,
+          values: {
+            ...formState.values,
+            deliveryData: {
+              region: "",
+              city: "",
+              address1: "",
+              address2: "",
+              contactName: "",
+              contactPhone: "",
+              contactEmail: "",
+            }
+          },
+          touched: {
+            ...formState.touched,
+            [name]: false,
+          },
+        }));
+      }
+      const curAddress = await foundCustomer.addressList?.find(
+        (address) => address._id === value
+      );
+
+      if (curAddress) {
+        setFormState((formState) => ({
+          ...formState,
+          values: {
+            ...formState.values,
+            deliveryData: {
+              region: curAddress?.region || "",
+              city: curAddress?.city || "",
+              address1: curAddress?.address1 || "",
+              address2: curAddress?.address2 || "",
+              contactName: curAddress?.contactName || "",
+              contactPhone: curAddress?.contactPhone || "",
+              contactEmail: curAddress?.contactEmail || "",
+            }
+          },
+          touched: {
+            ...formState.touched,
+            [name]: true,
+          },
+        }));
+      }
+  }, [setFormState, foundCustomer]);
+  
   if (orderSaved) return null;
 
   return (
@@ -323,6 +430,24 @@ const OrderForm = ({ onCancel }) => {
           <Grid item xs={12} sm={6}>
             <h3>Collection Address</h3>
             <TextField
+            select
+            required
+            label="Choose address"
+            name="_id"
+            defaultValue=""
+            error={fieldHasError("_id")}
+            helperText={fieldGetError("_id") || "Display the _id of a address"}
+            onChange={onAddressCollectionChange}
+            {...SHARED_CONTROL_PROPS}
+          >
+            <MenuItem value="new">Add new address</MenuItem>
+            {foundCustomer?.addressList?.map((option) => (
+              <MenuItem key={option.title} value={option._id}>
+                {option.title}
+              </MenuItem>
+            ))}
+          </TextField>
+            <TextField
               label="Region"
               name="region"
               value={values?.collectionData?.region || ""}
@@ -392,6 +517,24 @@ const OrderForm = ({ onCancel }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <h3>Delivery Address</h3>
+            <TextField
+            select
+            required
+            label="Choose address"
+            name="_id"
+            defaultValue=""
+            error={fieldHasError("_id")}
+            helperText={fieldGetError("_id") || "Display the _id of a address"}
+            onChange={onAddressDeliveryChange}
+            {...SHARED_CONTROL_PROPS}
+          >
+            <MenuItem value="new">Add new address</MenuItem>
+            {foundCustomer?.addressList?.map((option) => (
+              <MenuItem key={option.title} value={option._id}>
+                {option.title}
+              </MenuItem>
+            ))}
+          </TextField>
             <TextField
               label="Region"
               name="region"

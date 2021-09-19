@@ -7,6 +7,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
+import api from "../../../api";
 import { AppContext } from "../../../store";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
@@ -39,6 +40,7 @@ const RegisterCustomerForm = (props) => {
   const [state] = useContext(AppContext);
   const [currentCustomer, setCurrentCustomer] = useState();
   const [addressList, setAddressList] = useState();
+  const [updatedAddressID, setUpdatedAddressID] = useState("");
   const values = formState.values;
 
   const findCustomerAddress = useCallback(
@@ -57,56 +59,60 @@ const RegisterCustomerForm = (props) => {
     setFormState((oldFormState) => ({
       ...oldFormState,
       values: {
-        ...oldFormState.values
+        ...oldFormState.values,
       },
     }));
   }, [setFormState]);
-  
+
   useEffect(() => {
     findCustomerAddress(props.customerId);
     formAddress();
   }, [formAddress, findCustomerAddress, props.customerId]);
-  
+
   const onAddressChange = useCallback(
     async (event) => {
       const name = event.target?.name;
       const value = event.target?.value;
 
-      if (value === 'new') {
+      if (value === "new") {
+        setUpdatedAddressID("");
         setFormState((formState) => ({
           ...formState,
           values: {
             ...formState.values,
-            title: '',
-            region: '',
-            city: '',
-            address1: '',
-            address2: '',
-            contactName: '',
-            contactPhone: '',
-            contactEmail: '',
+            title: "",
+            region: "",
+            city: "",
+            address1: "",
+            address2: "",
+            contactName: "",
+            contactPhone: "",
+            contactEmail: "",
           },
           touched: {
             ...formState.touched,
             [name]: false,
           },
-        }))
+        }));
       }
-      const curAddress = await addressList?.find(address => address._id === value);
-      
+      const curAddress = await addressList?.find(
+        (address) => address._id === value
+      );
+
       if (curAddress) {
+        setUpdatedAddressID(curAddress._id);
         setFormState((formState) => ({
           ...formState,
           values: {
             ...formState.values,
-            title: curAddress?.title || '',
-            region: curAddress?.region || '',
-            city: curAddress?.city || '',
-            address1: curAddress?.address1 || '',
-            address2: curAddress?.address2 || '',
-            contactName: curAddress?.contactName || '',
-            contactPhone: curAddress?.contactPhone || '',
-            contactEmail: curAddress?.contactEmail || '',
+            title: curAddress?.title || "",
+            region: curAddress?.region || "",
+            city: curAddress?.city || "",
+            address1: curAddress?.address1 || "",
+            address2: curAddress?.address2 || "",
+            contactName: curAddress?.contactName || "",
+            contactPhone: curAddress?.contactPhone || "",
+            contactEmail: curAddress?.contactEmail || "",
           },
           touched: {
             ...formState.touched,
@@ -117,6 +123,15 @@ const RegisterCustomerForm = (props) => {
     },
     [setFormState, addressList]
   );
+
+  const handleDeleteAddress = useCallback(async () => {
+    const curAddress = addressList.find(
+      (address) => address._id === updatedAddressID
+    );
+    const index = addressList.indexOf(curAddress);
+    addressList.splice(index, 1);
+    await api.customers.update(props.customerId, { addressList: addressList });
+  }, [addressList, props.customerId, updatedAddressID]);
 
   return (
     <>
@@ -134,7 +149,7 @@ const RegisterCustomerForm = (props) => {
             onChange={onAddressChange}
             {...SHARED_CONTROL_PROPS}
           >
-            <MenuItem value="new">Add new</MenuItem>
+            <MenuItem value="new">Add new address</MenuItem>
             {currentCustomer?.addressList?.map((option) => (
               <MenuItem key={option.title} value={option._id}>
                 {option.title}
@@ -234,13 +249,23 @@ const RegisterCustomerForm = (props) => {
           </Grid>
         </Grid>
       </CardContent>
-      <AppButton
-        color="light"
-        disabled={!formState.isValid}
-        onClick={() => props.onAddAddress(formState.values)}
-      >
-        Add address
-      </AppButton>
+      {updatedAddressID !== "" ? (
+        <AppButton
+          color="error"
+          disabled={!formState.isValid}
+          onClick={handleDeleteAddress}
+        >
+          Delete address
+        </AppButton>
+      ) : (
+        <AppButton
+          color="light"
+          disabled={!formState.isValid}
+          onClick={() => props.onAddAddress(formState.values)}
+        >
+          Add address
+        </AppButton>
+      )}
     </>
   );
 };
