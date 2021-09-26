@@ -1,15 +1,15 @@
-import { useState, useEffect, useContext } from "react";
-import { LinearProgress } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+// import { useState, useEffect, useContext } from "react";
+// import { LinearProgress } from "@material-ui/core";
+// import { useHistory } from "react-router-dom";
 
-import { AppContext } from '../../store'
+// import { AppContext } from '../../store'
 import AppButton from "../../components/AppButton";
-import api from "../../api";
+// import api from "../../api";
 
 const AllRoutesView = () => {
-  const history = useHistory();
-  const [loading, setLoading] = useState(true);
-  const [state, dispatch] = useContext(AppContext);
+  // const history = useHistory();
+  // const [loading, setLoading] = useState(true);
+  // const [state, dispatch] = useContext(AppContext);
   
   // useEffect(() => {
   //   if (state.customers.length) {

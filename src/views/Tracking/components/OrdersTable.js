@@ -161,25 +161,25 @@ export default function OrdersTable({ data }) {
     setPage(newPage);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+  // const handleClick = (event, name) => {
+  //   const selectedIndex = selected.indexOf(name);
+  //   let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, name);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1),
+  //     );
+  //   }
 
-    setSelected(newSelected);
-  };
+  //   setSelected(newSelected);
+  // };
   
   const handleSingleOrderView = (id) => {
     history.push(`tracking/${id}`);

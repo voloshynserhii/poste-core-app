@@ -18,7 +18,7 @@ const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = fals
   const [modal, setModal] = useState();
   const title = capitalize(collection);
   const history = useHistory();
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
 
   const updateRecord = async () => {
     const res = await api.orders.update(collection, id, payload);
