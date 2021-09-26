@@ -1,9 +1,7 @@
-import { makeStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import { makeStyles } from "@material-ui/core/styles";
+import {IconButton, Typography, Toolbar, Tooltip} from "@material-ui/core"
+import FilterListIcon from "@material-ui/icons/FilterList";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
@@ -11,23 +9,46 @@ const useToolbarStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
   title: {
-    flex: '1 1 100%',
+    flex: "1 1 100%",
   },
 }));
 
 const UsersToolbar = (props) => {
   const classes = useToolbarStyles();
+  const { numSelected } = props;
 
   return (
-    <Toolbar className={classes.root}>
-      <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+    <Toolbar
+      className={classes.root}
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) => theme.palette.primary.main
+        }),
+      }}
+    >
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
         Orders Table
       </Typography>
-      <Tooltip title="Filter list">
+      {numSelected > 0 ? (
+        <Tooltip title="Delete">
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Filter list">
         <IconButton aria-label="filter list" onClick={props.onFilter}>
           <FilterListIcon />
         </IconButton>
       </Tooltip>
+      )}
     </Toolbar>
   );
 };

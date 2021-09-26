@@ -9,10 +9,10 @@ async function collectionUpdate(id, payload) {
       'Content-Type': 'application/json',
     },
   });
-  console.log(res, payload);
+
   return {
     id,
-    ...payload
+    ...res
   };
 }
 

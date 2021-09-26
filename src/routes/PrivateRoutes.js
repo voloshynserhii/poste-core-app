@@ -9,6 +9,7 @@ import { PrivateLayout } from './Layout';
 // import UserRoutes from '../views/User';
 import Tracking from '../views/Tracking';
 import Customers from '../views/Customers';
+import Routes from '../views/Routes';
 import Users from '../views/Users';
 import { Welcome, MyProfile } from '../views';
 
@@ -25,6 +26,7 @@ const PrivateRoutes = () => {
       const orders = await api.orders.read(); // List of All orders
       const customers = await api.customers.read(); // List of All customers
       const users = await api.users.read(); // List of All users
+      //const routes = await api.routes.read(); // List of All routes
       if (orders) {
         dispatch({ type: 'SET_ORDERS', orders: orders });
       }
@@ -34,6 +36,9 @@ const PrivateRoutes = () => {
       if (users) {
         dispatch({ type: 'SET_USERS', users: users });
       }
+      // if (routes) {
+      //   dispatch({ type: 'SET_ROUTES', routes: routes });
+      // } 
       setLoading(false);
     }
     fetchData();
@@ -49,6 +54,7 @@ const PrivateRoutes = () => {
         <Route path="/tracking" component={Tracking} />
         <Route path="/customer" component={Customers} />
         <Route path="/user" component={Users} />
+        <Route path="/route" component={Routes} />
         <Route path="/me" component={MyProfile} />,
         <SharedRoutes />
       </Switch>

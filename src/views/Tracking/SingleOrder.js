@@ -49,7 +49,7 @@ const VALIDATE_FORM_ORDER = {
 const SingleOrderView = () => {
   const history = useHistory();
   const params = useParams();
-  const [state] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState({});
   const [assignedCurier, setAssignedCurier] = useState({});
@@ -145,6 +145,7 @@ const SingleOrderView = () => {
     //show modal do you really want to delete order?
     const res = await api.orders.delete(id);
     if (res.status === 200) {
+      dispatch({ type: 'DELETE_ORDER', payload: id });
       history.replace("/tracking");
       //show modal
     }
@@ -250,7 +251,7 @@ const SingleOrderView = () => {
                 required
                 label="Assigned Curier"
                 name="assignedCurier"
-                defaultValue={assignedCurier._id}
+                defaultValue={assignedCurier?._id}
                 error={fieldHasError("assignedCurier")}
                 helperText={
                   fieldGetError("assignedCurier") ||

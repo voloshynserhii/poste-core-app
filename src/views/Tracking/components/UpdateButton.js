@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
 import api from "../../../api";
+import { AppContext } from "../../../store";
 import { AppButton } from '../../../components/AppButton';
 import { ConfirmationDialog } from '../../../components/Dialogs';
 import { capitalize } from '../../../utils/string';
@@ -17,10 +18,13 @@ const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = fals
   const [modal, setModal] = useState();
   const title = capitalize(collection);
   const history = useHistory();
+  const [state, dispatch] = useContext(AppContext);
 
   const updateRecord = async () => {
-    console.log(payload, id, collection)
-    await api.orders.update(collection, id, payload);
+    const res = await api.orders.update(collection, id, payload);
+    if (res.status === 200) {
+      dispatch({ type: 'UPDATE_ORDER', id: id, updatedOrder: res.data });
+    }
   };
 
   const onDialogClose = useCallback((event, reason) => {

@@ -41,7 +41,7 @@ const VALIDATE_FORM_ORDER = {
 
 const OrderForm = ({ onCancel }) => {
   const history = useHistory();
-  const [state] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
   const [orderSaved, setOrderSaved] = useState(false);
   const [foundCustomer, setFoundCustomer] = useState(null);
@@ -104,7 +104,12 @@ const OrderForm = ({ onCancel }) => {
         customer: foundCustomer._id,
       };
       // save changes in BD
-      await api.orders.create(savedOrder);
+      const res = await api.orders.create(savedOrder);
+      console.log("RESULT", res.data.data.order);
+      const newOrder = res.data.data.order;
+      if(res.status === 201) {
+        dispatch({ type: 'ADD_ORDER', payload: newOrder });
+      }
       setOrderSaved(true);
     } else {
       return <AppAlert severity="No customer found in DB" />;

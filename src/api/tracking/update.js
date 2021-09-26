@@ -9,11 +9,8 @@ async function collectionUpdate(collection, id, payload) {
       'Content-Type': 'application/json',
     },
   });
-  console.log(res, payload);
-  return {
-    id,
-    ...payload
-  };
+
+  return res;
 }
 
 export default collectionUpdate;

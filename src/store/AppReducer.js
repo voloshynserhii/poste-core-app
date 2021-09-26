@@ -37,15 +37,56 @@ const AppReducer = (state, action) => {
         ...state,
         orders: action?.orders || action?.payload,
       };
+    case 'ADD_ORDER':
+      const newOrderArr = [...state.orders, action.payload];
+      return {
+        ...state,
+        orders: newOrderArr,
+      };
+    case 'UPDATE_ORDER':
+      let updatedOrder = {_id: action.id, ...action.updatedOrder};
+      let orderArr = [...state.orders];
+      let i = orderArr.findIndex(order => order._id === action.id)
+      orderArr.splice(i, 1, updatedOrder);
+      return {
+        ...state,
+        orders: orderArr,
+      };
+    case 'DELETE_ORDER':
+      const deleteOrderId = action.payload;
+      const orderArray = [...state.orders];
+      const index = orderArray.indexOf(order => order._id === deleteOrderId)
+      const updatedOrderArr = orderArray.splice(index, 0);
+      return {
+        ...state,
+        orders: updatedOrderArr,
+      };
     case 'SET_USERS':
       return {
         ...state,
         users: action?.users || action?.payload,
       };
+    case 'ADD_USER':
+      const newUserArr = [...state.users, action.payload];
+      return {
+        ...state,
+        users: newUserArr,
+      };
     case 'SET_CUSTOMERS':
       return {
         ...state,
         customers: action?.customers || action?.payload,
+      };
+    case 'ADD_CUSTOMERS':
+      const newCustomerArr = [...state.customers, action.payload];
+      return {
+        ...state,
+        customers: newCustomerArr,
+      };
+    case 'SET_ROUTES':
+      return {
+        ...state,
+        routes: action?.routes || action?.payload,
       };
     case 'SET_ERROR':
       return {

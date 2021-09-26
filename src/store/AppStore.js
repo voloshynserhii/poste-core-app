@@ -11,7 +11,8 @@ const initialAppState = {
   currentUser: null,
   orders: [],
   customers: [],
-  users: []
+  users: [],
+  routes: [],
 };
 
 /**

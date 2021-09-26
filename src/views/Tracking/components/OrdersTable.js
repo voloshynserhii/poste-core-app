@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import {
+  Checkbox,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TablePagination,
+  TableRow,
+} from "@material-ui/core";
 
 import { AppContext } from "../../../store";
 import OrdersToolbar from "./OrdersToolbar";
@@ -83,6 +86,7 @@ export default function OrdersTable({ data }) {
   const [orderBy, setOrderBy] = React.useState("balance");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage] = React.useState(10);
+  const [selected, setSelected] = React.useState([]);
 
   function createData(
     id,
@@ -110,14 +114,16 @@ export default function OrdersTable({ data }) {
       weight,
       declaredValue,
       date,
-      updateDate
+      updateDate,
     };
   }
 
   useEffect(() => {
     const rows = data.map((order) => {
       const customer = state.customers?.find((c) => c._id === order.customer);
-      const assignedCurier = state.users?.find((c) => c._id === order.assignedCurier);
+      const assignedCurier = state.users?.find(
+        (c) => c._id === order.assignedCurier
+      );
       return createData(
         order._id,
         order.trackingNumber,
@@ -129,8 +135,8 @@ export default function OrdersTable({ data }) {
         order.submissionSource || "no submission source",
         order.weight || 0,
         order.declaredValue || 0,
-        order.createdAt,
-        order.updateDate
+        order.createdAt || "today",
+        order.updateDate || "today"
       );
     });
     setRows(rows.reverse());
@@ -142,21 +148,50 @@ export default function OrdersTable({ data }) {
     setOrderBy(property);
   };
 
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n.name);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+  
   const handleSingleOrderView = (id) => {
     history.push(`tracking/${id}`);
   };
-
+  const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <OrdersToolbar />
+        <OrdersToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -169,13 +204,16 @@ export default function OrdersTable({ data }) {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
+              numSelected={selected.length}
+              onSelectAllClick={handleSelectAllClick}
+              rowCount={rows.length}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  const isItemSelected = isSelected(row.name);
                   return (
                     <TableRow
                       className={
@@ -185,12 +223,25 @@ export default function OrdersTable({ data }) {
                           ? classes.green
                           : null
                       }
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
                       hover
                       style={{ cursor: "pointer" }}
                       key={row.id}
+                      selected={isItemSelected}
+                      // onClick={(event) => handleClick(event, row.name)}
                       onClick={() => handleSingleOrderView(row.id)}
                     >
-                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </TableCell>
                       <TableCell
                         component="th"
                         id={labelId}
@@ -199,8 +250,20 @@ export default function OrdersTable({ data }) {
                       >
                         {row.trackingNumber}
                       </TableCell>
-                      <TableCell style={{ minWidth: 200 }} align="left" padding="none">{row.customer}</TableCell>
-                      <TableCell style={{ minWidth: 200 }} align="left" padding="none">{row.assignedCurier}</TableCell>
+                      <TableCell
+                        style={{ minWidth: 200 }}
+                        align="left"
+                        padding="none"
+                      >
+                        {row.customer}
+                      </TableCell>
+                      <TableCell
+                        style={{ minWidth: 200 }}
+                        align="left"
+                        padding="none"
+                      >
+                        {row.assignedCurier}
+                      </TableCell>
                       <TableCell align="left">{row.collectionFrom}</TableCell>
                       <TableCell align="left">{row.deliveryTo}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
@@ -208,10 +271,14 @@ export default function OrdersTable({ data }) {
                       <TableCell align="left">{row.weight}</TableCell>
                       <TableCell align="left">{row.declaredValue}</TableCell>
                       <TableCell align="left">
-                        {row.date.replace("T", " ").replace("Z", " ").slice(0, 16)}
+                        {row.date
+                          ?.replace("T", " ")
+                          .replace("Z", " ")
+                          .slice(0, 16) || "today"}
                       </TableCell>
                       <TableCell align="left">
-                        {row.updateDate.replace("T", " ").replace("Z", " ").slice(0, 16)}
+                        {/* {row.updateDate?.replace("T", " ").replace("Z", " ").slice(0, 16) || 'today'} */}
+                        {row.updateDate}
                       </TableCell>
                       {/* <TableCell align="left">
                         <AppButton

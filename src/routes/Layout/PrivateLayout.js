@@ -72,8 +72,8 @@ const SIDE_BAR_PRIVATE_ITEMS = [
     icon: 'provider',
   },
   {
-    title: 'Vehicles',
-    href: '/vehicle',
+    title: 'Routes',
+    href: '/route',
     icon: 'category',
   },
   {
