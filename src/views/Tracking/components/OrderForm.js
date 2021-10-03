@@ -105,7 +105,7 @@ const OrderForm = ({ onCancel }) => {
       };
       // save changes in BD
       const res = await api.orders.create(savedOrder);
-      console.log("RESULT", res.data.data.order);
+
       const newOrder = res.data.data.order;
       if(res.status === 201) {
         dispatch({ type: 'ADD_ORDER', payload: newOrder });

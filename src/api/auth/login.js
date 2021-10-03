@@ -1,7 +1,8 @@
 import { api } from '..';
 import { clearAuthData, fakeApiResponse, saveRefreshToken, saveToken, setRefreshTimeout } from './utils';
 
-const ENDPOINT = 'auth/login';
+// const ENDPOINT = 'auth/login';
+const ENDPOINT ='/api/users/login'
 const METHOD = 'login()';
 
 export async function loginByFirebase({ email, password }) {
@@ -45,7 +46,7 @@ export async function loginByAxios({ email, password }) {
     const { data } = res;
     log.warn(`${METHOD} -`, data);
 
-    saveToken(data?.access_token);
+    saveToken(data?.token);
     saveRefreshToken(data?.refresh_token);
     setRefreshTimeout(data?.expires);
     log.warn(METHOD, '- token expires in', +data?.expires / 1000 / 60, 'minutes');
@@ -57,4 +58,4 @@ export async function loginByAxios({ email, password }) {
   return undefined;
 }
 
-export default loginByFirebase;
+export default loginByAxios;

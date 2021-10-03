@@ -88,7 +88,7 @@ export default function UsersTable({ data }) {
     email,
     phone,
     role,
-    date
+    createdAt
   ) {
     return {
       id,
@@ -96,7 +96,7 @@ export default function UsersTable({ data }) {
       email,
       phone,
       role,
-      date
+      createdAt
     };
   }
 
@@ -175,7 +175,7 @@ export default function UsersTable({ data }) {
                       <TableCell style={{ minWidth: 200 }} align="left">{row.email}</TableCell>
                       <TableCell style={{ minWidth: 180 }} align="left">{row.phone}</TableCell>
                       <TableCell style={{ minWidth: 200 }} align="left">{row.role}</TableCell>
-                      <TableCell align="left">{row.date.replace('T', ' ').replace('Z', ' ')}</TableCell>
+                      <TableCell align="left">{row?.createdAt?.replace('T', ' ').replace('Z', ' ')}</TableCell>
                     </TableRow>
                   );
                 })}

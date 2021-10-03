@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import {
   makeStyles,
   Grid,
@@ -10,6 +10,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 
+import { AppContext } from "../../../store";
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
@@ -47,7 +48,7 @@ const VALIDATE_FORM_USER = {
   email: {
     type: "string",
     presence: { allowEmpty: false },
-  },  
+  },
   password: {
     type: "string",
     presence: { allowEmpty: false },
@@ -55,6 +56,7 @@ const VALIDATE_FORM_USER = {
 };
 
 const RegisterUserForm = ({ onCancel }) => {
+  const [state, dispatch] = useContext(AppContext);
   const classes = userForm();
   const [userSaved, setUserSaved] = useState(false);
   const [curier, setCurier] = useState(false);
@@ -88,14 +90,22 @@ const RegisterUserForm = ({ onCancel }) => {
     let role;
     if (curier) role = "curier";
     if (dispatcher) role = "dispatcher";
-    
+
     const newUser = {
       ...formState.values,
       role: role,
+    };
+    try {
+      // save changes in BD
+      const res = await api.users.create(newUser);
+      const savedUser = res.data.data.user;
+      if (res.status === 201) {
+        dispatch({ type: "ADD_USER", payload: savedUser });
+        setUserSaved(true);
+      }
+    } catch (err) {
+      alert("Something went wrong. Please try another email address")
     }
-    // save changes in BD
-    await api.users.create(newUser);
-    setUserSaved(true);
   };
   const handleSave = () => {
     // Save without confirmation
@@ -138,7 +148,9 @@ const RegisterUserForm = ({ onCancel }) => {
             value={values?.password}
             defaultValue={values.password}
             error={fieldHasError("password")}
-            helperText={fieldGetError("password") || "Provide a password of the user"}
+            helperText={
+              fieldGetError("password") || "Provide a password of the user"
+            }
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />

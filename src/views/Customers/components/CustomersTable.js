@@ -89,7 +89,7 @@ export default function OrdersTable({ data }) {
     phone,
     company,
     taxId,
-    date
+    createdAt
   ) {
     return {
       id,
@@ -98,7 +98,7 @@ export default function OrdersTable({ data }) {
       phone,
       company,
       taxId,
-      date
+      createdAt
     };
   }
 
@@ -179,7 +179,7 @@ export default function OrdersTable({ data }) {
                       <TableCell style={{ minWidth: 180 }} align="left">{row.phone}</TableCell>
                       <TableCell style={{ minWidth: 200 }} align="left">{row.company}</TableCell>
                       <TableCell style={{ minWidth: 100 }} align="left">{row.taxId}</TableCell>
-                      <TableCell align="left">{row.date.replace('T', ' ').replace('Z', ' ')}</TableCell>
+                      <TableCell align="left">{row?.createdAt?.replace('T', ' ').replace('Z', ' ')}</TableCell>
                     </TableRow>
                   );
                 })}

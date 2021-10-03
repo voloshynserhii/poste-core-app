@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
+  Checkbox,
+  FormControlLabel,
   Grid,
   TextField,
   Card,
@@ -9,6 +11,7 @@ import {
   LinearProgress,
 } from "@material-ui/core";
 
+import { AppContext } from "../../store";
 import api from "../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
@@ -31,6 +34,7 @@ const VALIDATE_FORM_USER = {
 };
 
 const SingleUserView = () => {
+  const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const params = useParams();
   const [loading, setLoading] = useState(false);
@@ -48,7 +52,6 @@ const SingleUserView = () => {
       setError("");
       try {
         const res = await api.users.read(id);
-        console.log(res);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
@@ -92,12 +95,13 @@ const SingleUserView = () => {
     //show modal do you really want to delete user?
     const res = await api.users.delete(id);
     if (res.status === 200) {
+      dispatch({ type: "DELETE_USER", payload: id });
       history.replace("/user");
       //show modal
     }
     alert(res.data.message);
   };
-  
+
   if (loading) return <LinearProgress />;
 
   return (
@@ -122,6 +126,7 @@ const SingleUserView = () => {
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
+                disabled
                 label="Email"
                 name="email"
                 value={values?.email}
@@ -144,30 +149,61 @@ const SingleUserView = () => {
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
-                required
                 label="New password"
                 name="password"
                 value={values?.password}
-                defaultValue={values.password}
                 error={fieldHasError("password")}
                 helperText={
-                  fieldGetError("password") || "Provide a new password of the user"
+                  fieldGetError("password") ||
+                  "Provide a new password of the user"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
-                required
                 label="Confirm password"
                 name="confirmPassword"
                 value={values?.confirmPassword}
-                defaultValue={values.confirmPassword}
+                // defaultValue={values.confirmPassword}
                 error={fieldHasError("confirmPassword")}
                 helperText={
-                  fieldGetError("confirmPassword") || "Confirm a new password of the user"
+                  fieldGetError("confirmPassword") ||
+                  "Confirm a new password of the user"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={values.role === "curier"}
+                    // onChange={() => {
+                    //   setCurier((old) => !old);
+                    //   if (dispatcher) {
+                    //     setDispatcher(false);
+                    //   }
+                    // }}
+                    name="curier"
+                    color="primary"
+                  />
+                }
+                label="Curier"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={values.role === "dispatcher"}
+                    // onChange={() => {
+                    //   setDispatcher((prev) => !prev);
+                    //   if (curier) {
+                    //     setCurier(false);
+                    //   }
+                    // }}
+                    name="curier"
+                    color="primary"
+                  />
+                }
+                label="Dispatcher"
               />
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>

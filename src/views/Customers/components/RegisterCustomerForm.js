@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import {
   makeStyles,
@@ -9,6 +9,7 @@ import {
   CardContent,
 } from "@material-ui/core";
 
+import { AppContext } from "../../../store";
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
@@ -38,6 +39,7 @@ const VALIDATE_FORM_CUSTOMER = {
 
 const RegisterCustomerForm = ({ onCancel }) => {
   const history = useHistory();
+  const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
   const [addressList, setAddressList] = useState([]);
 
@@ -70,8 +72,17 @@ const RegisterCustomerForm = ({ onCancel }) => {
 
   const saveRecord = async () => {
     // save changes in BD
-    await api.customers.create({...formState.values, addressList});
-    history.push('/customer');
+    try {
+      const res = await api.customers.create({...formState.values, addressList});
+      const newCustomer = res.data.data.customer;
+      if(res.status === 201) {
+        dispatch({ type: 'ADD_CUSTOMER', payload: newCustomer });
+      }
+      history.push('/customer');
+    } catch (err) {
+      alert("Something went wrong. Please try again with another email address")
+    }
+
   };
 
   const handleSave = () => {

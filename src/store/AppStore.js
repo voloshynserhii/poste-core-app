@@ -52,6 +52,7 @@ const AppStore = ({ children }) => {
   };
 
   const [state, dispatch] = useReducer(AppReducer, initialState);
+
   return <AppContext.Provider value={[state, dispatch]}>{children}</AppContext.Provider>;
 };
 

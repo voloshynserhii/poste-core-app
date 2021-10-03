@@ -30,6 +30,7 @@ export default function OrdersTableHead(props) {
     <TableHead>
       <TableRow>
         <TableCell>#</TableCell>
+        <TableCell>Menu</TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}

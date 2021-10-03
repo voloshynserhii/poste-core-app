@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 
+import Menu from "../../../components/Menu";
 import { AppContext } from "../../../store";
 import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
@@ -231,7 +232,7 @@ export default function OrdersTable({ data }) {
                       key={row.id}
                       selected={isItemSelected}
                       // onClick={(event) => handleClick(event, row.name)}
-                      onClick={() => handleSingleOrderView(row.id)}
+                      // onClick={() => handleSingleOrderView(row.id)}
                     >
                       <TableCell>
                         <Checkbox
@@ -242,11 +243,14 @@ export default function OrdersTable({ data }) {
                           }}
                         />
                       </TableCell>
+                      <TableCell>
+                        <Menu />
+                      </TableCell>
                       <TableCell
                         component="th"
                         id={labelId}
                         scope="row"
-                        // padding="none"
+                        onClick={() => handleSingleOrderView(row.id)}
                       >
                         {row.trackingNumber}
                       </TableCell>

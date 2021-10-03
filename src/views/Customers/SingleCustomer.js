@@ -45,7 +45,7 @@ const VALIDATE_FORM_ORDER = {
 };
 
 const SingleCustomerView = () => {
-  const [state, ] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const params = useParams();
   const [loading, setLoading] = useState(false);
@@ -57,15 +57,15 @@ const SingleCustomerView = () => {
     });
   const values = formState.values;
   const id = params?.id;
-  
+
   const fetchCustomerById = useCallback(
     async (id) => {
       setLoading(true);
       setError("");
       try {
-        const res = await state.customers.find(c => c._id === id);
+        const res = await state.customers.find((c) => c._id === id);
         if (res) {
-          setAddressList(res.addressList)
+          setAddressList(res.addressList);
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
@@ -75,7 +75,7 @@ const SingleCustomerView = () => {
               phone: res?.phone || "Pending",
               company: res?.company || "",
               taxId: res?.taxId || "",
-              updateDate: Date.now()
+              updateDate: Date.now(),
             },
           }));
         } else {
@@ -108,16 +108,16 @@ const SingleCustomerView = () => {
     //show modal do you really want to delete order?
     const res = await api.customers.delete(id);
     if (res.status === 200) {
+      dispatch({ type: "DELETE_CUSTOMER", payload: id });
       history.replace("/customer");
       //show modal
     }
     alert(res.data.message);
   };
 
-  const getAddressValues = useCallback(
-    (val) => {
-      setAddressList((prev) => [...prev, val]);
-    },[]);
+  const getAddressValues = useCallback((val) => {
+    setAddressList((prev) => [...prev, val]);
+  }, []);
 
   if (loading) return <LinearProgress />;
 
@@ -216,7 +216,7 @@ const SingleCustomerView = () => {
                   collection="customers"
                   color="primary"
                   id={id}
-                  payload={{...values, addressList: addressList}}
+                  payload={{ ...values, addressList: addressList }}
                 >
                   Update customer
                 </UpdateButton>
