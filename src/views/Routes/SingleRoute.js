@@ -16,30 +16,30 @@ import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
 
 const VALIDATE_FORM_ROUTE = {
-  weight: {
+  title: {
     type: "string",
     presence: { allowEmpty: false },
   },
-  dimensions: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
-  declaredValue: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  status: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
-  comments: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  description: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
+  // dimensions: {
+  //   type: "string",
+  //   presence: { allowEmpty: false },
+  // },
+  // declaredValue: {
+  //   type: "string",
+  //   presence: { allowEmpty: true },
+  // },
+  // status: {
+  //   type: "string",
+  //   presence: { allowEmpty: false },
+  // },
+  // comments: {
+  //   type: "string",
+  //   presence: { allowEmpty: true },
+  // },
+  // description: {
+  //   type: "string",
+  //   presence: { allowEmpty: true },
+  // },
 };
 
 const SingleRouteView = () => {
@@ -60,18 +60,18 @@ const SingleRouteView = () => {
       setLoading(true);
       setError("");
       try {
-        const res = await state.customers.find(c => c._id === id);
+        const res = await state.route.find(c => c._id === id);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
             values: {
               ...oldFormState.values,
-              name: res?.name || "",
-              email: res?.email || "",
-              phone: res?.phone || "Pending",
-              company: res?.company || "",
-              taxId: res?.taxId || "",
-              updateDate: Date.now()
+              title: res?.title || "",
+              // email: res?.email || "",
+              // phone: res?.phone || "Pending",
+              // company: res?.company || "",
+              // taxId: res?.taxId || "",
+              // updateDate: Date.now()
             },
           }));
         } else {

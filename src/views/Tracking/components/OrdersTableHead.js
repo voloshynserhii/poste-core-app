@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
 
 const headCells = [
   { id: 'trackingNumber', numeric: false, disablePadding: true, label: 'Tracking Number' },
@@ -21,7 +18,7 @@ const headCells = [
 ];
 
 export default function OrdersTableHead(props) {
-  const { classes, order, orderBy, onRequestSort } = props;
+  const { classes, numSelected, order, orderBy, rowCount, onSelectAllClick, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -29,8 +26,15 @@ export default function OrdersTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>#</TableCell>
-        <TableCell>Menu</TableCell>
+      <TableCell padding="checkbox">
+          <Checkbox
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{ 'aria-label': 'select all desserts' }}
+          />
+        </TableCell>
+        <TableCell></TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}

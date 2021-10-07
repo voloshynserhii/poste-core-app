@@ -134,13 +134,13 @@ const AppReducer = (state, action) => {
       const newRouteArr = [...state.routes, action.payload];
       return {
         ...state,
-        orders: newRouteArr,
+        routes: newRouteArr,
       };
     case "UPDATE_ROUTE":
       let updatedRoute = { _id: action.id, ...action.updatedRoute };
       let routeArr = [...state.routes];
       let j = routeArr.findIndex((route) => route._id === action.id);
-      routeArr.splice(i, 1, updatedRoute);
+      routeArr.splice(j, 1, updatedRoute);
       return {
         ...state,
         routes: routeArr,
@@ -151,7 +151,7 @@ const AppReducer = (state, action) => {
       const delIndex = routeArray.indexOf(
         (route) => route._id === deleteRouteId
       );
-      const updatedRouteArr = routeArray.splice(index, 0);
+      const updatedRouteArr = routeArray.splice(delIndex, 0);
       return {
         ...state,
         routes: updatedRouteArr,

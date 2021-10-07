@@ -1,7 +1,7 @@
 import { Route, Switch } from 'react-router-dom';
 import AllRoutesView from './AllRoutes';
 import SingleRouteView from './SingleRoute';
-// import CustomerForm from './components/RegisterCustomerForm';
+import RouteForm from './components/RegisterRouteForm';
 
 /**
  * Routes for "Routes" view
@@ -10,7 +10,7 @@ import SingleRouteView from './SingleRoute';
 const RouteRoutes = () => {
   return (
     <Switch>
-      {/* <Route path="/customer/form" component={CustomerForm} /> */}
+      <Route path="/route/form" component={RouteForm} />
       <Route path="/route/:id" component={SingleRouteView} />
       <Route path="/route" component={AllRoutesView} />
       <Route component={AllRoutesView} />

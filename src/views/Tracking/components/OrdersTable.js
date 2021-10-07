@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -12,8 +12,9 @@ import {
   TableRow,
 } from "@material-ui/core";
 
-import Menu from "../../../components/Menu";
+import api from "../../../api";
 import { AppContext } from "../../../store";
+import Menu from "../../../components/Menu";
 import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
 
@@ -78,16 +79,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const menuOptions = ["Assign to route", "Edit", "Delete"]
+
 export default function OrdersTable({ data }) {
-  const [state] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
   const [rows, setRows] = useState([]);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("balance");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage] = React.useState(10);
-  const [selected, setSelected] = React.useState([]);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("date");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selected, setSelected] = useState([]);
 
   function createData(
     id,
@@ -151,7 +154,7 @@ export default function OrdersTable({ data }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -161,38 +164,58 @@ export default function OrdersTable({ data }) {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
-  // const handleClick = (event, name) => {
-  //   const selectedIndex = selected.indexOf(name);
-  //   let newSelected = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, name);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1),
-  //     );
-  //   }
-
-  //   setSelected(newSelected);
-  // };
   
-  const handleSingleOrderView = (id) => {
-    history.push(`tracking/${id}`);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
+
+  const handleClick = (event, name) => {
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+
+    setSelected(newSelected);
+  };
+  
+  const handleDelete = async (id) => {
+    //show modal do you really want to delete order?
+    const res = await api.orders.delete(id);
+    if (res.status === 200) {
+      dispatch({ type: 'DELETE_ORDER', payload: id });
+      history.replace("/tracking");
+      //show modal
+    }
+    alert(res.data.message);
+  };
+  
+  const handleGetOption = (value, id) => {
+    if (value === "Edit") history.push(`tracking/${id}`);
+    if (value === "Delete") handleDelete(id);
+    if (value === "Assign to route") alert("Assign to route");
+  }
+  
   const isSelected = (name) => selected.indexOf(name) !== -1;
+  
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <OrdersToolbar numSelected={selected.length} />
+        <OrdersToolbar numSelected={selected.length} selectedList={selected}/>
         <TableContainer>
           <Table
             className={classes.table}
@@ -214,7 +237,7 @@ export default function OrdersTable({ data }) {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
                   return (
                     <TableRow
                       className={
@@ -231,8 +254,7 @@ export default function OrdersTable({ data }) {
                       style={{ cursor: "pointer" }}
                       key={row.id}
                       selected={isItemSelected}
-                      // onClick={(event) => handleClick(event, row.name)}
-                      // onClick={() => handleSingleOrderView(row.id)}
+                      onClick={(event) => handleClick(event, row.id)}
                     >
                       <TableCell>
                         <Checkbox
@@ -244,13 +266,12 @@ export default function OrdersTable({ data }) {
                         />
                       </TableCell>
                       <TableCell>
-                        <Menu />
+                        <Menu options={menuOptions} onMenuClick={(opt) => handleGetOption(opt, row.id)}/>
                       </TableCell>
                       <TableCell
                         component="th"
                         id={labelId}
                         scope="row"
-                        onClick={() => handleSingleOrderView(row.id)}
                       >
                         {row.trackingNumber}
                       </TableCell>
@@ -284,14 +305,6 @@ export default function OrdersTable({ data }) {
                         {/* {row.updateDate?.replace("T", " ").replace("Z", " ").slice(0, 16) || 'today'} */}
                         {row.updateDate}
                       </TableCell>
-                      {/* <TableCell align="left">
-                        <AppButton
-                          color="error"
-                          onClick={() => handleDisable(row.id)}
-                        >
-                          Delete
-                        </AppButton>
-                      </TableCell> */}
                     </TableRow>
                   );
                 })}
@@ -304,12 +317,13 @@ export default function OrdersTable({ data }) {
           </Table>
         </TableContainer>
         <TablePagination
-          // rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 25, 50, 100]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>

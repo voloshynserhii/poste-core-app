@@ -1,7 +1,7 @@
 import { api } from '..';
 
 async function collectionReadMany() {
-  const ref = await api.axios(`${process.env.REACT_APP_API_URL}/api/route`);
+  const ref = await api.axios(`${process.env.REACT_APP_API_URL}/api/route/`);
   const data = await ref.data.data.routes;
   if (!data) return [];
   return data;
