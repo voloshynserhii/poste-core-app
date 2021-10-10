@@ -3,18 +3,12 @@ import PropTypes from 'prop-types';
 import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
 
 const headCells = [
-  { id: 'trackingNumber', numeric: false, disablePadding: true, label: 'Tracking Number' },
-  { id: 'customer', numeric: false, disablePadding: true, label: 'Customer' },
-  { id: 'assignedCurier', numeric: false, disablePadding: true, label: 'Assigned Curier' },
-  { id: 'collectionFrom', numeric: false, disablePadding: false, label: 'Collection from' },
-  { id: 'deliveryTo', numeric: false, disablePadding: false, label: 'Delivery to' },
+  { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
+  { id: 'type', numeric: false, disablePadding: true, label: 'Type' },
+  { id: 'startPlace', numeric: false, disablePadding: true, label: 'Start place' },
+  { id: 'finishPlace', numeric: false, disablePadding: false, label: 'Finish place' },
+  { id: 'region', numeric: false, disablePadding: false, label: 'Region' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
-  { id: 'submissionSource', numeric: false, disablePadding: false, label: 'Source' },
-  { id: 'weight', numeric: false, disablePadding: false, label: 'Weight' },
-  { id: 'declaredValue', numeric: false, disablePadding: false, label: 'Value' },
-  { id: 'date', numeric: false, disablePadding: false, label: 'Created' },
-  { id: 'update', numeric: false, disablePadding: false, label: 'Last Update' },
-  // { id: 'action', numeric: false, disablePadding: false, label: 'Actions' },
 ];
 
 export default function OrdersTableHead(props) {

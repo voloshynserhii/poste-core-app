@@ -79,9 +79,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const menuOptions = ["Assign to route", "Edit", "Delete"]
+const menuOptions = ["Assign order", "Edit", "Delete"]
 
-export default function OrdersTable({ data }) {
+export default function RoutesTable({ data }) {
   const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
@@ -94,53 +94,42 @@ export default function OrdersTable({ data }) {
 
   function createData(
     id,
-    trackingNumber,
-    customer,
-    assignedCurier,
-    collectionFrom,
-    deliveryTo,
-    status,
-    submissionSource,
-    weight,
-    declaredValue,
-    date,
-    updateDate
+    title,
+    type,
+    startPlace,
+    finishPlace,
+    region,
+    status
+
   ) {
     return {
       id,
-      trackingNumber,
-      customer,
-      assignedCurier,
-      collectionFrom,
-      deliveryTo,
-      status,
-      submissionSource,
-      weight,
-      declaredValue,
-      date,
-      updateDate,
+      title,
+      type,
+      startPlace,
+      finishPlace,
+      region,
+      status
     };
   }
 
   useEffect(() => {
-    const rows = data.map((order) => {
-      const customer = state.customers?.find((c) => c._id === order.customer);
+    console.log(data)
+    const rows = data.map((route) => {
+      const customer = state.customers?.find((c) => c._id === route.customer);
       const assignedCurier = state.users?.find(
-        (c) => c._id === order.assignedCurier
+        (c) => c._id === route.assignedCurier
       );
       return createData(
-        order._id,
-        order.trackingNumber,
-        customer?.name || "no customer",
-        assignedCurier?.name || "no assigned curier",
-        order.collectionData?.city || "no address",
-        order.deliveryData?.city || "no address",
-        order.status || "no status",
-        order.submissionSource || "no submission source",
-        order.weight || 0,
-        order.declaredValue || 0,
-        order.createdAt || "today",
-        order.updateDate || "today"
+        route._id,
+        route.title,
+        // customer?.name || "no customer",
+        // assignedCurier?.name || "no assigned curier",
+        route.type || "no type",
+        route.startPlace || "no address",
+        route.finishPlace || "no address",
+        route.region || "no region",
+        route.status || "no status",
       );
     });
     setRows(rows.reverse());
@@ -273,38 +262,25 @@ export default function OrdersTable({ data }) {
                         id={labelId}
                         scope="row"
                       >
-                        {row.trackingNumber}
+                        {row.title}
                       </TableCell>
                       <TableCell
                         style={{ minWidth: 200 }}
                         align="left"
                         padding="none"
                       >
-                        {row.customer}
+                        {row.type}
                       </TableCell>
                       <TableCell
                         style={{ minWidth: 200 }}
                         align="left"
                         padding="none"
                       >
-                        {row.assignedCurier}
+                        {row.startPlace}
                       </TableCell>
-                      <TableCell align="left">{row.collectionFrom}</TableCell>
-                      <TableCell align="left">{row.deliveryTo}</TableCell>
+                      <TableCell align="left">{row.finishPlace}</TableCell>
+                      <TableCell align="left">{row.region}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
-                      <TableCell align="left">{row.submissionSource}</TableCell>
-                      <TableCell align="left">{row.weight}</TableCell>
-                      <TableCell align="left">{row.declaredValue}</TableCell>
-                      <TableCell align="left">
-                        {row.date
-                          ?.replace("T", " ")
-                          .replace("Z", " ")
-                          .slice(0, 16) || "today"}
-                      </TableCell>
-                      <TableCell align="left">
-                        {/* {row.updateDate?.replace("T", " ").replace("Z", " ").slice(0, 16) || 'today'} */}
-                        {row.updateDate}
-                      </TableCell>
                     </TableRow>
                   );
                 })}
