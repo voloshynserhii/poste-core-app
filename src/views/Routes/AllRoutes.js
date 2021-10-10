@@ -2,7 +2,9 @@ import { useState, useEffect, useContext } from "react";
 import { LinearProgress, TextField } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { Autocomplete } from "@material-ui/lab";
+
 import { AppContext } from '../../store'
+import RoutesTable from "./components/RoutesTable";
 import AppButton from "../../components/AppButton";
 import api from "../../api";
 
@@ -44,6 +46,7 @@ const AllRoutesView = () => {
           <TextField {...params} label="Choose route type" variant="outlined" />
         )}
       />
+      <RoutesTable data={state.routes} />
       <AppButton color="success" onClick={handleAddRoute}>
         Add Route
       </AppButton>
