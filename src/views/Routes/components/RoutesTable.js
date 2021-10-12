@@ -91,6 +91,7 @@ export default function RoutesTable({ data }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
+  const [assignRoute, setAssignRoute] = useState(false);
 
   function createData(
     id,
@@ -193,7 +194,7 @@ export default function RoutesTable({ data }) {
   const handleGetOption = (value, id) => {
     if (value === "Edit") history.push(`tracking/${id}`);
     if (value === "Delete") handleDelete(id);
-    if (value === "Assign to route") alert("Assign to route");
+    if (value === "Assign to route") setAssignRoute(true);
   }
   
   const isSelected = (name) => selected.indexOf(name) !== -1;
