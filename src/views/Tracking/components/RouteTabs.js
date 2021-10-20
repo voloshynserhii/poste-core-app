@@ -1,13 +1,12 @@
-import React from "react";
+import {useState, useEffect, useContext} from "react";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import {AppBar, Box, LinearProgress, Tabs, Tab, Typography} from "@material-ui/core";
+
+import { AppContext } from "../../../store";
 import RouteCheckboxes from "./RouteCheckboxes";
+import api from "../../../api";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,8 +51,50 @@ const useStyles = makeStyles((theme) => ({
 export default function FullWidthTabs() {
   const classes = useStyles();
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+  const [state, dispatch] = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
+  const [value, setValue] = useState(0);
+  const [routes, setRoutes] = useState();
+  const [lastMileRoutes, setLastMileRoutes] = useState();
+  const [transitRoutes, setTransitRoutes] = useState();
+  const [collectionRoutes, setCollectionRoutes] = useState();
+  const [peerRoutes, setPeerRoutes] = useState();
 
+  useEffect(() => {
+    if (state.routes.length) {
+      setLoading(false);
+      setRoutes(state.routes);
+    } else {
+      async function fetchData() {
+        const res = await api.routes.read(); // List of All routes
+        if (res) {
+          dispatch({ type: "SET_ROUTES", routes: res });
+          setLoading(false);
+          setRoutes(res);
+        }
+      }
+      fetchData();
+
+    }
+  }, [dispatch, state.orders.length]);
+  
+  useEffect(() => {
+    if (!!routes) {
+      setLastMileRoutes(() => {
+        return routes.filter(r => r.type === "lastMile")
+      });
+      setTransitRoutes(() => {
+        return routes.filter(r => r.type === "transit")
+      });
+      setCollectionRoutes(() => {
+        return routes.filter(r => r.type === "collection")
+      });
+      setPeerRoutes(() => {
+        return routes.filter(r => r.type === "peer-to-peer")
+      });
+    }
+  }, [routes]);
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -61,7 +102,9 @@ export default function FullWidthTabs() {
   const handleChangeIndex = (index) => {
     setValue(index);
   };
-
+  
+  if (loading) return <LinearProgress />;
+  
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -73,9 +116,10 @@ export default function FullWidthTabs() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="Last mile" {...a11yProps(0)} />
+          <Tab label="Collection" {...a11yProps(1)} />
+          <Tab label="Transit" {...a11yProps(2)} />
+          <Tab label="Peer-topeer" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -84,13 +128,16 @@ export default function FullWidthTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <RouteCheckboxes />
+          <RouteCheckboxes data={lastMileRoutes}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <RouteCheckboxes />
+          <RouteCheckboxes data={collectionRoutes}/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <RouteCheckboxes />
+          <RouteCheckboxes data={transitRoutes}/>
+        </TabPanel>
+        <TabPanel value={value} index={3} dir={theme.direction}>
+          <RouteCheckboxes data={peerRoutes}/>
         </TabPanel>
       </SwipeableViews>
     </div>

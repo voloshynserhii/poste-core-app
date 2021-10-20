@@ -8,13 +8,12 @@ import AddIcon from "@material-ui/icons/Add";
 import { AppContext } from "../../store";
 import api from "../../api";
 import OrdersTable from "./components/OrdersTable";
-import AppButton from "../../components/AppButton";
 
 const useStyles = makeStyles((theme) => ({
   fixedButton: {
     position: "fixed",
     bottom: "3%",
-    left: "22%",
+    left: "25%",
   },
 }));
 
