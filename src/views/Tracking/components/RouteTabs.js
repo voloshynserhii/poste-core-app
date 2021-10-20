@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FullWidthTabs() {
+export default function FullWidthTabs({orderId}) {
   const classes = useStyles();
   const theme = useTheme();
   const [state, dispatch] = useContext(AppContext);
@@ -128,16 +128,16 @@ export default function FullWidthTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <RouteCheckboxes data={lastMileRoutes}/>
+          <RouteCheckboxes data={lastMileRoutes} orderId={orderId}/>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <RouteCheckboxes data={collectionRoutes}/>
+          <RouteCheckboxes data={collectionRoutes} orderId={orderId}/>
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <RouteCheckboxes data={transitRoutes}/>
+          <RouteCheckboxes data={transitRoutes} orderId={orderId}/>
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
-          <RouteCheckboxes data={peerRoutes}/>
+          <RouteCheckboxes data={peerRoutes} orderId={orderId}/>
         </TabPanel>
       </SwipeableViews>
     </div>

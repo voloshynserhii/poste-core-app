@@ -93,6 +93,7 @@ export default function OrdersTable({ data }) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
   const [assignRoute, setAssignRoute] = useState(false);
+  const [orderToAssignRoute, setOrderToAssignRoute] = useState()
 
   function createData(
     id,
@@ -106,7 +107,8 @@ export default function OrdersTable({ data }) {
     weight,
     declaredValue,
     date,
-    updateDate
+    updateDate,
+    routeData
   ) {
     return {
       id,
@@ -121,6 +123,7 @@ export default function OrdersTable({ data }) {
       declaredValue,
       date,
       updateDate,
+      routeData
     };
   }
 
@@ -142,7 +145,8 @@ export default function OrdersTable({ data }) {
         order.weight || 0,
         order.declaredValue || 0,
         order.createdAt || "today",
-        order.updateDate || "today"
+        order.updateDate || "today",
+        order.routeData || [],
       );
     });
     setRows(rows.reverse());
@@ -206,7 +210,10 @@ export default function OrdersTable({ data }) {
   const handleGetOption = (value, id) => {
     if (value === "Edit") history.push(`tracking/${id}`);
     if (value === "Delete") handleDelete(id);
-    if (value === "Assign to route") setAssignRoute(true);
+    if (value === "Assign to route") {
+      setAssignRoute(true);
+      setOrderToAssignRoute(id);
+    }
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -216,7 +223,7 @@ export default function OrdersTable({ data }) {
 
   return (
     <div className={classes.root}>
-      {assignRoute && <RouteTabs />}
+      {assignRoute && <RouteTabs orderId={orderToAssignRoute}/>}
       {!assignRoute && (
         <Paper className={classes.paper}>
           <OrdersToolbar

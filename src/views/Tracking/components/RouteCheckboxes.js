@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Checkbox,
@@ -7,6 +7,9 @@ import {
   FormControlLabel,
   FormHelperText,
 } from "@material-ui/core";
+
+import { AppContext } from "../../../store";
+import api from "../../../api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,18 +20,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CheckboxesGroup({ data }) {
+export default function CheckboxesGroup({ data, orderId }) {
   const classes = useStyles();
-  const [state, setState] = useState({
-    gilad: true,
-    jason: false,
-    antoine: false,
-  });
+  const [state, dispatch] = useContext(AppContext);
+  const [checked, setChecked] = useState([]);
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+  useEffect(() => {
+    const order = state.orders.find(order => order._id === orderId);
+    setChecked(order.routeData);
+  }, [])
+
+  const handleChange = async (event) => {
+    if (!checked?.includes(event.target.id)) {
+      setChecked([...checked, event.target.id]);
+      const res = await api.orders.assignRoute(orderId, event.target.id);
+    } else {
+      const newChecked = checked.filter((item) => item !== event.target.id);
+      const res = await api.orders.unassignRoute(orderId, event.target.id);
+      setChecked(newChecked);
+    }
   };
- 
+
   return (
     <div className={classes.root} data={data}>
       <FormControl component="fieldset" className={classes.formControl}>
@@ -38,18 +50,20 @@ export default function CheckboxesGroup({ data }) {
               <FormControlLabel
                 control={
                   <Checkbox
-                    // checked={gilad}
+                    checked={checked?.includes(route?._id)}
                     onChange={handleChange}
                     name={route.title}
+                    id={route._id}
                   />
                 }
                 label={route.title}
               />
             ))}
         </FormGroup>
-        {!data || data?.length === 0 && (
-          <FormHelperText>No routes available</FormHelperText>
-        )}
+        {!data ||
+          (data?.length === 0 && (
+            <FormHelperText>No routes available</FormHelperText>
+          ))}
       </FormControl>
     </div>
   );
