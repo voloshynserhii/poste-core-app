@@ -84,7 +84,7 @@ const SingleRouteView = () => {
         setLoading(false);
       }
     },
-    [setFormState, state.customers]
+    [setFormState, state.route]
   ); // Don't pass formState here !!!
 
   useEffect(() => {

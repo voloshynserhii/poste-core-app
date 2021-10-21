@@ -24,12 +24,12 @@ const UsersToolbar = (props) => {
   const [confirm, setConfirm] = useState(false);
   const { numSelected, selectedList } = props;
 
-  const deleteOrder = async (id) => {
-    const res = await api.orders.delete(id);
+  const deleteRoute = useCallback(async (id) => {
+    const res = await api.routes.delete(id);
     if (res.status === 200) {
-      dispatch({ type: "DELETE_ORDER", payload: id });
+      dispatch({ type: "DELETE_ROUTE", payload: id });
     }
-  };
+  }, [dispatch]);
 
   const handleDelete = () => {
     setConfirm(true);
@@ -40,9 +40,9 @@ const UsersToolbar = (props) => {
   }, []);
 
   const onDialogConfirm = useCallback(() => {
-    selectedList.forEach((order) => deleteOrder(order));
+    selectedList.forEach((route) => deleteRoute(route));
     setConfirm(false);
-  }, []);
+  }, [deleteRoute, selectedList]);
 
   return (
     <Toolbar

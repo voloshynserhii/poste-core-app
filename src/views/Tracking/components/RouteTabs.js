@@ -76,7 +76,7 @@ export default function FullWidthTabs({orderId}) {
       fetchData();
 
     }
-  }, [dispatch, state.orders.length]);
+  }, [dispatch, state.orders.length, state.routes]);
   
   useEffect(() => {
     if (!!routes) {

@@ -1,13 +1,24 @@
 import React, { useState, useEffect, useContext } from "react";
-import { LinearProgress } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { LinearProgress } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 import { AppContext } from '../../store'
-import AppButton from "../../components/AppButton";
 import api from "../../api";
 import CustomersTable from "./components/CustomersTable";
 
+const useStyles = makeStyles((theme) => ({
+  fixedButton: {
+    position: "fixed",
+    bottom: "3%",
+    left: "25%",
+  },
+}));
+
 const AllCustomersView = () => {
+  const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [state, dispatch] = useContext(AppContext);
@@ -36,9 +47,14 @@ const AllCustomersView = () => {
   return (
     <>
       <CustomersTable data={state.customers} />
-      <AppButton color="success" onClick={handleAddCustomer}>
-        Add Customer
-      </AppButton>
+      <Fab
+        className={classes.fixedButton}
+        color="secondary"
+        aria-label="add"
+        onClick={handleAddCustomer}
+      >
+        <AddIcon />
+      </Fab>
     </>
   );
 };

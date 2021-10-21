@@ -23,7 +23,7 @@ const UpdateButton = ({
   noConfirmation = false,
   ...restOfProps
 }) => {
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const [modal, setModal] = useState();
   const title = capitalize(collection);
   const history = useHistory();

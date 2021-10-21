@@ -39,7 +39,7 @@ const VALIDATE_FORM_CUSTOMER = {
 
 const RegisterCustomerForm = ({ onCancel }) => {
   const history = useHistory();
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const classes = orderForm();
   const [addressList, setAddressList] = useState([]);
 

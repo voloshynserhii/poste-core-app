@@ -56,7 +56,7 @@ const VALIDATE_FORM_USER = {
 };
 
 const RegisterUserForm = ({ onCancel }) => {
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const classes = userForm();
   const [userSaved, setUserSaved] = useState(false);
   const [curier, setCurier] = useState(false);

@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const menuOptions = ["Assign to route", "Edit", "Delete"];
+const menuOptions = ["Order routes", "Edit order", "Delete order"];
 
 export default function OrdersTable({ data }) {
   const [state, dispatch] = useContext(AppContext);
@@ -208,9 +208,9 @@ export default function OrdersTable({ data }) {
   };
 
   const handleGetOption = (value, id) => {
-    if (value === "Edit") history.push(`tracking/${id}`);
-    if (value === "Delete") handleDelete(id);
-    if (value === "Assign to route") {
+    if (value === "Edit order") history.push(`tracking/${id}`);
+    if (value === "Delete order") handleDelete(id);
+    if (value === "Order routes") {
       setAssignRoute(true);
       setOrderToAssignRoute(id);
     }

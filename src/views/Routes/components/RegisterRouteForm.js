@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useEffect, useCallback, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import {
   makeStyles,
@@ -39,7 +39,7 @@ const VALIDATE_FORM_ROUTE = {
 
 const RegisterRouteForm = ({ onCancel }) => {
   const history = useHistory();
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const classes = orderForm();
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =

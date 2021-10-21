@@ -16,7 +16,7 @@ import { capitalize } from '../../../utils/string';
  * @param {boolean} [noConfirmation] - open or not the Confirmation dialog
  */
 const UpdateButton = ({ collection, id, payload, disabled, noConfirmation = false, ...restOfProps }) => {
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const [modal, setModal] = useState();
   const title = capitalize(collection);
   const history = useHistory();

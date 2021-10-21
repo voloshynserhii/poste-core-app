@@ -34,7 +34,7 @@ const VALIDATE_FORM_USER = {
 };
 
 const SingleUserView = () => {
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const history = useHistory();
   const params = useParams();
   const [loading, setLoading] = useState(false);

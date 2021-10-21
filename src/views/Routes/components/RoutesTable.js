@@ -117,10 +117,10 @@ export default function RoutesTable({ data }) {
   useEffect(() => {
     console.log(data)
     const rows = data.map((route) => {
-      const customer = state.customers?.find((c) => c._id === route.customer);
-      const assignedCurier = state.users?.find(
-        (c) => c._id === route.assignedCurier
-      );
+      // const customer = state.customers?.find((c) => c._id === route.customer);
+      // const assignedCurier = state.users?.find(
+      //   (c) => c._id === route.assignedCurier
+      // );
       return createData(
         route._id,
         route.title,
@@ -192,9 +192,9 @@ export default function RoutesTable({ data }) {
   };
   
   const handleGetOption = (value, id) => {
-    if (value === "Edit") history.push(`tracking/${id}`);
-    if (value === "Delete") handleDelete(id);
-    if (value === "Assign to route") setAssignRoute(true);
+    if (value === "Edit order") history.push(`tracking/${id}`);
+    if (value === "Delete order") handleDelete(id);
+    if (value === "Order routes") setAssignRoute(true);
   }
   
   const isSelected = (name) => selected.indexOf(name) !== -1;
