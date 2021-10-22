@@ -28,7 +28,7 @@ export default function CheckboxesGroup({ data, orderId }) {
   useEffect(() => {
     const order = state.orders.find(order => order._id === orderId);
     setChecked(order.routeData);
-  }, [])
+  }, [orderId, state.orders])
 
   const handleChange = async (event) => {
     if (!checked?.includes(event.target.id)) {

@@ -93,7 +93,7 @@ export default function OrdersTable({ data }) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
   const [assignRoute, setAssignRoute] = useState(false);
-  const [orderToAssignRoute, setOrderToAssignRoute] = useState()
+  const [orderToAssignRoute, setOrderToAssignRoute] = useState();
 
   function createData(
     id,
@@ -123,7 +123,7 @@ export default function OrdersTable({ data }) {
       declaredValue,
       date,
       updateDate,
-      routeData
+      routeData,
     };
   }
 
@@ -146,7 +146,7 @@ export default function OrdersTable({ data }) {
         order.declaredValue || 0,
         order.createdAt || "today",
         order.updateDate || "today",
-        order.routeData || [],
+        order.routeData || []
       );
     });
     setRows(rows.reverse());
@@ -223,7 +223,12 @@ export default function OrdersTable({ data }) {
 
   return (
     <div className={classes.root}>
-      {assignRoute && <RouteTabs orderId={orderToAssignRoute}/>}
+      {assignRoute && (
+        <>
+          <button onClick={() => setAssignRoute(false)}>back</button>
+          <RouteTabs orderId={orderToAssignRoute} />
+        </>
+      )}
       {!assignRoute && (
         <Paper className={classes.paper}>
           <OrdersToolbar

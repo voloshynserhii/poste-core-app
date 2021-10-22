@@ -1,8 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import { LinearProgress, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { LinearProgress } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -43,21 +42,10 @@ const AllRoutesView = () => {
     history.push("/route/form");
   };
 
-  const routeType = ["last mile", "collection", "peer-to-peer", "transit"];
-
   if (loading) return <LinearProgress />;
 
   return (
     <>
-      <Autocomplete
-        id="userRoles"
-        options={routeType}
-        getOptionLabel={(option) => option.toUpperCase()}
-        style={{ width: "100%" }}
-        renderInput={(params) => (
-          <TextField {...params} label="Choose route type" variant="outlined" />
-        )}
-      />
       <RoutesTable data={state.routes} />
       <Fab
         className={classes.fixedButton}

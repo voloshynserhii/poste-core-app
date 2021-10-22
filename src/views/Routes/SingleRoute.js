@@ -119,7 +119,7 @@ const SingleRouteView = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title="Customer Details" />
+            <CardHeader title="Route Details" />
             <CardContent>
               <TextField
                 label="Name"
@@ -127,7 +127,7 @@ const SingleRouteView = () => {
                 value={values?.name}
                 error={fieldHasError("name")}
                 helperText={
-                  fieldGetError("name") || "Display name of the Customer"
+                  fieldGetError("name") || "Display name of the Route"
                 }
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
