@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardContent,
   LinearProgress,
+  MenuItem,
 } from "@material-ui/core";
 
 import { AppContext } from "../../store";
@@ -43,9 +44,9 @@ const VALIDATE_FORM_ROUTE = {
 };
 
 const SingleRouteView = () => {
-  const [state, ] = useContext(AppContext);
   const history = useHistory();
   const params = useParams();
+  const [state, dispatch] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
@@ -54,13 +55,13 @@ const SingleRouteView = () => {
     });
   const values = formState.values;
   const id = params?.id;
-  
+
   const fetchRouteById = useCallback(
     async (id) => {
       setLoading(true);
       setError("");
       try {
-        const res = await state.route.find(c => c._id === id);
+        const res = await state.routes.find((c) => c._id === id);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
@@ -84,7 +85,7 @@ const SingleRouteView = () => {
         setLoading(false);
       }
     },
-    [setFormState, state.route]
+    [setFormState, state.routes]
   ); // Don't pass formState here !!!
 
   useEffect(() => {
@@ -103,8 +104,7 @@ const SingleRouteView = () => {
   const handleDelete = async (id) => {
     //show modal do you really want to delete order?
 
-      history.replace("/route");
-
+    history.replace("/route");
   };
 
   if (loading) return <LinearProgress />;
@@ -121,18 +121,105 @@ const SingleRouteView = () => {
           <Card>
             <CardHeader title="Route Details" />
             <CardContent>
-              <TextField
-                label="Name"
-                name="name"
-                value={values?.name}
-                error={fieldHasError("name")}
-                helperText={
-                  fieldGetError("name") || "Display name of the Route"
-                }
-                onChange={onFieldChange}
-                {...SHARED_CONTROL_PROPS}
-              />
-
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    required
+                    label="Title"
+                    name="title"
+                    value={values.title}
+                    error={fieldHasError("title")}
+                    helperText={
+                      fieldGetError("title") || "Display name of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  />
+                  <TextField
+                    required
+                    select
+                    label="Type"
+                    name="type"
+                    defaultValue={values.type}
+                    error={fieldHasError("type")}
+                    helperText={
+                      fieldGetError("type") || "Display type of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    <MenuItem value="transit">Transit</MenuItem>
+                    <MenuItem value="lastMile">Last Mile</MenuItem>
+                    <MenuItem value="collection">Collection</MenuItem>
+                    <MenuItem value="peerToPeer">Peer-to-peer</MenuItem>
+                  </TextField>
+                  <TextField
+                    select
+                    label="Start place"
+                    name="startPlace"
+                    defaultValue={values.startPlace}
+                    error={fieldHasError("startPlace")}
+                    helperText={
+                      fieldGetError("startPlace") ||
+                      "Display start place of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    <MenuItem value="tbilisi">Tbilisi</MenuItem>
+                    <MenuItem value="batumi">Batumi</MenuItem>
+                  </TextField>
+                  <TextField
+                    select
+                    label="Finish place"
+                    name="finishPlace"
+                    defaultValue={values.finishPlace}
+                    error={fieldHasError("finishPlace")}
+                    helperText={
+                      fieldGetError("finishPlace") ||
+                      "Display finish place of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    <MenuItem value="tbilisi">Tbilisi</MenuItem>
+                    <MenuItem value="batumi">Batumi</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    label="Region"
+                    name="region"
+                    defaultValue={values.region}
+                    error={fieldHasError("region")}
+                    helperText={
+                      fieldGetError("region") || "Display region of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    <MenuItem value="adjaria">Adjaria</MenuItem>
+                    <MenuItem value="kakhetia">Kakhetia</MenuItem>
+                  </TextField>
+                  <TextField
+                    select
+                    label="Status"
+                    name="status"
+                    defaultValue={values.status}
+                    error={fieldHasError("status")}
+                    helperText={
+                      fieldGetError("status") || "Display status of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    <MenuItem value="onLoading">On loading</MenuItem>
+                    <MenuItem value="started">Started</MenuItem>
+                    <MenuItem value="finished">Finished</MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <AppButton color="error" onClick={() => handleDelete(id)}>
