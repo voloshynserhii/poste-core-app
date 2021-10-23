@@ -26,18 +26,19 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(trackingNumber, calories, fat, carbs, protein, price) {
+function createData(
+  trackingNumber,
+  weight,
+  quantity,
+  collectionData,
+  deliveryData
+) {
   return {
     trackingNumber,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      { date: "2020-01-05", customerId: "11091700", amount: 3 },
-      { date: "2020-01-02", customerId: "Anonymous", amount: 1 },
-    ],
+    weight,
+    quantity,
+    collectionData,
+    deliveryData,
   };
 }
 
@@ -46,6 +47,7 @@ function Row(props) {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
+  console.log(row);
   return (
     <>
       <TableRow className={classes.root}>
@@ -64,28 +66,72 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.trackingNumber}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
+        <TableCell align="right">{row.weight}</TableCell>
         <TableCell align="right">{row.fat}</TableCell>
         <TableCell align="right">{row.carbs}</TableCell>
         <TableCell align="right">{row.protein}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Details
               </Typography>
-              <Table size="small" aria-label="purchases">
+              <Table size="small" aria-label="details">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>Region</TableCell>
+                    <TableCell>City</TableCell>
+                    <TableCell align="right">Address1</TableCell>
+                    <TableCell align="right">Address2</TableCell>
+                    <TableCell align="right">Phone</TableCell>
+                    <TableCell align="right">Email</TableCell>
+                    <TableCell align="right">Contact Name</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  <TableRow>
+                    <TableCell>FROM</TableCell>
+                    <TableCell>{row.collectionData.region}</TableCell>
+                    <TableCell>{row.collectionData.city}</TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.address1}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.address2}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.contactPhone}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.constactEmail}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.contactName}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>TO</TableCell>
+                    <TableCell>{row.deliveryData.region}</TableCell>
+                    <TableCell>{row.deliveryData.city}</TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.address1}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.address2}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.contactPhone}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.constactEmail}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.contactName}
+                    </TableCell>
+                  </TableRow>
                   {/* {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
@@ -111,7 +157,7 @@ function Row(props) {
 export default function OrderList(props) {
   const [state, dispatch] = useContext(AppContext);
   const [ordersList, setOrdersList] = useState([]);
-  const [assignedOrders, setAssignedOrders] = useState([])
+  const [assignedOrders, setAssignedOrders] = useState([]);
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
@@ -125,12 +171,12 @@ export default function OrderList(props) {
       return state.orders.find((item) => item._id === order);
     });
     setAssignedOrders(orders);
-    console.log(orders);
   }, [ordersList, state.orders]);
 
   useEffect(() => {
     const rows = assignedOrders.map((order) => {
       return createData(
+        order._id,
         order.trackingNumber,
         order.weight || 0,
         order.quantity || 0,
@@ -156,8 +202,8 @@ export default function OrderList(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, i) => (
-            <Row key={row.name} index={i} row={row} />
+          {assignedOrders.map((order, i) => (
+            <Row key={order._id} index={i} row={order} />
           ))}
         </TableBody>
       </Table>

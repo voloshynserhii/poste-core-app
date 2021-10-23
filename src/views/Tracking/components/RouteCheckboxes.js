@@ -26,9 +26,9 @@ export default function CheckboxesGroup({ data, orderId }) {
   const [checked, setChecked] = useState([]);
 
   useEffect(() => {
-    const order = state.orders.find(order => order._id === orderId);
+    const order = state.orders.find((order) => order._id === orderId);
     setChecked(order.routeData);
-  }, [orderId, state.orders])
+  }, [orderId, state.orders]);
 
   const handleChange = async (event) => {
     if (!checked?.includes(event.target.id)) {
@@ -48,6 +48,7 @@ export default function CheckboxesGroup({ data, orderId }) {
           {!!data &&
             data.map((route) => (
               <FormControlLabel
+                key={route._id}
                 control={
                   <Checkbox
                     checked={checked?.includes(route?._id)}

@@ -20,7 +20,7 @@ export default function OrdersTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-      <TableCell padding="checkbox">
+      <TableCell>
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}

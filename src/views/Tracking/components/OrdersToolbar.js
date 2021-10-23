@@ -88,8 +88,8 @@ const UsersToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon onClick={handleDelete} />
+          <IconButton aria-label="delete" onClick={handleDelete} >
+            <DeleteIcon/>
           </IconButton>
         </Tooltip>
       ) : (

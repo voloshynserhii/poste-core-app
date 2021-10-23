@@ -94,6 +94,7 @@ export default function RoutesTable({ data }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
+  const [selectedRouteType, setSelectedRouteType] = useState();
   const [assignOrder, setAssignOrder] = useState(false);
   const [routeId, setRouteId] = useState();
 
@@ -119,7 +120,13 @@ export default function RoutesTable({ data }) {
 
   useEffect(() => {
     console.log(data);
-    const rows = data.map((route) => {
+    let filteredData;
+    if (!!selectedRouteType) {
+      filteredData = data.filter((route) => route.type === selectedRouteType);
+    } else {
+      filteredData = data;
+    }
+    const rows = filteredData.map((route) => {
       // const customer = state.customers?.find((c) => c._id === route.customer);
       // const assignedCurier = state.users?.find(
       //   (c) => c._id === route.assignedCurier
@@ -137,7 +144,7 @@ export default function RoutesTable({ data }) {
       );
     });
     setRows(rows.reverse());
-  }, [data, state.customers, state.users]);
+  }, [data, selectedRouteType]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -205,7 +212,7 @@ export default function RoutesTable({ data }) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const routeType = ["last mile", "collection", "peer-to-peer", "transit"];
+  const routeType = ["lastMile", "collection", "peer-to-peer", "transit"];
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -225,6 +232,10 @@ export default function RoutesTable({ data }) {
             options={routeType}
             getOptionLabel={(option) => option.toUpperCase()}
             style={{ width: "100%" }}
+            value={selectedRouteType}
+            onChange={(event, newValue) => {
+              setSelectedRouteType(newValue);
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -296,14 +307,14 @@ export default function RoutesTable({ data }) {
                           {row.title}
                         </TableCell>
                         <TableCell
-                          style={{ minWidth: 200 }}
+                          style={{ minWidth: 100 }}
                           align="left"
                           padding="none"
                         >
                           {row.type}
                         </TableCell>
                         <TableCell
-                          style={{ minWidth: 200 }}
+                          style={{ minWidth: 100 }}
                           align="left"
                           padding="none"
                         >
