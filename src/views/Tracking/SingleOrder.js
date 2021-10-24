@@ -52,7 +52,7 @@ const SingleOrderView = () => {
   const [state, dispatch] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState({});
-  const [assignedCurier, setAssignedCurier] = useState({});
+  // const [assignedCurier, setAssignedCurier] = useState({});
   const [, setDispatcher] = useState({});
   const [, setLastModifiedBy] = useState({});
 
@@ -73,7 +73,7 @@ const SingleOrderView = () => {
         console.log(res);
         if (res) {
           setCustomer(res?.customer);
-          setAssignedCurier(res?.assignedCurier);
+          // setAssignedCurier(res?.assignedCurier);
           setDispatcher(res?.dispatcher);
           setLastModifiedBy(res?.lastModifiedBy);
 
@@ -84,9 +84,9 @@ const SingleOrderView = () => {
               customer: {
                 _id: res?.customer?._id || "",
               },
-              assignedCurier: {
-                _id: res?.assignedCurier?._id || "",
-              },
+              // assignedCurier: {
+              //   _id: res?.assignedCurier?._id,
+              // },
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
@@ -246,7 +246,7 @@ const SingleOrderView = () => {
                   ))}
                 </TextField>
               )}
-              <TextField
+              {/* <TextField
                 select
                 required
                 label="Assigned Curier"
@@ -265,7 +265,7 @@ const SingleOrderView = () => {
                     {option.name}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
               <TextField
                 disabled
                 label="Tracking number"
