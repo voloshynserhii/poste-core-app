@@ -24,12 +24,15 @@ const UsersToolbar = (props) => {
   const [confirm, setConfirm] = useState(false);
   const { numSelected, selectedList } = props;
 
-  const deleteRoute = useCallback(async (id) => {
-    const res = await api.routes.delete(id);
-    if (res.status === 200) {
-      dispatch({ type: "DELETE_ROUTE", payload: id });
-    }
-  }, [dispatch]);
+  const deleteRoute = useCallback(
+    async (id) => {
+      const res = await api.routes.delete(id);
+      if (res.status === 200) {
+        dispatch({ type: "DELETE_ROUTE", payload: id });
+      }
+    },
+    [dispatch]
+  );
 
   const handleDelete = () => {
     setConfirm(true);
@@ -85,11 +88,10 @@ const UsersToolbar = (props) => {
           Routes Table
         </Typography>
       )}
-
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton onClick={handleDelete} >
-            <DeleteIcon/>
+          <IconButton onClick={handleDelete}>
+            <DeleteIcon />
           </IconButton>
         </Tooltip>
       ) : (

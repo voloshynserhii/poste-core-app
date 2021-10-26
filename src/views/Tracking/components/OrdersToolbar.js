@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { IconButton, Typography, Toolbar, Tooltip } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import DeleteIcon from "@material-ui/icons/Delete";
+import LocalShippingIcon from "@material-ui/icons/LocalShipping";
 
 import api from "../../../api";
 import { AppContext } from "../../../store";
@@ -24,15 +25,22 @@ const UsersToolbar = (props) => {
   const [confirm, setConfirm] = useState(false);
   const { numSelected, selectedList } = props;
 
-  const deleteOrder = useCallback(async (id) => {
-    const res = await api.orders.delete(id);
-    if (res.status === 200) {
-      dispatch({ type: "DELETE_ORDER", payload: id });
-    }
-  }, [dispatch]);
+  const deleteOrder = useCallback(
+    async (id) => {
+      const res = await api.orders.delete(id);
+      if (res.status === 200) {
+        dispatch({ type: "DELETE_ORDER", payload: id });
+      }
+    },
+    [dispatch]
+  );
 
   const handleDelete = () => {
     setConfirm(true);
+  };
+
+  const handleAssignToRoutes = () => {
+    props.onAssignToRoutes(true);
   };
 
   const onDialogClose = useCallback((event, reason) => {
@@ -87,11 +95,18 @@ const UsersToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete" onClick={handleDelete} >
-            <DeleteIcon/>
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Assign selected to routes">
+            <IconButton aria-label="multiply" onClick={handleAssignToRoutes}>
+              <LocalShippingIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete selected">
+            <IconButton aria-label="delete" onClick={handleDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : (
         <Tooltip title="Filter list">
           <IconButton aria-label="filter list" onClick={props.onFilter}>

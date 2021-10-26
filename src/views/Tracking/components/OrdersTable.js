@@ -18,6 +18,7 @@ import Menu from "../../../components/Menu";
 import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
 import RouteTabs from "./RouteTabs";
+import RoutesTable from '../../Routes/components/RoutesTable';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
 const menuOptions = ["Order routes", "Edit order", "Delete order"];
 
-export default function OrdersTable({ data }) {
+export default function OrdersTable({ data, ...props }) {
   const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
@@ -94,6 +95,7 @@ export default function OrdersTable({ data }) {
   const [selected, setSelected] = useState([]);
   const [assignRoute, setAssignRoute] = useState(false);
   const [orderToAssignRoute, setOrderToAssignRoute] = useState();
+  const [multiplyAssignRoute, setmultiplyAssignRoute] = useState(false);
 
   function createData(
     id,
@@ -216,6 +218,9 @@ export default function OrdersTable({ data }) {
     }
   };
 
+  const handleAssignToRoutes = (val) => {
+    setmultiplyAssignRoute(val);
+  }
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
@@ -223,6 +228,7 @@ export default function OrdersTable({ data }) {
 
   return (
     <div className={classes.root}>
+      {multiplyAssignRoute && <RoutesTable orders={selected}/>}
       {assignRoute && (
         <>
           <button onClick={() => setAssignRoute(false)}>back</button>
@@ -234,6 +240,7 @@ export default function OrdersTable({ data }) {
           <OrdersToolbar
             numSelected={selected.length}
             selectedList={selected}
+            onAssignToRoutes={(val) => handleAssignToRoutes(val)}
           />
           <TableContainer>
             <Table

@@ -13,12 +13,13 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import { LinearProgress } from "@material-ui/core";
 
 import api from "../../../api";
 import { AppContext } from "../../../store";
 import Menu from "../../../components/Menu";
-import OrdersToolbar from "./RoutesToolbar";
-import OrdersTableHead from "./RoutesTableHead";
+import RoutesToolbar from "./RoutesToolbar";
+import RoutesTableHead from "./RoutesTableHead";
 import OrderList from "./OrderList";
 
 function descendingComparator(a, b, orderBy) {
@@ -58,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(1),
   },
   table: {
     minWidth: 750,
@@ -84,10 +86,11 @@ const useStyles = makeStyles((theme) => ({
 
 const menuOptions = ["Order routes", "Edit route", "Delete route"];
 
-export default function RoutesTable({ data }) {
+export default function RoutesTable({ orders }) {
   const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
+  const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("date");
@@ -97,6 +100,7 @@ export default function RoutesTable({ data }) {
   const [selectedRouteType, setSelectedRouteType] = useState();
   const [assignOrder, setAssignOrder] = useState(false);
   const [routeId, setRouteId] = useState();
+  const [data, setData] = useState([]);
 
   function createData(
     id,
@@ -119,7 +123,22 @@ export default function RoutesTable({ data }) {
   }
 
   useEffect(() => {
-    console.log(data);
+    if (state.routes.length) {
+      setLoading(false);
+      setData(state.routes);
+    } else {
+      async function fetchData() {
+        const res = await api.routes.read(); // List of All routes
+        if (res) {
+          dispatch({ type: "SET_ROUTES", routes: res });
+          setLoading(false);
+        }
+      }
+      fetchData();
+    }
+  }, [dispatch, state.routes.length]);
+
+  useEffect(() => {
     let filteredData;
     if (!!selectedRouteType) {
       filteredData = data.filter((route) => route.type === selectedRouteType);
@@ -127,15 +146,9 @@ export default function RoutesTable({ data }) {
       filteredData = data;
     }
     const rows = filteredData.map((route) => {
-      // const customer = state.customers?.find((c) => c._id === route.customer);
-      // const assignedCurier = state.users?.find(
-      //   (c) => c._id === route.assignedCurier
-      // );
       return createData(
         route._id,
         route.title,
-        // customer?.name || "no customer",
-        // assignedCurier?.name || "no assigned curier",
         route.type || "no type",
         route.startPlace || "no address",
         route.finishPlace || "no address",
@@ -153,7 +166,7 @@ export default function RoutesTable({ data }) {
   };
 
   const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
+    if (event.target.checked && !orders) {
       const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
@@ -170,7 +183,11 @@ export default function RoutesTable({ data }) {
     setPage(0);
   };
 
-  const handleClick = (event, name) => {
+  const handleClick = async (event, name) => {
+    if (orders) {
+      await api.routes.addMultiplyOrders(orders, name);
+    }
+
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -217,6 +234,8 @@ export default function RoutesTable({ data }) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  if (loading) return <LinearProgress />;
+
   return (
     <div className={classes.root}>
       {assignOrder && (
@@ -244,10 +263,12 @@ export default function RoutesTable({ data }) {
               />
             )}
           />
-          <OrdersToolbar
-            numSelected={selected.length}
-            selectedList={selected}
-          />
+          {!orders && (
+            <RoutesToolbar
+              numSelected={selected.length}
+              selectedList={selected}
+            />
+          )}
           <TableContainer>
             <Table
               className={classes.table}
@@ -255,7 +276,7 @@ export default function RoutesTable({ data }) {
               size={"small"}
               aria-label="enhanced table"
             >
-              <OrdersTableHead
+              <RoutesTableHead
                 classes={classes}
                 order={order}
                 orderBy={orderBy}

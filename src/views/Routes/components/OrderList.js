@@ -17,6 +17,9 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 import { AppContext } from "../../../store";
+import Menu from "../../../components/Menu";
+import api from "../../../api";
+
 
 const useRowStyles = makeStyles({
   root: {
@@ -27,6 +30,7 @@ const useRowStyles = makeStyles({
 });
 
 function createData(
+  id,
   trackingNumber,
   weight,
   quantity,
@@ -34,6 +38,7 @@ function createData(
   deliveryData
 ) {
   return {
+    id,
     trackingNumber,
     weight,
     quantity,
@@ -47,7 +52,20 @@ function Row(props) {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
-  console.log(row);
+  const menuOptions = ["Remove"];
+
+  const handleGetOption = async (value, id) => {
+    if (value === "Remove") {
+      try {
+        await api.orders.unassignRoute(id, props.routeId);
+      } catch (err) {
+        console.error(err.error);
+      }
+      
+      console.log(id, props.routeId);
+    }
+  };
+
   return (
     <>
       <TableRow className={classes.root}>
@@ -62,6 +80,12 @@ function Row(props) {
         </TableCell>
         <TableCell component="th" scope="row">
           {index + 1}
+        </TableCell>
+        <TableCell>
+          <Menu
+            options={menuOptions}
+            onMenuClick={(opt) => handleGetOption(opt, row._id)}
+          />
         </TableCell>
         <TableCell component="th" scope="row">
           {row.trackingNumber}
@@ -194,6 +218,7 @@ export default function OrderList(props) {
           <TableRow>
             <TableCell />
             <TableCell>#</TableCell>
+            <TableCell />
             <TableCell>Tracking #</TableCell>
             <TableCell align="right">Weight</TableCell>
             <TableCell align="right">Quantity</TableCell>
@@ -203,7 +228,7 @@ export default function OrderList(props) {
         </TableHead>
         <TableBody>
           {assignedOrders.map((order, i) => (
-            <Row key={order._id} index={i} row={order} />
+            <Row key={order._id} index={i} row={order} routeId={props.routeId} />
           ))}
         </TableBody>
       </Table>
