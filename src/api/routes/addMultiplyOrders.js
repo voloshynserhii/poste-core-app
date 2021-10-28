@@ -1,30 +1,28 @@
 import { api } from "..";
 
 async function addMultiplyOrders(ordersArr, routeId) {
-  console.log(ordersArr, routeId);
+
+  let arr = [];
 
   ordersArr.forEach(async (orderId) => {
-    await api.axios.patch(
+    const addRouteToOrderResult = await api.axios.patch(
       `${process.env.REACT_APP_API_URL}/api/orders/route/${orderId}`,
       {
         params: routeId,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
-  });
-  const res = await api.axios.patch(
-    `${process.env.REACT_APP_API_URL}/api/route/addOrder/${routeId}`,
-    {
-      params: ordersArr,
-      headers: {
-        "Content-Type": "application/json",
-      },
+    if (addRouteToOrderResult.status === 200) arr.push(addRouteToOrderResult);
+    if (ordersArr.length === arr.length) {
+      const res = await api.axios.patch(
+        `${process.env.REACT_APP_API_URL}/api/route/addOrder/${routeId}`,
+        {
+          params: ordersArr,
+        }
+      );
+      return res;
     }
-  );
-
-  return res;
+  });
+  
 }
 
 export default addMultiplyOrders;

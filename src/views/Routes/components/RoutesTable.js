@@ -185,7 +185,10 @@ export default function RoutesTable({ orders }) {
 
   const handleClick = async (event, name) => {
     if (orders) {
-      await api.routes.addMultiplyOrders(orders, name);
+      const response = await api.routes.addMultiplyOrders(orders, name);
+      if (response) {
+        console.log("Response", response);
+      }
     }
 
     const selectedIndex = selected.indexOf(name);
