@@ -13,13 +13,14 @@ import {
   Typography,
   Paper,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { AppContext } from "../../../store";
 import Menu from "../../../components/Menu";
 import api from "../../../api";
-
 
 const useRowStyles = makeStyles({
   root: {
@@ -57,12 +58,12 @@ function Row(props) {
   const handleGetOption = async (value, id) => {
     if (value === "Remove") {
       try {
-        await api.orders.unassignRoute(id, props.routeId);
+        const res = await api.orders.unassignRoute(id, props.routeId);
+        console.log(res);
+        if (res.status === 200) props.onConfirmModalOpen(id);
       } catch (err) {
         console.error(err.error);
       }
-      
-      console.log(id, props.routeId);
     }
   };
 
@@ -183,6 +184,7 @@ export default function OrderList(props) {
   const [ordersList, setOrdersList] = useState([]);
   const [assignedOrders, setAssignedOrders] = useState([]);
   const [rows, setRows] = useState([]);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   useEffect(() => {
     const routeData = state.routes.find((route) => route._id === props.routeId);
@@ -213,6 +215,26 @@ export default function OrderList(props) {
 
   return (
     <TableContainer component={Paper}>
+      {confirmModalOpen && (
+        <Alert
+          severity="success"
+          variant="filled"
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setConfirmModalOpen(false);
+              }}
+            >
+              <CloseIcon fontSize="inherit" />
+            </IconButton>
+          }
+        >
+          Order removed
+        </Alert>
+      )}
       <Table aria-label="Order List">
         <TableHead>
           <TableRow>
@@ -228,7 +250,13 @@ export default function OrderList(props) {
         </TableHead>
         <TableBody>
           {assignedOrders.map((order, i) => (
-            <Row key={order._id} index={i} row={order} routeId={props.routeId} />
+            <Row
+              key={order._id}
+              index={i}
+              row={order}
+              routeId={props.routeId}
+              onConfirmModalOpen={(id) => setConfirmModalOpen(true)}
+            />
           ))}
         </TableBody>
       </Table>
