@@ -17,6 +17,7 @@ import { LinearProgress } from "@material-ui/core";
 
 import api from "../../../api";
 import { AppContext } from "../../../store";
+import { AppButton } from "../../../components";
 import Menu from "../../../components/Menu";
 import RoutesToolbar from "./RoutesToolbar";
 import RoutesTableHead from "./RoutesTableHead";
@@ -101,6 +102,8 @@ export default function RoutesTable({ orders }) {
   const [assignOrder, setAssignOrder] = useState(false);
   const [routeId, setRouteId] = useState();
   const [data, setData] = useState([]);
+  const [menuValue, setMenuValue] = useState("");
+  const [assignedRoutes, setAssignedRoutes] = useState([]);
 
   function createData(
     id,
@@ -183,14 +186,25 @@ export default function RoutesTable({ orders }) {
     setPage(0);
   };
 
-  const handleClick = async (event, name) => {
+  const handleAssignToRoutes = async (name) => {
+    console.log(name ,orders);
     if (orders) {
-      const response = await api.routes.addMultiplyOrders(orders, name);
-      if (response) {
-        console.log("Response", response);
+      if(assignedRoutes.includes(name)) {
+        orders.forEach(async (order) => {
+          const result = await api.orders.unassignRoute(order, name);
+          console.log(result);
+        })
+      } else {
+        const response = await api.routes.addMultiplyOrders(orders, name);
+        setAssignedRoutes((prev) => [...prev, name]);
+        if (response) {
+          console.log("Response", response);
+        }
       }
     }
+  };
 
+  const handleClick = async (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -222,6 +236,7 @@ export default function RoutesTable({ orders }) {
   };
 
   const handleGetOption = (value, id) => {
+    setMenuValue(value);
     if (value === "Edit route") history.push(`route/${id}`);
     if (value === "Delete route") handleDelete(id);
     if (value === "Order routes") {
@@ -309,24 +324,52 @@ export default function RoutesTable({ orders }) {
                         hover
                         style={{ cursor: "pointer" }}
                         key={row.id}
-                        selected={isItemSelected}
+                        selected={!orders ? isItemSelected : false}
                         onClick={(event) => handleClick(event, row.id)}
                       >
-                        <TableCell>
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              "aria-labelledby": labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Menu
-                            options={menuOptions}
-                            onMenuClick={(opt) => handleGetOption(opt, row.id)}
-                          />
-                        </TableCell>
+                        {orders ? (
+                          <>
+                            <TableCell>
+                              <AppButton
+                                color={
+                                  assignedRoutes.includes(row.id)
+                                    ? "primary"
+                                    : "default"
+                                }
+                                onClick={() =>
+                                  handleAssignToRoutes(row.id)
+                                }
+                              >
+                                {assignedRoutes.includes(row.id)
+                                  ? "Assigned"
+                                  : "Assign"}
+                              </AppButton>
+                            </TableCell>
+                            <TableCell />
+                          </>
+                        ) : (
+                          <>
+                            <TableCell>
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  "aria-labelledby": labelId,
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Menu
+                                options={menuOptions}
+                                selected={menuValue}
+                                onMenuClick={(opt) =>
+                                  handleGetOption(opt, row.id)
+                                }
+                              />
+                            </TableCell>
+                          </>
+                        )}
+
                         <TableCell component="th" id={labelId} scope="row">
                           {row.title}
                         </TableCell>

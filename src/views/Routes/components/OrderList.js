@@ -52,10 +52,12 @@ function Row(props) {
   const { row, index } = props;
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
+  const [menuValue, setMenuValue] = useState("");
 
   const menuOptions = ["Remove"];
 
   const handleGetOption = async (value, id) => {
+    setMenuValue(value);
     if (value === "Remove") {
       try {
         const res = await api.orders.unassignRoute(id, props.routeId);
@@ -85,6 +87,7 @@ function Row(props) {
         <TableCell>
           <Menu
             options={menuOptions}
+            selected={menuValue}
             onMenuClick={(opt) => handleGetOption(opt, row._id)}
           />
         </TableCell>

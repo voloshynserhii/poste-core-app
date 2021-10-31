@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -6,10 +6,14 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const ITEM_HEIGHT = 48;
 
-export default function LongMenu({options = [], selected, getOption, onMenuClick}) {
+export default function LongMenu({options = [], selected, onMenuClick}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  useEffect(() => {
+    setAnchorEl(null);
+  }, [selected]);
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
