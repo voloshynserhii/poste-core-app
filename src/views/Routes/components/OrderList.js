@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
@@ -88,7 +88,7 @@ function Row(props) {
           <Menu
             options={menuOptions}
             selected={menuValue}
-            onMenuClick={(opt) => handleGetOption(opt, row._id)}
+            onMenuClick={(opt) => handleGetOption(opt, row.id)}
           />
         </TableCell>
         <TableCell component="th" scope="row">
@@ -184,14 +184,34 @@ function Row(props) {
 
 export default function OrderList(props) {
   const [state, dispatch] = useContext(AppContext);
+  const [currentRoute, setCurrentRoute] = useState();
   const [ordersList, setOrdersList] = useState([]);
   const [assignedOrders, setAssignedOrders] = useState([]);
   const [rows, setRows] = useState([]);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  console.log(state.routes);
+
+  const onRemoveOrder = useCallback(
+    (id) => {
+      setConfirmModalOpen(true);
+      const newOrdersList = ordersList.filter((order) => order !== id);
+      const newAssignedOrders = assignedOrders.filter(
+        (order) => order._id !== id
+      );
+      dispatch({
+        type: "UPDATE_ROUTE",
+        updatedRoute: { ...currentRoute, orders: newOrdersList },
+      });
+      setOrdersList(() => newOrdersList);
+      setAssignedOrders(() => newAssignedOrders);
+    },
+    [assignedOrders, ordersList]
+  );
 
   useEffect(() => {
     const routeData = state.routes.find((route) => route._id === props.routeId);
     const ordersList = routeData.orders;
+    setCurrentRoute(routeData);
     setOrdersList(ordersList);
   }, [props.routeId, state.routes]);
 
@@ -214,8 +234,9 @@ export default function OrderList(props) {
       );
     });
     setRows(rows.reverse());
-  }, [assignedOrders]);
+  }, [assignedOrders, ordersList, state.routes]);
 
+  console.log(rows);
   return (
     <TableContainer component={Paper}>
       {confirmModalOpen && (
@@ -252,13 +273,13 @@ export default function OrderList(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {assignedOrders.map((order, i) => (
+          {rows?.map((order, i) => (
             <Row
-              key={order._id}
+              key={order.id}
               index={i}
               row={order}
               routeId={props.routeId}
-              onConfirmModalOpen={(id) => setConfirmModalOpen(true)}
+              onConfirmModalOpen={(id) => onRemoveOrder(id)}
             />
           ))}
         </TableBody>

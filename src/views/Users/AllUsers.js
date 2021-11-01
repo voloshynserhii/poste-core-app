@@ -14,8 +14,8 @@ import UsersTable from "./components/UsersTable";
 const useStyles = makeStyles((theme) => ({
   fixedButton: {
     position: "fixed",
-    bottom: "3%",
-    left: "25%",
+    bottom: "5%",
+    right: "5%",
   },
 }));
 
