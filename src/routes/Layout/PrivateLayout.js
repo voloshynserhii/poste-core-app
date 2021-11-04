@@ -59,22 +59,27 @@ const SIDE_BAR_PRIVATE_ITEMS = [
   {
     title: 'Tracking',
     href: '/tracking',
-    icon: 'game',
+    icon: 'tracking',
   },
   {
     title: 'Customers',
     href: '/customer',
-    icon: 'smile',
+    icon: 'people',
   },
   {
     title: 'Users',
     href: '/user',
-    icon: 'provider',
+    icon: 'shipping',
   },
   {
     title: 'Routes',
     href: '/route',
-    icon: 'category',
+    icon: 'route',
+  },
+  {
+    title: 'Data',
+    href: '/data',
+    icon: 'data',
   },
   {
     title: 'Profile',

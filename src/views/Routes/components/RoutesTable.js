@@ -139,7 +139,7 @@ export default function RoutesTable({ orders }) {
       }
       fetchData();
     }
-  }, [dispatch, state.routes.length]);
+  }, [dispatch, state.routes]);
 
   useEffect(() => {
     let filteredData;

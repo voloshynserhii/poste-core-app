@@ -10,6 +10,7 @@ import { PrivateLayout } from './Layout';
 import Tracking from '../views/Tracking';
 import Customers from '../views/Customers';
 import Routes from '../views/Routes';
+import Data from '../views/DataManaging';
 import Users from '../views/Users';
 import { Welcome, MyProfile } from '../views';
 
@@ -55,6 +56,7 @@ const PrivateRoutes = () => {
         <Route path="/customer" component={Customers} />
         <Route path="/user" component={Users} />
         <Route path="/route" component={Routes} />
+        <Route path="/data" component={Data} />
         <Route path="/me" component={MyProfile} />,
         <SharedRoutes />
       </Switch>

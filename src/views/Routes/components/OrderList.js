@@ -205,7 +205,7 @@ export default function OrderList(props) {
       setOrdersList(() => newOrdersList);
       setAssignedOrders(() => newAssignedOrders);
     },
-    [assignedOrders, ordersList]
+    [assignedOrders, ordersList, currentRoute, dispatch]
   );
 
   useEffect(() => {

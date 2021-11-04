@@ -28,6 +28,11 @@ import HomeIcon from '@material-ui/icons/Home';
 import CategoryIcon from '@material-ui/icons/Category';
 import BusinessIcon from '@material-ui/icons/Business';
 import SportsEsportsIcon from '@material-ui/icons/SportsEsports';
+import StorageIcon from '@material-ui/icons/Storage';
+import CallSplitIcon from '@material-ui/icons/CallSplit';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import PeopleIcon from '@material-ui/icons/People';
 
 /**
  * How to use:
@@ -68,6 +73,11 @@ const ICONS = {
   provider: BusinessIcon,
   home: HomeIcon,
   game: SportsEsportsIcon,
+  data: StorageIcon,
+  route: CallSplitIcon,
+  tracking: EventNoteIcon,
+  shipping: LocalShippingIcon,
+  people: PeopleIcon
 };
 
 /**
