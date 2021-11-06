@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 
 import AppButton from "../../../components/AppButton";
+import AddDataForm from "./AddDataForm";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -35,10 +36,11 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function SearchWithCheckboxForm(props) {
+export default function DataTabs(props) {
   const classes = useStyles();
   const [checked, setChecked] = useState([]);
   const [data, setData] = useState([]);
+  const [add, setAdd] = useState(false);
 
   const handleChange = (event) => {
     if (!checked?.includes(event.target.name)) {
@@ -70,6 +72,7 @@ export default function SearchWithCheckboxForm(props) {
 
   return (
     <Grid container fullWidth spacing={2}>
+      {add && <AddDataForm onCancel={() => setAdd(false)} />}
       <Grid item sm={12} className={classes.container}>
         <TextField
           className={classes.searchField}
@@ -86,22 +89,8 @@ export default function SearchWithCheckboxForm(props) {
           }}
           onChange={searchCheckbox}
         />
-        <TextField
-          className={classes.searchField}
-          id="search"
-          placeholder="New location"
-          type="text"
-          variant="outlined"
-          InputProps={{
-            style: {
-              maxHeight: 40,
-              margin: "0 15px",
-              padding: "0",
-            },
-          }}
-          // onChange={searchCheckbox}
-        />
-        <AppButton>add</AppButton>
+        <span>or</span>
+        <AppButton onClick={() => setAdd(true)}>add</AppButton>
       </Grid>
       <div className={classes.root}>
         <FormControl

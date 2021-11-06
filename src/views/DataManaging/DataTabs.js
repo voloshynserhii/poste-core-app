@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {Box, Tab, Tabs, Typography} from '@material-ui/core';
 
-import DataForm from "./components/DataForm"
+import DataForm from "./components/DataForm";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
