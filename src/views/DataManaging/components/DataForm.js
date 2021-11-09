@@ -42,6 +42,7 @@ export default function DataTabs(props) {
   const [data, setData] = useState([]);
   const [add, setAdd] = useState(false);
 
+  console.log(props.data)
 
   const handleChange = (event) => {
     if (!checked?.includes(event.target.name)) {
@@ -105,7 +106,11 @@ export default function DataTabs(props) {
             style={{
               gridTemplateColumns: `repeat(${props.columns || 2}, 1fr)`,
             }}
-          ></FormGroup>
+          >
+            {props.data.map(region => (
+              <span>{region.name}</span>
+            ))}
+          </FormGroup>
         </FormControl>
       </div>
     </Grid>

@@ -18,7 +18,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataTabs() {
+export default function DataTabs({data}) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -74,7 +74,7 @@ export default function DataTabs() {
         <Tab label="Districts & Villages" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <DataForm />
+        <DataForm data={data.filter(el => el.type === "region")}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
       <DataForm />

@@ -33,8 +33,7 @@ const AllDataView = () => {
       setData(state.locations);
     } else {
       async function fetchData() {
-        const res = await api.locations.read(); // List of All routes
-        console.log(res);
+        const res = await api.locations.read(); // List of All locations
         if (res) {
           dispatch({ type: "SET_LOCATIONS", locations: res });
           setLoading(false);
@@ -43,7 +42,7 @@ const AllDataView = () => {
       fetchData();
     }
   }, [dispatch, state.locations]);
-  
+
   const handleAddDataType = () => {
     alert("Do you want to add data type?")
     // history.push("/route/form");
@@ -68,7 +67,7 @@ const AllDataView = () => {
           <TextField {...params} label="Choose data" variant="outlined" />
         )}
       />
-      <DataTabs />
+      <DataTabs data={data}/>
       <Fab
         className={classes.fixedButton}
         color="secondary"
