@@ -8,6 +8,7 @@ import {
   CardContent,
   FormControlLabel,
   Checkbox,
+  Typography,
 } from "@material-ui/core";
 
 import { AppContext } from "../../../store";
@@ -34,22 +35,15 @@ const userForm = makeStyles((theme) => ({
     zIndex: 10000,
     overflow: "scroll",
   },
+  container: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }));
 
-const VALIDATE_FORM_USER = {
+const VALIDATE_FORM_LOCATION = {
   name: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
-  phone: {
-    type: "string",
-    presence: { allowEmpty: true },
-  },
-  email: {
-    type: "string",
-    presence: { allowEmpty: false },
-  },
-  password: {
     type: "string",
     presence: { allowEmpty: false },
   },
@@ -58,62 +52,58 @@ const VALIDATE_FORM_USER = {
 const AddDataForm = ({ onCancel }) => {
   const [, dispatch] = useContext(AppContext);
   const classes = userForm();
-  const [userSaved, setUserSaved] = useState(false);
-  const [curier, setCurier] = useState(false);
-  const [dispatcher, setDispatcher] = useState(false);
+  const [locationSaved, setLocationSaved] = useState(false);
+  const [locationType, setLocationType] = useState("");
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
-      validationSchema: VALIDATE_FORM_USER,
-      initialValues: {},
+      validationSchema: VALIDATE_FORM_LOCATION,
+      initialValues: { name: "" },
     });
   const values = formState.values;
 
-  const formUser = useCallback(() => {
+  const formLocation = useCallback(() => {
     setFormState((oldFormState) => ({
       ...oldFormState,
       values: {
         ...oldFormState.values,
         name: "",
-        email: "",
-        password: "",
-        phone: "",
+        type: "",
       },
     }));
   }, [setFormState]);
 
   useEffect(() => {
-    formUser();
-  }, [formUser]);
+    formLocation();
+  }, [formLocation]);
 
   const saveRecord = async () => {
-    let role;
-    if (curier) role = "curier";
-    if (dispatcher) role = "dispatcher";
-
-    const newUser = {
+    const newLocation = {
       ...formState.values,
-      role: role,
+      type: locationType,
     };
+    console.log(newLocation);
     try {
       // save changes in BD
-      const res = await api.users.create(newUser);
-      const savedUser = res.data.data.user;
-      if (res.status === 201) {
-        dispatch({ type: "ADD_USER", payload: savedUser });
-        setUserSaved(true);
+      const res = await api.locations.create(newLocation);
+      const savedLocation = res.data;
+      if (res.status === 200) {
+        dispatch({ type: "ADD_LOCATION", payload: savedLocation });
+        setLocationSaved(true);
       }
     } catch (err) {
-      alert("Something went wrong. Please try another email address")
+      console.error(err);
+      alert("Something went wrong. Please try again later");
     }
   };
+
   const handleSave = () => {
     // Save without confirmation
     saveRecord();
     return;
   };
 
-  if (userSaved) return null;
+  if (locationSaved) return null;
 
   return (
     <div className={classes.layer}>
@@ -121,80 +111,54 @@ const AddDataForm = ({ onCancel }) => {
         <CardHeader title="Input all fields" />
         <CardContent>
           <TextField
-            required
-            label="Name"
+            label="Location name"
             name="name"
             value={values?.name}
             error={fieldHasError("name")}
-            helperText={fieldGetError("name") || "Provide a name"}
+            helperText={fieldGetError("name") || "Provide a name of a location"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
-          <TextField
-            required
-            label="Email"
-            name="email"
-            value={values?.email}
-            defaultValue={values.email}
-            error={fieldHasError("email")}
-            helperText={fieldGetError("email") || "Provide email of the user"}
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            required
-            label="Password"
-            name="password"
-            value={values?.password}
-            defaultValue={values.password}
-            error={fieldHasError("password")}
-            helperText={
-              fieldGetError("password") || "Provide a password of the user"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Phone"
-            name="phone"
-            value={values?.phone}
-            error={fieldHasError("phone")}
-            helperText={fieldGetError("phone") || "Provide a phone of the user"}
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={curier}
-                onChange={() => {
-                  setCurier((old) => !old);
-                  if (dispatcher) {
-                    setDispatcher(false);
-                  }
-                }}
-                name="curier"
-                color="primary"
+          <Grid container>
+            <Typography style={{ margin: "auto" }}>
+              Select type of a new location
+            </Typography>
+            <Grid item className={classes.container} sm={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={locationType === "region"}
+                    onChange={() => setLocationType("region")}
+                    name="region"
+                    color="primary"
+                  />
+                }
+                label="Region"
               />
-            }
-            label="Curier"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={dispatcher}
-                onChange={() => {
-                  setDispatcher((prev) => !prev);
-                  if (curier) {
-                    setCurier(false);
-                  }
-                }}
-                name="curier"
-                color="primary"
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={locationType === "city"}
+                    onChange={() => setLocationType("city")}
+                    name="city"
+                    color="primary"
+                  />
+                }
+                label="City"
               />
-            }
-            label="Dispatcher"
-          />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={locationType === "village"}
+                    onChange={() => setLocationType("village")}
+                    name="village"
+                    color="primary"
+                  />
+                }
+                label="District or Village"
+              />
+            </Grid>
+          </Grid>
           <Grid container justifyContent="center" alignItems="center">
             <AppButton onClick={onCancel}>Cancel</AppButton>
             <AppButton

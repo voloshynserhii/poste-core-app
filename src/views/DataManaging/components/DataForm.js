@@ -42,6 +42,7 @@ export default function DataTabs(props) {
   const [data, setData] = useState([]);
   const [add, setAdd] = useState(false);
 
+
   const handleChange = (event) => {
     if (!checked?.includes(event.target.name)) {
       setChecked([...checked, event.target.name]);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
@@ -6,6 +6,8 @@ import AddIcon from "@material-ui/icons/Add";
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
+import api from "../../api";
+import { AppContext } from "../../store";
 import DataTabs from "./DataTabs";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,10 +19,30 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AllDataView = () => {
+  const [state, dispatch] = useContext(AppContext);
   const classes = useStyles();
   const history = useHistory();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
   const [selectedDataType, setSelectedDataType] = useState();
 
+  useEffect(() => {
+    if (state.locations.length) {
+      setLoading(false);
+      setData(state.locations);
+    } else {
+      async function fetchData() {
+        const res = await api.locations.read(); // List of All routes
+        console.log(res);
+        if (res) {
+          dispatch({ type: "SET_LOCATIONS", locations: res });
+          setLoading(false);
+        }
+      }
+      fetchData();
+    }
+  }, [dispatch, state.routes]);
+  
   const handleAddDataType = () => {
     alert("Do you want to add data type?")
     // history.push("/route/form");

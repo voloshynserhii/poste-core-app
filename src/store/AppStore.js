@@ -13,6 +13,7 @@ const initialAppState = {
   customers: [],
   users: [],
   routes: [],
+  locations: []
 };
 
 /**
