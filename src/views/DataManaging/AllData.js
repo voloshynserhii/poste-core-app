@@ -5,6 +5,7 @@ import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import { LinearProgress } from "@material-ui/core";
 
 import api from "../../api";
 import { AppContext } from "../../store";
@@ -41,7 +42,7 @@ const AllDataView = () => {
       }
       fetchData();
     }
-  }, [dispatch, state.routes]);
+  }, [dispatch, state.locations]);
   
   const handleAddDataType = () => {
     alert("Do you want to add data type?")
@@ -50,6 +51,8 @@ const AllDataView = () => {
 
   const dataType = ["Locations", "Other"];
 
+  if (loading) return <LinearProgress />;
+  
   return (
     <>
       <Autocomplete

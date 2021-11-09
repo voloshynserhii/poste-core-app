@@ -67,12 +67,12 @@ export default function DataTabs(props) {
     } else {
       setData(props.checkboxList);
     }
-  }, []);
+  }, [data, props.checkboxList]);
 
   const error = checked?.length === 3 || false;
 
   return (
-    <Grid container fullWidth spacing={2}>
+    <Grid container fullwidth="true" spacing={2}>
       {add && <AddDataForm onCancel={() => setAdd(false)} />}
       <Grid item sm={12} className={classes.container}>
         <TextField
