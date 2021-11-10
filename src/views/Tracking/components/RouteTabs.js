@@ -1,8 +1,8 @@
-import {useState, useEffect, useContext} from "react";
+import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import {AppBar, Box, LinearProgress, Tabs, Tab, Typography} from "@material-ui/core";
+import { AppBar, Box, LinearProgress, Tabs, Tab } from "@material-ui/core";
 
 import { AppContext } from "../../../store";
 import RouteCheckboxes from "./RouteCheckboxes";
@@ -19,11 +19,7 @@ function TabPanel(props) {
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -48,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FullWidthTabs({orderId}) {
+export default function FullWidthTabs({ orderId }) {
   const classes = useStyles();
   const theme = useTheme();
   const [state, dispatch] = useContext(AppContext);
@@ -74,27 +70,26 @@ export default function FullWidthTabs({orderId}) {
         }
       }
       fetchData();
-
     }
   }, [dispatch, state.orders.length, state.routes]);
-  
+
   useEffect(() => {
     if (!!routes) {
       setLastMileRoutes(() => {
-        return routes.filter(r => r.type === "lastMile")
+        return routes.filter((r) => r.type === "lastMile");
       });
       setTransitRoutes(() => {
-        return routes.filter(r => r.type === "transit")
+        return routes.filter((r) => r.type === "transit");
       });
       setCollectionRoutes(() => {
-        return routes.filter(r => r.type === "collection")
+        return routes.filter((r) => r.type === "collection");
       });
       setPeerRoutes(() => {
-        return routes.filter(r => r.type === "peer-to-peer")
+        return routes.filter((r) => r.type === "peer-to-peer");
       });
     }
   }, [routes]);
-  
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -102,9 +97,9 @@ export default function FullWidthTabs({orderId}) {
   const handleChangeIndex = (index) => {
     setValue(index);
   };
-  
+
   if (loading) return <LinearProgress />;
-  
+
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
@@ -128,16 +123,16 @@ export default function FullWidthTabs({orderId}) {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-          <RouteCheckboxes data={lastMileRoutes} orderId={orderId}/>
+          <RouteCheckboxes data={lastMileRoutes} orderId={orderId} />
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          <RouteCheckboxes data={collectionRoutes} orderId={orderId}/>
+          <RouteCheckboxes data={collectionRoutes} orderId={orderId} />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          <RouteCheckboxes data={transitRoutes} orderId={orderId}/>
+          <RouteCheckboxes data={transitRoutes} orderId={orderId} />
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
-          <RouteCheckboxes data={peerRoutes} orderId={orderId}/>
+          <RouteCheckboxes data={peerRoutes} orderId={orderId} />
         </TabPanel>
       </SwipeableViews>
     </div>

@@ -39,6 +39,7 @@ const userForm = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    margin: theme.spacing(1),
   },
 }));
 
@@ -115,7 +116,9 @@ const AddDataForm = ({ onCancel }) => {
             name="name"
             value={values?.name}
             error={fieldHasError("name")}
-            helperText={fieldGetError("name") || "Provide a name of the location"}
+            helperText={
+              fieldGetError("name") || "Provide a name of the location"
+            }
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
@@ -124,7 +127,10 @@ const AddDataForm = ({ onCancel }) => {
             name="nameGE"
             value={values?.nameGE}
             error={fieldHasError("nameGE")}
-            helperText={fieldGetError("nameGE") || "Provide a name of the location in Georgian"}
+            helperText={
+              fieldGetError("nameGE") ||
+              "Provide a name of the location in Georgian"
+            }
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
@@ -133,11 +139,14 @@ const AddDataForm = ({ onCancel }) => {
             name="code"
             value={values?.code}
             error={fieldHasError("code")}
-            helperText={fieldGetError("code") || "Provide a universal code of the location"}
+            helperText={
+              fieldGetError("code") ||
+              "Provide a universal code of the location"
+            }
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
-          <Grid container>
+          <Grid container style={{ marginTop: 20, marginBottom: 20 }}>
             <Typography style={{ margin: "auto" }}>
               Select type of the location
             </Typography>

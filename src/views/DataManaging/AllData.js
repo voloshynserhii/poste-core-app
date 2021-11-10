@@ -44,14 +44,14 @@ const AllDataView = () => {
   }, [dispatch, state.locations]);
 
   const handleAddDataType = () => {
-    alert("Do you want to add data type?")
+    alert("Do you want to add data type?");
     // history.push("/route/form");
   };
 
   const dataType = ["Locations", "Other"];
 
   if (loading) return <LinearProgress />;
-  
+
   return (
     <>
       <Autocomplete
@@ -67,7 +67,7 @@ const AllDataView = () => {
           <TextField {...params} label="Choose data" variant="outlined" />
         )}
       />
-      <DataTabs data={data}/>
+      <DataTabs data={data} />
       <Fab
         className={classes.fixedButton}
         color="secondary"

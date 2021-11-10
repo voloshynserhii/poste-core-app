@@ -1,11 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { useState, useCallback } from "react";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import {
   FormControl,
   FormGroup,
   Grid,
   TextField,
-  Typography,
 } from "@material-ui/core";
 
 import AppButton from "../../../components/AppButton";
@@ -38,39 +37,39 @@ const useStyles = makeStyles(() =>
 
 export default function DataTabs(props) {
   const classes = useStyles();
-  const [checked, setChecked] = useState([]);
   const [data, setData] = useState([]);
   const [add, setAdd] = useState(false);
 
-  console.log(props.data)
+  // const handleChange = (event) => {
+  //   if (!checked?.includes(event.target.name)) {
+  //     setChecked([...checked, event.target.name]);
+  //     //   props.onGetValues([...checked, event.target.name]);
+  //   } else {
+  //     const newChecked = checked.filter((item) => item !== event.target.name);
+  //     setChecked(newChecked);
+  //     //   props.onGetValues(newChecked);
+  //   }
+  // };
 
-  const handleChange = (event) => {
-    if (!checked?.includes(event.target.name)) {
-      setChecked([...checked, event.target.name]);
-      //   props.onGetValues([...checked, event.target.name]);
-    } else {
-      const newChecked = checked.filter((item) => item !== event.target.name);
-      setChecked(newChecked);
-      //   props.onGetValues(newChecked);
-    }
-  };
-
-  const searchCheckbox = useCallback((event) => {
-    if (event.target.value) {
-      const lowerData = data.map((item) => item.toLowerCase());
-      const res = lowerData.filter((item) => item.includes(event.target.value));
-      const result = res.map((item) => {
-        const lower = item.toLowerCase().slice(1);
-        const first = item.charAt(0).toUpperCase();
-        return first + lower;
-      });
-      setData(result);
-    } else {
-      setData(props.checkboxList);
-    }
-  }, [data, props.checkboxList]);
-
-  const error = checked?.length === 3 || false;
+  const searchCheckbox = useCallback(
+    (event) => {
+      if (event.target.value) {
+        const lowerData = data.map((item) => item.toLowerCase());
+        const res = lowerData.filter((item) =>
+          item.includes(event.target.value)
+        );
+        const result = res.map((item) => {
+          const lower = item.toLowerCase().slice(1);
+          const first = item.charAt(0).toUpperCase();
+          return first + lower;
+        });
+        setData(result);
+      } else {
+        setData(props.checkboxList);
+      }
+    },
+    [data, props.checkboxList]
+  );
 
   return (
     <Grid container fullwidth="true" spacing={2}>
@@ -97,7 +96,7 @@ export default function DataTabs(props) {
       <div className={classes.root}>
         <FormControl
           required
-          error={error}
+          // error={error}
           component="fieldset"
           className={classes.formControl}
         >
@@ -107,9 +106,8 @@ export default function DataTabs(props) {
               gridTemplateColumns: `repeat(${props.columns || 2}, 1fr)`,
             }}
           >
-            {!!props.data && props.data.map(location => (
-              <span>{location.name}</span>
-            ))}
+            {!!props.data &&
+              props.data.map((location) => <span>{location.name}</span>)}
           </FormGroup>
         </FormControl>
       </div>
