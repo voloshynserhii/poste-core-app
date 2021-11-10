@@ -21,26 +21,6 @@ const VALIDATE_FORM_ROUTE = {
     type: "string",
     presence: { allowEmpty: false },
   },
-  // dimensions: {
-  //   type: "string",
-  //   presence: { allowEmpty: false },
-  // },
-  // declaredValue: {
-  //   type: "string",
-  //   presence: { allowEmpty: true },
-  // },
-  // status: {
-  //   type: "string",
-  //   presence: { allowEmpty: false },
-  // },
-  // comments: {
-  //   type: "string",
-  //   presence: { allowEmpty: true },
-  // },
-  // description: {
-  //   type: "string",
-  //   presence: { allowEmpty: true },
-  // },
 };
 
 const SingleRouteView = () => {
@@ -53,8 +33,28 @@ const SingleRouteView = () => {
     useAppForm({
       validationSchema: VALIDATE_FORM_ROUTE,
     });
+
+  const [regions, setRegions] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [villages, setVillages] = useState([]);
+
   const values = formState.values;
   const id = params?.id;
+
+  useEffect(() => {
+    const regions = state.locations.filter(
+      (location) => location.type === "region"
+    );
+    const cities = state.locations.filter(
+      (location) => location.type === "city"
+    );
+    const villages = state.locations.filter(
+      (location) => location.type === "village"
+    );
+    setRegions(regions);
+    setCities(cities);
+    setVillages(villages);
+  }, [state.locations]);
 
   const fetchRouteById = useCallback(
     async (id) => {
@@ -68,11 +68,6 @@ const SingleRouteView = () => {
             values: {
               ...oldFormState.values,
               title: res?.title || "",
-              // email: res?.email || "",
-              // phone: res?.phone || "Pending",
-              // company: res?.company || "",
-              // taxId: res?.taxId || "",
-              // updateDate: Date.now()
             },
           }));
         } else {
@@ -166,8 +161,11 @@ const SingleRouteView = () => {
                     onChange={onFieldChange}
                     {...SHARED_CONTROL_PROPS}
                   >
-                    <MenuItem value="tbilisi">Tbilisi</MenuItem>
-                    <MenuItem value="batumi">Batumi</MenuItem>
+                    {cities.map((region) => (
+                      <MenuItem value={region.name} key={region.name}>
+                        {region.name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                   <TextField
                     select
@@ -182,8 +180,11 @@ const SingleRouteView = () => {
                     onChange={onFieldChange}
                     {...SHARED_CONTROL_PROPS}
                   >
-                    <MenuItem value="tbilisi">Tbilisi</MenuItem>
-                    <MenuItem value="batumi">Batumi</MenuItem>
+                    {cities.map((region) => (
+                      <MenuItem value={region.name} key={region.name}>
+                        {region.name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -199,8 +200,11 @@ const SingleRouteView = () => {
                     onChange={onFieldChange}
                     {...SHARED_CONTROL_PROPS}
                   >
-                    <MenuItem value="adjaria">Adjaria</MenuItem>
-                    <MenuItem value="kakhetia">Kakhetia</MenuItem>
+                    {regions.map((region) => (
+                      <MenuItem value={region.name} key={region.name}>
+                        {region.name}
+                      </MenuItem>
+                    ))}
                   </TextField>
                   <TextField
                     select

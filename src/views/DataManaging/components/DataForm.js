@@ -107,8 +107,8 @@ export default function DataTabs(props) {
               gridTemplateColumns: `repeat(${props.columns || 2}, 1fr)`,
             }}
           >
-            {props.data.map(region => (
-              <span>{region.name}</span>
+            {!!props.data && props.data.map(location => (
+              <span>{location.name}</span>
             ))}
           </FormGroup>
         </FormControl>

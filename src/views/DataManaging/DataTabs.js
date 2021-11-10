@@ -1,7 +1,7 @@
-import {useState} from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import {Box, Tab, Tabs, Typography} from '@material-ui/core';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { makeStyles } from "@material-ui/core/styles";
+import { Box, Tab, Tabs, Typography } from "@material-ui/core";
 
 import DataForm from "./components/DataForm";
 
@@ -16,11 +16,7 @@ function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
 }
@@ -34,7 +30,7 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
 
@@ -42,16 +38,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    display: 'flex',
+    display: "flex",
     height: 224,
-    marginTop: 20
+    marginTop: 20,
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
   },
 }));
 
-export default function DataTabs({data}) {
+export default function DataTabs({ data }) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -74,13 +70,13 @@ export default function DataTabs({data}) {
         <Tab label="Districts & Villages" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <DataForm data={data.filter(el => el.type === "region")}/>
+        <DataForm data={data.filter((el) => el.type === "region")} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-      <DataForm />
+        <DataForm data={data.filter((el) => el.type === "city")} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-      <DataForm />
+        <DataForm data={data.filter((el) => el.type === "village")} />
       </TabPanel>
     </div>
   );

@@ -156,11 +156,17 @@ const AppReducer = (state, action) => {
         ...state,
         routes: updatedRouteArr,
       };
-      case "SET_LOCATIONS":
-        return {
-          ...state,
-          locations: action?.locations || action?.payload,
-        };
+    case "SET_LOCATIONS":
+      return {
+        ...state,
+        locations: action?.locations || action?.payload,
+      };
+    case "ADD_LOCATION":
+      const newLocations = [...state.locations, action.payload];
+      return {
+        ...state,
+        locations: newLocations,
+      };
     case "SET_ERROR":
       return {
         ...state,

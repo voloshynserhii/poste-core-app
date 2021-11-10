@@ -68,6 +68,7 @@ const AddDataForm = ({ onCancel }) => {
       values: {
         ...oldFormState.values,
         name: "",
+        nameGE: "",
         type: "",
       },
     }));
@@ -82,7 +83,6 @@ const AddDataForm = ({ onCancel }) => {
       ...formState.values,
       type: locationType,
     };
-    console.log(newLocation);
     try {
       // save changes in BD
       const res = await api.locations.create(newLocation);
@@ -111,17 +111,35 @@ const AddDataForm = ({ onCancel }) => {
         <CardHeader title="Input all fields" />
         <CardContent>
           <TextField
-            label="Location name"
+            label="Location name in English"
             name="name"
             value={values?.name}
             error={fieldHasError("name")}
-            helperText={fieldGetError("name") || "Provide a name of a location"}
+            helperText={fieldGetError("name") || "Provide a name of the location"}
+            onChange={onFieldChange}
+            {...SHARED_CONTROL_PROPS}
+          />
+          <TextField
+            label="Location name in Georgian"
+            name="nameGE"
+            value={values?.nameGE}
+            error={fieldHasError("nameGE")}
+            helperText={fieldGetError("nameGE") || "Provide a name of the location in Georgian"}
+            onChange={onFieldChange}
+            {...SHARED_CONTROL_PROPS}
+          />
+          <TextField
+            label="Universal code of the location"
+            name="code"
+            value={values?.code}
+            error={fieldHasError("code")}
+            helperText={fieldGetError("code") || "Provide a universal code of the location"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
           <Grid container>
             <Typography style={{ margin: "auto" }}>
-              Select type of a new location
+              Select type of the location
             </Typography>
             <Grid item className={classes.container} sm={12}>
               <FormControlLabel

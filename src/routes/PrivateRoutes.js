@@ -27,6 +27,7 @@ const PrivateRoutes = () => {
       const orders = await api.orders.read(); // List of All orders
       const customers = await api.customers.read(); // List of All customers
       const users = await api.users.read(); // List of All users
+      const locations = await api.locations.read(); // List of All locations
       //const routes = await api.routes.read(); // List of All routes
       if (orders) {
         dispatch({ type: 'SET_ORDERS', orders: orders });
@@ -36,6 +37,9 @@ const PrivateRoutes = () => {
       }
       if (users) {
         dispatch({ type: 'SET_USERS', users: users });
+      }
+      if (locations) {
+        dispatch({ type: 'SET_LOCATIONS', locations: locations });
       }
       // if (routes) {
       //   dispatch({ type: 'SET_ROUTES', routes: routes });
