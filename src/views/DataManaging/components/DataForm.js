@@ -1,14 +1,10 @@
 import { useState, useCallback } from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import {
-  FormControl,
-  FormGroup,
-  Grid,
-  TextField,
-} from "@material-ui/core";
+import { FormControl, FormGroup, Grid, TextField } from "@material-ui/core";
 
 import AppButton from "../../../components/AppButton";
 import AddDataForm from "./AddDataForm";
+import DataFormList from "./DataFormList";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -22,15 +18,8 @@ const useStyles = makeStyles(() =>
       justifyContent: "space-between",
       marginBottom: "10px",
     },
-    formControl: {
-      margin: "0",
-    },
     searchField: {
       width: "100%",
-    },
-    formGroup: {
-      display: "grid",
-      fontSize: 12,
     },
   })
 );
@@ -94,22 +83,7 @@ export default function DataTabs(props) {
         <AppButton onClick={() => setAdd(true)}>add</AppButton>
       </Grid>
       <div className={classes.root}>
-        <FormControl
-          required
-          // error={error}
-          component="fieldset"
-          className={classes.formControl}
-        >
-          <FormGroup
-            className={classes.formGroup}
-            style={{
-              gridTemplateColumns: `repeat(${props.columns || 2}, 1fr)`,
-            }}
-          >
-            {!!props.data &&
-              props.data.map((location) => <span>{location.name}</span>)}
-          </FormGroup>
-        </FormControl>
+        <DataFormList data={props.data}/>
       </div>
     </Grid>
   );
