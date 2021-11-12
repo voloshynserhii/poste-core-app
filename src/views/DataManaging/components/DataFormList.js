@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   List,
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataFormList({data}) {
+export default function DataFormList({ data }) {
   const classes = useStyles();
   const [checked, setChecked] = useState([0]);
 
@@ -34,12 +34,13 @@ export default function DataFormList({data}) {
 
     setChecked(newChecked);
   };
-console.log(data)
+  console.log(data);
+
+
   return (
     <List className={classes.root}>
       {data.map((value) => {
         const labelId = `checkbox-list-label-${value}`;
-
         return (
           <ListItem
             key={value._id}

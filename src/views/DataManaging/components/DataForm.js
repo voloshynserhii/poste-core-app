@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import { FormControl, FormGroup, Grid, TextField } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 
 import AppButton from "../../../components/AppButton";
 import AddDataForm from "./AddDataForm";
@@ -10,7 +11,6 @@ const useStyles = makeStyles(() =>
   createStyles({
     root: {
       width: "100%",
-      display: "flex",
     },
     container: {
       display: "flex",
@@ -28,6 +28,7 @@ export default function DataTabs(props) {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [add, setAdd] = useState(false);
+  const [selectedDataType, setSelectedDataType] = useState();
 
   // const handleChange = (event) => {
   //   if (!checked?.includes(event.target.name)) {
@@ -59,7 +60,7 @@ export default function DataTabs(props) {
     },
     [data, props.checkboxList]
   );
-
+  const dataType = ["Locations", "Other"];
   return (
     <Grid container fullwidth="true" spacing={2}>
       {add && <AddDataForm onCancel={() => setAdd(false)} />}
@@ -83,7 +84,26 @@ export default function DataTabs(props) {
         <AppButton onClick={() => setAdd(true)}>add</AppButton>
       </Grid>
       <div className={classes.root}>
-        <DataFormList data={props.data}/>
+        {props.type !== "region" && (
+          <Autocomplete
+            id="data"
+            options={dataType}
+            getOptionLabel={(option) => option.toUpperCase()}
+            style={{ width: "100%" }}
+            value={selectedDataType}
+            onChange={(event, newValue) => {
+              setSelectedDataType(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Choose parent location"
+                variant="outlined"
+              />
+            )}
+          />
+        )}
+        <DataFormList data={props.data} />
       </div>
     </Grid>
   );
