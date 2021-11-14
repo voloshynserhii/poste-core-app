@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataTabs({ data, type }) {
+export default function DataTabs() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
 
@@ -69,13 +69,13 @@ export default function DataTabs({ data, type }) {
         <Tab label="Districts & Villages" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        <DataForm data={data.filter((el) => el.type === "region")} type="region"/>
+        <DataForm type="region"/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DataForm data={data.filter((el) => el.type === "city")} type="city"/>
+        <DataForm type="city"/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <DataForm data={data.filter((el) => el.type === "village")} type="village" />
+        <DataForm type="village" />
       </TabPanel>
     </div>
   );

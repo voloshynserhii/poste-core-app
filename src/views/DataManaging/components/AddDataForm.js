@@ -6,8 +6,8 @@ import {
   Card,
   CardHeader,
   CardContent,
-  FormControlLabel,
   Checkbox,
+  FormControlLabel,
   Typography,
 } from "@material-ui/core";
 
@@ -41,6 +41,17 @@ const userForm = makeStyles((theme) => ({
     justifyContent: "center",
     margin: theme.spacing(1),
   },
+  selectContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10
+  },
+  selects: {
+    width: "45%",
+    height: 30,
+    border: 'none'
+  }
 }));
 
 const VALIDATE_FORM_LOCATION = {
@@ -51,10 +62,13 @@ const VALIDATE_FORM_LOCATION = {
 };
 
 const AddDataForm = ({ onCancel }) => {
-  const [, dispatch] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const classes = userForm();
   const [locationSaved, setLocationSaved] = useState(false);
   const [locationType, setLocationType] = useState("");
+  const [regions, setRegions] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [parent, setParent] = useState();
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -79,11 +93,24 @@ const AddDataForm = ({ onCancel }) => {
     formLocation();
   }, [formLocation]);
 
+  useEffect(() => {
+    if (locationType === "city") {
+      const regions = state.locations.filter((loc) => loc.type === "region");
+      setRegions(regions);
+    }
+    if (locationType === "village") {
+      const cities = state.locations.filter((loc) => loc.type === "city");
+      setCities(cities);
+    }
+  }, [locationType]);
+
   const saveRecord = async () => {
     const newLocation = {
       ...formState.values,
       type: locationType,
+      parent: parent
     };
+    console.log(newLocation);
     try {
       // save changes in BD
       const res = await api.locations.create(newLocation);
@@ -185,7 +212,30 @@ const AddDataForm = ({ onCancel }) => {
                 label="District or Village"
               />
             </Grid>
+            <Grid item sm={7} className={classes.selectContainer}>
+            {locationType !== "region" && (
+              <select className={classes.selects} onChange={(event) => setParent(event.target.value)}>
+                Regions
+                {regions.map((region) => (
+                  <option key={region._id} value={region._id}>
+                    {region.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            {locationType === "village" && (
+              <select className={classes.selects} onChange={(event) => setParent(event.target.value)}>
+                Cities
+                {cities.map((city) => (
+                  <option key={city._id} value={city._id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            </Grid>
           </Grid>
+
           <Grid container justifyContent="center" alignItems="center">
             <AppButton onClick={onCancel}>Cancel</AppButton>
             <AppButton

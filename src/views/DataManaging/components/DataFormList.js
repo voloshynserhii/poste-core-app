@@ -6,10 +6,10 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  Checkbox,
   IconButton,
 } from "@material-ui/core";
-import CommentIcon from "@material-ui/icons/Comment";
+import CallSplitIcon from "@material-ui/icons/CallSplit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +36,6 @@ export default function DataFormList({ data }) {
   };
   console.log(data);
 
-
   return (
     <List className={classes.root}>
       {data.map((value) => {
@@ -50,19 +49,17 @@ export default function DataFormList({ data }) {
             button
             onClick={handleToggle(value)}
           >
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={checked.indexOf(value) !== -1}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{ "aria-labelledby": labelId }}
-              />
+            <ListItemIcon title={`Assign a parent location to ${value.name}`}>
+              <CallSplitIcon onClick={(event) => console.log(value._id)} />
             </ListItemIcon>
             <ListItemText id={labelId} primary={value.name} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="comments">
-                <CommentIcon />
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                title={`Delete ${value.name}`}
+              >
+                <DeleteIcon color="secondary" />
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>

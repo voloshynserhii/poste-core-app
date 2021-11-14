@@ -1,11 +1,14 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField, LinearProgress } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
+import api from "../../../api";
+import { AppContext } from "../../../store";
 import AppButton from "../../../components/AppButton";
 import AddDataForm from "./AddDataForm";
 import DataFormList from "./DataFormList";
+import { setDate } from "date-fns";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -26,10 +29,35 @@ const useStyles = makeStyles(() =>
 
 export default function DataTabs(props) {
   const classes = useStyles();
-  const [data, setData] = useState([]);
+  const [state, dispatch] = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
   const [add, setAdd] = useState(false);
   const [selectedDataType, setSelectedDataType] = useState();
-
+  const [data, setData] = useState([]);
+  
+  useEffect(() => {
+    if (state.locations.length) {
+      setLoading(false);
+      setData(state.locations);
+    } else {
+      async function fetchData() {
+        const res = await api.locations.read(); // List of All locations
+        if (res) {
+          dispatch({ type: "SET_LOCATIONS", locations: res });
+          setLoading(false);
+        }
+      }
+      fetchData();
+    }
+  }, [dispatch, state.locations]);
+  
+  //filter locations by their parent
+  useEffect(() => {
+    // const filteredData = data.filter((item) => item.parent === selectedDataType);
+    // setDate(filteredData)
+    // console.log(filteredData);
+  }, [selectedDataType]);
+  
   // const handleChange = (event) => {
   //   if (!checked?.includes(event.target.name)) {
   //     setChecked([...checked, event.target.name]);
@@ -60,7 +88,10 @@ export default function DataTabs(props) {
     },
     [data, props.checkboxList]
   );
-  const dataType = ["Locations", "Other"];
+  const dataType = ["Adjaria", "Kakhetia", "default"];
+  
+  if (loading) return <LinearProgress />;
+  
   return (
     <Grid container fullwidth="true" spacing={2}>
       {add && <AddDataForm onCancel={() => setAdd(false)} />}
@@ -84,13 +115,14 @@ export default function DataTabs(props) {
         <AppButton onClick={() => setAdd(true)}>add</AppButton>
       </Grid>
       <div className={classes.root}>
+        {/* filter locations by parent location */}
         {props.type !== "region" && (
           <Autocomplete
             id="data"
             options={dataType}
             getOptionLabel={(option) => option.toUpperCase()}
             style={{ width: "100%" }}
-            value={selectedDataType}
+            value={selectedDataType || null}
             onChange={(event, newValue) => {
               setSelectedDataType(newValue);
             }}
@@ -103,7 +135,7 @@ export default function DataTabs(props) {
             )}
           />
         )}
-        <DataFormList data={props.data} />
+        <DataFormList data={data.filter(data => data.type === props.type)} />
       </div>
     </Grid>
   );
