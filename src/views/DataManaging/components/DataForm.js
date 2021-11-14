@@ -31,9 +31,13 @@ export default function DataTabs(props) {
   const [state, dispatch] = useContext(AppContext);
   const [loading, setLoading] = useState(true);
   const [add, setAdd] = useState(false);
-  const [selectedDataType, setSelectedDataType] = useState();
+  const [selectedRegion, setSelectedRegion] = useState();
+  const [selectedCity, setSelectedCity] = useState();
   const [data, setData] = useState([]);
-  
+  const [regions, setRegions] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [dataToRender, setDataToRender] = useState(null);
+
   useEffect(() => {
     if (state.locations.length) {
       setLoading(false);
@@ -50,24 +54,34 @@ export default function DataTabs(props) {
       fetchData();
     }
   }, [dispatch, state.locations]);
-  
+
   //filter locations by their parent
   useEffect(() => {
-    // const filteredData = data.filter((item) => item.parent === selectedDataType);
-    // setDate(filteredData)
-    // console.log(filteredData);
-  }, [selectedDataType]);
-  
-  // const handleChange = (event) => {
-  //   if (!checked?.includes(event.target.name)) {
-  //     setChecked([...checked, event.target.name]);
-  //     //   props.onGetValues([...checked, event.target.name]);
-  //   } else {
-  //     const newChecked = checked.filter((item) => item !== event.target.name);
-  //     setChecked(newChecked);
-  //     //   props.onGetValues(newChecked);
-  //   }
-  // };
+    if (props.type !== "region") {
+      const filteredData = data.filter((item) => item.type === "region");
+      setRegions(filteredData);
+    }
+  }, [data]);
+
+  //set city by its parent region
+  useEffect(() => {
+    if (selectedRegion) {
+      const cities = selectedRegion.children;
+      if (props.type === "village") {
+        setCities(cities);
+      } else {
+        setDataToRender(cities);
+      }
+    }
+  }, [selectedRegion]);
+
+  //set data by its parent region
+  useEffect(() => {
+    if (selectedCity) {
+      const villages = selectedCity.children;
+      setDataToRender(villages);
+    }
+  }, [selectedCity]);
 
   const searchCheckbox = useCallback(
     (event) => {
@@ -88,10 +102,9 @@ export default function DataTabs(props) {
     },
     [data, props.checkboxList]
   );
-  const dataType = ["Adjaria", "Kakhetia", "default"];
-  
+
   if (loading) return <LinearProgress />;
-  
+
   return (
     <Grid container fullwidth="true" spacing={2}>
       {add && <AddDataForm onCancel={() => setAdd(false)} />}
@@ -118,24 +131,42 @@ export default function DataTabs(props) {
         {/* filter locations by parent location */}
         {props.type !== "region" && (
           <Autocomplete
-            id="data"
-            options={dataType}
-            getOptionLabel={(option) => option.toUpperCase()}
+            id="regionData"
+            options={regions}
+            getOptionLabel={(option) => option.name.toUpperCase()}
             style={{ width: "100%" }}
-            value={selectedDataType || null}
+            value={selectedRegion || null}
             onChange={(event, newValue) => {
-              setSelectedDataType(newValue);
+              setSelectedRegion(newValue);
+              setSelectedCity("");
             }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Choose parent location"
-                variant="outlined"
-              />
+              <TextField {...params} label="Choose region" variant="outlined" />
             )}
           />
         )}
-        <DataFormList data={data.filter(data => data.type === props.type)} />
+        {props.type === "village" && (
+          <Autocomplete
+            id="cityData"
+            options={cities}
+            getOptionLabel={(option) => option.name.toUpperCase()}
+            style={{ width: "100%", marginTop: 20 }}
+            value={selectedCity || null}
+            onChange={(event, newValue) => {
+              setSelectedCity(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Choose city" variant="outlined" />
+            )}
+          />
+        )}
+        <DataFormList
+          data={
+            !dataToRender
+              ? data.filter((data) => data.type === props.type)
+              : dataToRender
+          }
+        />
       </div>
     </Grid>
   );
