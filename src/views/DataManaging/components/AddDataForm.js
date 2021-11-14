@@ -102,7 +102,7 @@ const AddDataForm = ({ onCancel }) => {
       const cities = state.locations.filter((loc) => loc.type === "city");
       setCities(cities);
     }
-  }, [locationType]);
+  }, [locationType, state.locations]);
 
   const saveRecord = async () => {
     const newLocation = {
