@@ -45,13 +45,13 @@ const userForm = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 10
+    padding: 10,
   },
   selects: {
     width: "45%",
     height: 30,
-    border: 'none'
-  }
+    border: "none",
+  },
 }));
 
 const VALIDATE_FORM_LOCATION = {
@@ -65,7 +65,7 @@ const AddDataForm = ({ onCancel }) => {
   const [state, dispatch] = useContext(AppContext);
   const classes = userForm();
   const [locationSaved, setLocationSaved] = useState(false);
-  const [locationType, setLocationType] = useState("");
+  const [locationType, setLocationType] = useState("region");
   const [regions, setRegions] = useState([]);
   const [cities, setCities] = useState([]);
   const [parent, setParent] = useState();
@@ -85,6 +85,7 @@ const AddDataForm = ({ onCancel }) => {
         name: "",
         nameGE: "",
         type: "",
+        code: "",
       },
     }));
   }, [setFormState]);
@@ -94,7 +95,7 @@ const AddDataForm = ({ onCancel }) => {
   }, [formLocation]);
 
   useEffect(() => {
-    if (locationType === "city") {
+    if (locationType !== "region") {
       const regions = state.locations.filter((loc) => loc.type === "region");
       setRegions(regions);
     }
@@ -108,7 +109,7 @@ const AddDataForm = ({ onCancel }) => {
     const newLocation = {
       ...formState.values,
       type: locationType,
-      parent: parent
+      parent: parent,
     };
     console.log(newLocation);
     try {
@@ -213,26 +214,34 @@ const AddDataForm = ({ onCancel }) => {
               />
             </Grid>
             <Grid item sm={7} className={classes.selectContainer}>
-            {locationType !== "region" && (
-              <select className={classes.selects} onChange={(event) => setParent(event.target.value)}>
-                Regions
-                {regions.map((region) => (
-                  <option key={region._id} value={region._id}>
-                    {region.name}
-                  </option>
-                ))}
-              </select>
-            )}
-            {locationType === "village" && (
-              <select className={classes.selects} onChange={(event) => setParent(event.target.value)}>
-                Cities
-                {cities.map((city) => (
-                  <option key={city._id} value={city._id}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-            )}
+              {locationType !== "region" && (
+                <select
+                  className={classes.selects}
+                  onChange={(event) => setParent(event.target.value)}
+                >
+                  Regions
+                  <option value="">Choose region</option>
+                  {regions.map((region) => (
+                    <option key={region._id} value={region._id}>
+                      {region.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {locationType === "village" && (
+                <select
+                  className={classes.selects}
+                  onChange={(event) => setParent(event.target.value)}
+                >
+                  Cities
+                  <option value="">Choose city</option>
+                  {cities.map((city) => (
+                    <option key={city._id} value={city._id}>
+                      {city.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </Grid>
           </Grid>
 

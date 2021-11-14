@@ -167,6 +167,17 @@ const AppReducer = (state, action) => {
         ...state,
         locations: newLocations,
       };
+    case "DELETE_LOCATION":
+      const deleteLocationId = action.payload;
+      const locationArray = [...state.locations];
+      const deleteLocationIndex = locationArray.indexOf(
+        (location) => location._id === deleteLocationId
+      );
+      const updatedLocationArr = locationArray.splice(deleteLocationIndex, 0);
+      return {
+        ...state,
+        locations: updatedLocationArr,
+      };
     case "SET_ERROR":
       return {
         ...state,

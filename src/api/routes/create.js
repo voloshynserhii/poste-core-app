@@ -1,6 +1,6 @@
 import { api } from '../';
 
-async function collectionCreate(payload) {
+async function routeCreate(payload) {
   const newRoute = JSON.stringify(payload);
   const res = await api.axios.post(`${process.env.REACT_APP_API_URL}/api/route`, {
     body: newRoute,
@@ -14,4 +14,4 @@ async function collectionCreate(payload) {
   };
 }
 
-export default collectionCreate;
+export default routeCreate;

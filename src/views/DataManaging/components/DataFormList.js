@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   List,
@@ -11,6 +11,9 @@ import {
 import CallSplitIcon from "@material-ui/icons/CallSplit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import api from "../../../api";
+import { AppContext } from "../../../store";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -20,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DataFormList({ data }) {
   const classes = useStyles();
+  const [state, dispatch] = useContext(AppContext);
   const [checked, setChecked] = useState([0]);
 
   const handleToggle = (value) => () => {
@@ -34,7 +38,19 @@ export default function DataFormList({ data }) {
 
     setChecked(newChecked);
   };
-  console.log(data);
+  
+  const handleDelete = useCallback(async(id) => {
+    try {
+      // save changes in BD
+      const res = await api.locations.delete(id);
+      if (res.status === 200) {
+        dispatch({ type: "DELETE_LOCATION", payload: id });
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again later");
+    }
+  }, [dispatch]);
 
   return (
     <List className={classes.root}>
@@ -58,8 +74,9 @@ export default function DataFormList({ data }) {
                 edge="end"
                 aria-label="delete"
                 title={`Delete ${value.name}`}
+                onClick={() => handleDelete(value._id)} 
               >
-                <DeleteIcon color="secondary" />
+                <DeleteIcon color="secondary"/>
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>

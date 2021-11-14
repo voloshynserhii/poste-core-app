@@ -8,7 +8,6 @@ import { AppContext } from "../../../store";
 import AppButton from "../../../components/AppButton";
 import AddDataForm from "./AddDataForm";
 import DataFormList from "./DataFormList";
-import { setDate } from "date-fns";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,7 +41,8 @@ export default function DataTabs(props) {
     } else {
       async function fetchData() {
         const res = await api.locations.read(); // List of All locations
-        if (res) {
+        console.log(res);
+        if (res && res.length > 0) {
           dispatch({ type: "SET_LOCATIONS", locations: res });
           setLoading(false);
         }
