@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useCallback, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   List,
@@ -8,11 +8,12 @@ import {
   ListItemText,
   IconButton,
 } from "@material-ui/core";
-import CallSplitIcon from "@material-ui/icons/CallSplit";
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import api from "../../../api";
 import { AppContext } from "../../../store";
+import AddDataForm from "./AddDataForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,8 +24,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function DataFormList({ data }) {
   const classes = useStyles();
-  const [state, dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const [checked, setChecked] = useState([0]);
+  const [editID, setEditID] = useState('');
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -53,6 +55,8 @@ export default function DataFormList({ data }) {
   }, [dispatch]);
 
   return (
+    <>
+    {editID && <AddDataForm id={editID} title="Edit location" onCancel={() => setEditID('')} />}
     <List className={classes.root}>
       {data.map((value) => {
         const labelId = `checkbox-list-label-${value}`;
@@ -65,8 +69,8 @@ export default function DataFormList({ data }) {
             button
             onClick={handleToggle(value)}
           >
-            <ListItemIcon title={`Assign a parent location to ${value.name}`}>
-              <CallSplitIcon onClick={(event) => console.log(value._id)} />
+            <ListItemIcon title={`Edit ${value.name}`}>
+              <EditIcon onClick={() => setEditID(value._id)} />
             </ListItemIcon>
             <ListItemText id={labelId} primary={value.name} />
             <ListItemSecondaryAction>
@@ -83,5 +87,6 @@ export default function DataFormList({ data }) {
         );
       })}
     </List>
+    </>
   );
 }

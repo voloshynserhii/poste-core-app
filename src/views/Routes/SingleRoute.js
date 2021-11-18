@@ -81,7 +81,7 @@ const SingleRouteView = () => {
       }
     },
     [setFormState, state.routes]
-  ); // Don't pass formState here !!!
+  ); 
 
   useEffect(() => {
     fetchRouteById(id);

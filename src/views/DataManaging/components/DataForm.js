@@ -61,7 +61,7 @@ export default function DataTabs(props) {
       const filteredData = data.filter((item) => item.type === "region");
       setRegions(filteredData);
     }
-  }, [data]);
+  }, [data, props.type]);
 
   //set city by its parent region
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function DataTabs(props) {
         setDataToRender(cities);
       }
     }
-  }, [selectedRegion]);
+  }, [selectedRegion, props.type]);
 
   //set data by its parent region
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function DataTabs(props) {
 
   return (
     <Grid container fullwidth="true" spacing={2}>
-      {add && <AddDataForm onCancel={() => setAdd(false)} />}
+      {add && <AddDataForm title="Add new location" onCancel={() => setAdd(false)} />}
       <Grid item sm={12} className={classes.container}>
         <TextField
           className={classes.searchField}

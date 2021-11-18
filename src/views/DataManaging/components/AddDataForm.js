@@ -9,12 +9,14 @@ import {
   Checkbox,
   FormControlLabel,
   Typography,
+  LinearProgress,
 } from "@material-ui/core";
 
 import { AppContext } from "../../../store";
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
+import AppAlert from "../../../components/AppAlert";
 
 const userForm = makeStyles((theme) => ({
   root: {
@@ -61,9 +63,11 @@ const VALIDATE_FORM_LOCATION = {
   },
 };
 
-const AddDataForm = ({ onCancel }) => {
+const AddDataForm = ({ onCancel, id, title }) => {
   const [state, dispatch] = useContext(AppContext);
   const classes = userForm();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [locationSaved, setLocationSaved] = useState(false);
   const [locationType, setLocationType] = useState("region");
   const [regions, setRegions] = useState([]);
@@ -84,11 +88,46 @@ const AddDataForm = ({ onCancel }) => {
         ...oldFormState.values,
         name: "",
         nameGE: "",
-        type: "",
         code: "",
       },
     }));
   }, [setFormState]);
+
+  const fetchLocationById = useCallback(
+    async (id) => {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await state.locations.find((c) => c._id === id);
+        console.log(res);
+        if (res) {
+          setFormState((oldFormState) => ({
+            ...oldFormState,
+            values: {
+              ...oldFormState.values,
+              name: res?.name || "",
+              nameGE: res?.nameGE || "",
+              code: res?.code || "",
+            },
+          }));
+          setLocationType(res?.type || "region");
+          setParent(res?.parent._id || "");
+        } else {
+          setError(`Location id: "${id}" not found`);
+        }
+      } catch (error) {
+        log.error(error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setFormState, state.locations]
+  );
+
+  useEffect(() => {
+    fetchLocationById(id);
+  }, [fetchLocationById, id]);
 
   useEffect(() => {
     formLocation();
@@ -111,7 +150,6 @@ const AddDataForm = ({ onCancel }) => {
       type: locationType,
       parent: parent,
     };
-    console.log(newLocation);
     try {
       // save changes in BD
       const res = await api.locations.create(newLocation);
@@ -131,133 +169,145 @@ const AddDataForm = ({ onCancel }) => {
     saveRecord();
     return;
   };
+  
+  const onAlertClose = useCallback(() => {
+    setError("");
+  }, []);
 
   if (locationSaved) return null;
+  if (loading) return <LinearProgress />;
 
   return (
-    <div className={classes.layer}>
-      <Card className={classes.root}>
-        <CardHeader title="Input all fields" />
-        <CardContent>
-          <TextField
-            label="Location name in English"
-            name="name"
-            value={values?.name}
-            error={fieldHasError("name")}
-            helperText={
-              fieldGetError("name") || "Provide a name of the location"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Location name in Georgian"
-            name="nameGE"
-            value={values?.nameGE}
-            error={fieldHasError("nameGE")}
-            helperText={
-              fieldGetError("nameGE") ||
-              "Provide a name of the location in Georgian"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <TextField
-            label="Universal code of the location"
-            name="code"
-            value={values?.code}
-            error={fieldHasError("code")}
-            helperText={
-              fieldGetError("code") ||
-              "Provide a universal code of the location"
-            }
-            onChange={onFieldChange}
-            {...SHARED_CONTROL_PROPS}
-          />
-          <Grid container style={{ marginTop: 20, marginBottom: 20 }}>
-            <Typography style={{ margin: "auto" }}>
-              Select type of the location
-            </Typography>
-            <Grid item className={classes.container} sm={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={locationType === "region"}
-                    onChange={() => setLocationType("region")}
-                    name="region"
-                    color="primary"
-                  />
-                }
-                label="Region"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={locationType === "city"}
-                    onChange={() => setLocationType("city")}
-                    name="city"
-                    color="primary"
-                  />
-                }
-                label="City"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={locationType === "village"}
-                    onChange={() => setLocationType("village")}
-                    name="village"
-                    color="primary"
-                  />
-                }
-                label="District or Village"
-              />
+    <>
+      {Boolean(error) && (
+        <AppAlert severity="error" onClose={onAlertClose}>
+          {error}
+        </AppAlert>
+      )}
+      <div className={classes.layer}>
+        <Card className={classes.root}>
+          <CardHeader title={title} />
+          <CardContent>
+            <TextField
+              label="Location name in English"
+              name="name"
+              value={values?.name}
+              error={fieldHasError("name")}
+              helperText={
+                fieldGetError("name") || "Provide a name of the location"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Location name in Georgian"
+              name="nameGE"
+              value={values?.nameGE}
+              error={fieldHasError("nameGE")}
+              helperText={
+                fieldGetError("nameGE") ||
+                "Provide a name of the location in Georgian"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Universal code of the location"
+              name="code"
+              value={values?.code}
+              error={fieldHasError("code")}
+              helperText={
+                fieldGetError("code") ||
+                "Provide a universal code of the location"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <Grid container style={{ marginTop: 20, marginBottom: 20 }}>
+              <Typography style={{ margin: "auto" }}>
+                Select type of the location
+              </Typography>
+              <Grid item className={classes.container} sm={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={locationType === "region"}
+                      onChange={() => setLocationType("region")}
+                      name="region"
+                      color="primary"
+                    />
+                  }
+                  label="Region"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={locationType === "city"}
+                      onChange={() => setLocationType("city")}
+                      name="city"
+                      color="primary"
+                    />
+                  }
+                  label="City"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={locationType === "village"}
+                      onChange={() => setLocationType("village")}
+                      name="village"
+                      color="primary"
+                    />
+                  }
+                  label="District or Village"
+                />
+              </Grid>
+              <Grid item sm={7} className={classes.selectContainer}>
+                {locationType !== "region" && (
+                  <select
+                    className={classes.selects}
+                    onChange={(event) => setParent(event.target.value)}
+                  >
+                    Regions
+                    <option value="">Choose region</option>
+                    {regions.map((region) => (
+                      <option key={region._id} value={region._id}>
+                        {region.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {locationType === "village" && (
+                  <select
+                    className={classes.selects}
+                    onChange={(event) => setParent(event.target.value)}
+                  >
+                    Cities
+                    <option value="">Choose city</option>
+                    {cities.map((city) => (
+                      <option key={city._id} value={city._id}>
+                        {city.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </Grid>
             </Grid>
-            <Grid item sm={7} className={classes.selectContainer}>
-              {locationType !== "region" && (
-                <select
-                  className={classes.selects}
-                  onChange={(event) => setParent(event.target.value)}
-                >
-                  Regions
-                  <option value="">Choose region</option>
-                  {regions.map((region) => (
-                    <option key={region._id} value={region._id}>
-                      {region.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {locationType === "village" && (
-                <select
-                  className={classes.selects}
-                  onChange={(event) => setParent(event.target.value)}
-                >
-                  Cities
-                  <option value="">Choose city</option>
-                  {cities.map((city) => (
-                    <option key={city._id} value={city._id}>
-                      {city.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </Grid>
-          </Grid>
 
-          <Grid container justifyContent="center" alignItems="center">
-            <AppButton onClick={onCancel}>Cancel</AppButton>
-            <AppButton
-              color="success"
-              disabled={!formState.isValid}
-              onClick={handleSave}
-            >
-              Save
-            </AppButton>
-          </Grid>
-        </CardContent>
-      </Card>
-    </div>
+            <Grid container justifyContent="center" alignItems="center">
+              <AppButton onClick={onCancel}>Cancel</AppButton>
+              <AppButton
+                color="success"
+                disabled={!formState.isValid}
+                onClick={handleSave}
+              >
+                Save
+              </AppButton>
+            </Grid>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 export default AddDataForm;
