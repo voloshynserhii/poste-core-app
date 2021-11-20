@@ -124,7 +124,7 @@ const RegisterUserForm = ({ onCancel }) => {
             required
             label="Name"
             name="name"
-            value={values?.name}
+            value={values?.name || ''}
             error={fieldHasError("name")}
             helperText={fieldGetError("name") || "Provide a name of the user"}
             onChange={onFieldChange}
@@ -134,7 +134,7 @@ const RegisterUserForm = ({ onCancel }) => {
             required
             label="Email"
             name="email"
-            value={values?.email}
+            value={values?.email || ''}
             defaultValue={values.email}
             error={fieldHasError("email")}
             helperText={fieldGetError("email") || "Provide email of the user"}
@@ -145,7 +145,7 @@ const RegisterUserForm = ({ onCancel }) => {
             required
             label="Password"
             name="password"
-            value={values?.password}
+            value={values?.password || ''}
             defaultValue={values.password}
             error={fieldHasError("password")}
             helperText={
@@ -157,7 +157,7 @@ const RegisterUserForm = ({ onCancel }) => {
           <TextField
             label="Phone"
             name="phone"
-            value={values?.phone}
+            value={values?.phone || ''}
             error={fieldHasError("phone")}
             helperText={fieldGetError("phone") || "Provide a phone of the user"}
             onChange={onFieldChange}

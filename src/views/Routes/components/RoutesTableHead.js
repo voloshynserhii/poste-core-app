@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@material-ui/core';
 
 const headCells = [
-  { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
+  { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
   { id: 'type', numeric: false, disablePadding: true, label: 'Type' },
   { id: 'startPlace', numeric: false, disablePadding: true, label: 'Start place' },
   { id: 'finishPlace', numeric: false, disablePadding: false, label: 'Finish place' },
   { id: 'region', numeric: false, disablePadding: false, label: 'Region' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },
+  { id: 'locations', numeric: false, disablePadding: false, label: 'Locations' },
 ];
 
 export default function OrdersTableHead(props) {

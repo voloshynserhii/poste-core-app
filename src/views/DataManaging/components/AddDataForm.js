@@ -259,7 +259,7 @@ const AddDataForm = ({ onCancel, id, title }) => {
                       color="primary"
                     />
                   }
-                  label="District or Village"
+                  label="Point"
                 />
               </Grid>
               <Grid item sm={7} className={classes.selectContainer}>

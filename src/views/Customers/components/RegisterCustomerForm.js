@@ -105,7 +105,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
               required
               label="Name"
               name="name"
-              value={values.name}
+              value={values.name || ''}
               error={fieldHasError("name")}
               helperText={
                 fieldGetError("name") || "Display name of the customer"
@@ -117,7 +117,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
               required
               label="Email"
               name="email"
-              value={values.email}
+              value={values.email || ''}
               defaultValue={values.email}
               error={fieldHasError("email")}
               helperText={
@@ -130,7 +130,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
               required
               label="Password"
               name="password"
-              value={values.password}
+              value={values.password || ''}
               error={fieldHasError("password")}
               helperText={
                 fieldGetError("password") || "Display password of the customer"
@@ -143,7 +143,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
             <TextField
               label="Phone"
               name="phone"
-              value={values.phone}
+              value={values.phone || ''}
               error={fieldHasError("phone")}
               helperText={
                 fieldGetError("phone") || "Display phone of the customer"
@@ -154,7 +154,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
             <TextField
               label="Tax ID"
               name="taxId"
-              value={values.taxId}
+              value={values.taxId || ''}
               error={fieldHasError("taxId")}
               helperText={
                 fieldGetError("taxId") || "Display tax ID of the customer"
@@ -165,7 +165,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
             <TextField
               label="Company"
               name="company"
-              value={values.company}
+              value={values.company || ''}
               error={fieldHasError("company")}
               helperText={
                 fieldGetError("company") ||

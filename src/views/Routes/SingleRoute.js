@@ -1,20 +1,35 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import {
+  makeStyles,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  LinearProgress,
+  MenuItem,
   Grid,
   TextField,
+  Typography,
   Card,
   CardHeader,
   CardContent,
-  LinearProgress,
-  MenuItem,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { AppContext } from "../../store";
-// import api from "../../api";
+import UpdateButton from "./components/UpdateButton";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
+
+const orderForm = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    padding: "20px 0 50px 0",
+  },
+}));
 
 const VALIDATE_FORM_ROUTE = {
   title: {
@@ -26,6 +41,7 @@ const VALIDATE_FORM_ROUTE = {
 const SingleRouteView = () => {
   const history = useHistory();
   const params = useParams();
+  const classes = orderForm();
   const [state, dispatch] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,28 +49,10 @@ const SingleRouteView = () => {
     useAppForm({
       validationSchema: VALIDATE_FORM_ROUTE,
     });
-
-  const [regions, setRegions] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [villages, setVillages] = useState([]);
+  const [locationsArr, setLocationsArr] = useState([]);
 
   const values = formState.values;
   const id = params?.id;
-
-  useEffect(() => {
-    const regions = state.locations.filter(
-      (location) => location.type === "region"
-    );
-    const cities = state.locations.filter(
-      (location) => location.type === "city"
-    );
-    const villages = state.locations.filter(
-      (location) => location.type === "village"
-    );
-    setRegions(regions);
-    setCities(cities);
-    setVillages(villages);
-  }, [state.locations]);
 
   const fetchRouteById = useCallback(
     async (id) => {
@@ -68,8 +66,14 @@ const SingleRouteView = () => {
             values: {
               ...oldFormState.values,
               title: res?.title || "",
+              status: res?.status || "",
+              type: res?.type || "",
+              region: res?.region || "",
+              startPlace: res?.startPlace || "",
+              finishPlace: res?.finishPlace || "",
             },
           }));
+          setLocationsArr(res.locations.map((loc) => loc._id));
         } else {
           setError(`Route id: "${id}" not found`);
         }
@@ -81,7 +85,7 @@ const SingleRouteView = () => {
       }
     },
     [setFormState, state.routes]
-  ); 
+  );
 
   useEffect(() => {
     fetchRouteById(id);
@@ -96,6 +100,15 @@ const SingleRouteView = () => {
     history.replace("/route");
   };
 
+  const handleAddLocation = (id) => {
+    if (locationsArr.includes(id)) {
+      const newArr = locationsArr.filter((location) => location !== id);
+      setLocationsArr(newArr);
+    } else {
+      setLocationsArr((prev) => [...prev, id]);
+    }
+  };
+  
   const handleDelete = async (id) => {
     //show modal do you really want to delete order?
 
@@ -122,7 +135,7 @@ const SingleRouteView = () => {
                     required
                     label="Title"
                     name="title"
-                    value={values.title}
+                    value={values.title || ""}
                     error={fieldHasError("title")}
                     helperText={
                       fieldGetError("title") || "Display name of the route"
@@ -135,7 +148,7 @@ const SingleRouteView = () => {
                     select
                     label="Type"
                     name="type"
-                    defaultValue={values.type}
+                    value={values.type || ""}
                     error={fieldHasError("type")}
                     helperText={
                       fieldGetError("type") || "Display type of the route"
@@ -150,67 +163,9 @@ const SingleRouteView = () => {
                   </TextField>
                   <TextField
                     select
-                    label="Start place"
-                    name="startPlace"
-                    defaultValue={values.startPlace}
-                    error={fieldHasError("startPlace")}
-                    helperText={
-                      fieldGetError("startPlace") ||
-                      "Display start place of the route"
-                    }
-                    onChange={onFieldChange}
-                    {...SHARED_CONTROL_PROPS}
-                  >
-                    {cities.map((region) => (
-                      <MenuItem value={region.name} key={region.name}>
-                        {region.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
-                    select
-                    label="Finish place"
-                    name="finishPlace"
-                    defaultValue={values.finishPlace}
-                    error={fieldHasError("finishPlace")}
-                    helperText={
-                      fieldGetError("finishPlace") ||
-                      "Display finish place of the route"
-                    }
-                    onChange={onFieldChange}
-                    {...SHARED_CONTROL_PROPS}
-                  >
-                    {cities.map((region) => (
-                      <MenuItem value={region.name} key={region.name}>
-                        {region.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    select
-                    label="Region"
-                    name="region"
-                    defaultValue={values.region}
-                    error={fieldHasError("region")}
-                    helperText={
-                      fieldGetError("region") || "Display region of the route"
-                    }
-                    onChange={onFieldChange}
-                    {...SHARED_CONTROL_PROPS}
-                  >
-                    {regions.map((region) => (
-                      <MenuItem value={region.name} key={region.name}>
-                        {region.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                  <TextField
-                    select
                     label="Status"
                     name="status"
-                    defaultValue={values.status}
+                    value={values.status || ""}
                     error={fieldHasError("status")}
                     helperText={
                       fieldGetError("status") || "Display status of the route"
@@ -223,9 +178,115 @@ const SingleRouteView = () => {
                     <MenuItem value="finished">Finished</MenuItem>
                   </TextField>
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    label="Region"
+                    name="region"
+                    value={!!values.region ? values.region._id : ""}
+                    error={fieldHasError("region")}
+                    helperText={
+                      fieldGetError("region") || "Display region of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    {!!state.locations &&
+                      state.locations
+                        .filter((loc) => loc.type === "region")
+                        .map((location) => (
+                          <MenuItem value={location._id} key={location._id}>
+                            {location.name}
+                          </MenuItem>
+                        ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Start place"
+                    name="startPlace"
+                    value={!!values.startPlace ? values.startPlace._id : ""}
+                    error={fieldHasError("startPlace")}
+                    helperText={
+                      fieldGetError("startPlace") ||
+                      "Display start place of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    {!!state.locations &&
+                      state.locations
+                        .filter((loc) => loc.type === "city")
+                        .map((location) => (
+                          <MenuItem value={location._id} key={location._id}>
+                            {location.name}
+                          </MenuItem>
+                        ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Finish place"
+                    name="finishPlace"
+                    value={!!values.finishPlace ? values.finishPlace._id : ""}
+                    error={fieldHasError("finishPlace")}
+                    helperText={
+                      fieldGetError("finishPlace") ||
+                      "Display finish place of the route"
+                    }
+                    onChange={onFieldChange}
+                    {...SHARED_CONTROL_PROPS}
+                  >
+                    {!!state.locations &&
+                      state.locations
+                        .filter((loc) => loc.type === "city")
+                        .map((location) => (
+                          <MenuItem value={location._id} key={location._id}>
+                            {location.name}
+                          </MenuItem>
+                        ))}
+                  </TextField>
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Typography className={classes.heading}>
+                        Locations
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      {!!state.locations &&
+                        state.locations
+                          .filter((loc) => loc.type === "village")
+                          .map((location) => (
+                            <FormControlLabel
+                              key={location._id}
+                              control={
+                                <Checkbox
+                                  checked={locationsArr.includes(location._id)}
+                                  onChange={() =>
+                                    handleAddLocation(location._id)
+                                  }
+                                  name={location.name}
+                                  color="primary"
+                                />
+                              }
+                              label={location.name}
+                            />
+                          ))}
+                    </AccordionDetails>
+                  </Accordion>
+                </Grid>
               </Grid>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
+                <UpdateButton
+                  color="primary"
+                  id={id}
+                  payload={{ ...values, locations: locationsArr }}
+                >
+                  Update route
+                </UpdateButton>
                 <AppButton color="error" onClick={() => handleDelete(id)}>
                   Delete route
                 </AppButton>

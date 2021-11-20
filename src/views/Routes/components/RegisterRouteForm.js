@@ -1,14 +1,21 @@
-import { useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   makeStyles,
   MenuItem,
   Grid,
   TextField,
+  Typography,
   Card,
   CardHeader,
   CardContent,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { AppContext } from "../../../store";
 import api from "../../../api";
@@ -27,20 +34,13 @@ const VALIDATE_FORM_ROUTE = {
     type: "string",
     presence: { allowEmpty: false },
   },
-  //   taxId: {
-  //     type: "string",
-  //     presence: { allowEmpty: false },
-  //   },
-  //   password: {
-  //     type: "string",
-  //     presence: { allowEmpty: true },
-  //   },
 };
 
 const RegisterRouteForm = ({ onCancel }) => {
   const history = useHistory();
-  const [, dispatch] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
+  const [locationsArr, setLocationsArr] = useState([]);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -60,6 +60,7 @@ const RegisterRouteForm = ({ onCancel }) => {
         startPlace: "",
         finishPlace: "",
         status: "",
+        locations: [],
       },
     }));
     return;
@@ -72,7 +73,10 @@ const RegisterRouteForm = ({ onCancel }) => {
   const saveRecord = async () => {
     // save changes in BD
     try {
-      const res = await api.routes.create(formState.values);
+      const res = await api.routes.create({
+        ...formState.values,
+        locations: locationsArr,
+      });
       const newRoute = res.data.data.route;
       if (res.status === 201) {
         dispatch({ type: "ADD_ROUTE", payload: newRoute });
@@ -89,6 +93,15 @@ const RegisterRouteForm = ({ onCancel }) => {
     return;
   };
 
+  const handleAddLocation = (id) => {
+    if (locationsArr.includes(id)) {
+      const newArr = locationsArr.filter((location) => location !== id);
+      setLocationsArr(newArr);
+    } else {
+      setLocationsArr((prev) => [...prev, id]);
+    }
+  };
+
   return (
     <Card className={classes.root}>
       <CardHeader title="Add new route" />
@@ -99,7 +112,7 @@ const RegisterRouteForm = ({ onCancel }) => {
               required
               label="Title"
               name="title"
-              value={values.title}
+              value={values.title || ""}
               error={fieldHasError("title")}
               helperText={fieldGetError("title") || "Display name of the route"}
               onChange={onFieldChange}
@@ -110,7 +123,7 @@ const RegisterRouteForm = ({ onCancel }) => {
               select
               label="Type"
               name="type"
-              defaultValue={values.type}
+              value={values.type || ""}
               error={fieldHasError("type")}
               helperText={fieldGetError("type") || "Display type of the route"}
               onChange={onFieldChange}
@@ -123,58 +136,9 @@ const RegisterRouteForm = ({ onCancel }) => {
             </TextField>
             <TextField
               select
-              label="Start place"
-              name="startPlace"
-              defaultValue={values.startPlace}
-              error={fieldHasError("startPlace")}
-              helperText={
-                fieldGetError("startPlace") ||
-                "Display start place of the route"
-              }
-              onChange={onFieldChange}
-              {...SHARED_CONTROL_PROPS}
-            >
-              <MenuItem value="tbilisi">Tbilisi</MenuItem>
-              <MenuItem value="batumi">Batumi</MenuItem>
-            </TextField>
-            <TextField
-              select
-              label="Finish place"
-              name="finishPlace"
-              defaultValue={values.finishPlace}
-              error={fieldHasError("finishPlace")}
-              helperText={
-                fieldGetError("finishPlace") ||
-                "Display finish place of the route"
-              }
-              onChange={onFieldChange}
-              {...SHARED_CONTROL_PROPS}
-            >
-              <MenuItem value="tbilisi">Tbilisi</MenuItem>
-              <MenuItem value="batumi">Batumi</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              label="Region"
-              name="region"
-              defaultValue={values.region}
-              error={fieldHasError("region")}
-              helperText={
-                fieldGetError("region") || "Display region of the route"
-              }
-              onChange={onFieldChange}
-              {...SHARED_CONTROL_PROPS}
-            >
-              <MenuItem value="adjaria">Adjaria</MenuItem>
-              <MenuItem value="kakhetia">Kakhetia</MenuItem>
-            </TextField>
-            <TextField
-              select
               label="Status"
               name="status"
-              defaultValue={values.status}
+              value={values.status || ""}
               error={fieldHasError("status")}
               helperText={
                 fieldGetError("status") || "Display status of the route"
@@ -187,10 +151,105 @@ const RegisterRouteForm = ({ onCancel }) => {
               <MenuItem value="finished">Finished</MenuItem>
             </TextField>
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              label="Region"
+              name="region"
+              value={values.region || ""}
+              error={fieldHasError("region")}
+              helperText={
+                fieldGetError("region") || "Display region of the route"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              {!!state.locations &&
+                state.locations
+                  .filter((loc) => loc.type === "region")
+                  .map((location) => (
+                    <MenuItem value={location._id} key={location._id}>
+                      {location.name}
+                    </MenuItem>
+                  ))}
+            </TextField>
+            <TextField
+              select
+              label="Start place"
+              name="startPlace"
+              value={values.startPlace || ""}
+              error={fieldHasError("startPlace")}
+              helperText={
+                fieldGetError("startPlace") ||
+                "Display start place of the route"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              {!!state.locations &&
+                state.locations
+                  .filter((loc) => loc.type === "city")
+                  .map((location) => (
+                    <MenuItem value={location._id} key={location._id}>
+                      {location.name}
+                    </MenuItem>
+                  ))}
+            </TextField>
+            <TextField
+              select
+              label="Finish place"
+              name="finishPlace"
+              value={values.finishPlace || ""}
+              error={fieldHasError("finishPlace")}
+              helperText={
+                fieldGetError("finishPlace") ||
+                "Display finish place of the route"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              {!!state.locations &&
+                state.locations
+                  .filter((loc) => loc.type === "city")
+                  .map((location) => (
+                    <MenuItem value={location._id} key={location._id}>
+                      {location.name}
+                    </MenuItem>
+                  ))}
+            </TextField>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>Locations</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {!!state.locations &&
+                  state.locations
+                    .filter((loc) => loc.type === "village")
+                    .map((location) => (
+                      <FormControlLabel
+                        key={location._id}
+                        control={
+                          <Checkbox
+                            checked={locationsArr.includes(location._id)}
+                            onChange={() => handleAddLocation(location._id)}
+                            name={location.name}
+                            color="primary"
+                          />
+                        }
+                        label={location.name}
+                      />
+                    ))}
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
         </Grid>
       </CardContent>
       <Grid container justifyContent="center" alignItems="center">
-        <AppButton onClick={onCancel}>Cancel</AppButton>
+        <AppButton onClick={() => history.push("/route")}>Cancel</AppButton>
         <AppButton
           color="success"
           disabled={!formState.isValid}

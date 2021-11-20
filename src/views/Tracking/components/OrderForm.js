@@ -325,7 +325,7 @@ const OrderForm = ({ onCancel }) => {
               required
               label="Customer TAX ID"
               name="taxId"
-              value={values.customer?.taxId}
+              value={values.customer?.taxId || ''}
               error={fieldHasError("taxId")}
               helperText={
                 fieldGetError("taxId") || "Display tax ID of the Customer"
@@ -337,7 +337,7 @@ const OrderForm = ({ onCancel }) => {
               disabled
               label="Tracking number"
               name="trackingNumber"
-              value={values.trackingNumber}
+              value={values.trackingNumber || ''}
               error={fieldHasError("referenceNumber")}
               helperText={
                 fieldGetError("trackingNumber") ||
@@ -349,7 +349,7 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Reference number"
               name="referenceNumber"
-              value={values.referenceNumber}
+              value={values.referenceNumber || ''}
               error={fieldHasError("referenceNumber")}
               helperText={
                 fieldGetError("referenceNumber") ||
@@ -377,7 +377,7 @@ const OrderForm = ({ onCancel }) => {
               required
               label="Weight"
               name="weight"
-              value={values.weight}
+              value={values.weight || ''}
               error={fieldHasError("weight")}
               helperText={
                 fieldGetError("weight") || "Display weight of the order"
@@ -388,7 +388,7 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Dimensions"
               name="dimensions"
-              value={values.dimensions}
+              value={values.dimensions || ''}
               defaultValue={values.dimensions}
               error={fieldHasError("dimensions")}
               helperText={

@@ -102,7 +102,6 @@ export default function RoutesTable({ orders }) {
   const [assignOrder, setAssignOrder] = useState(false);
   const [routeId, setRouteId] = useState();
   const [data, setData] = useState([]);
-  const [menuValue, setMenuValue] = useState("");
   const [assignedRoutes, setAssignedRoutes] = useState([]);
 
   function createData(
@@ -112,7 +111,8 @@ export default function RoutesTable({ orders }) {
     startPlace,
     finishPlace,
     region,
-    status
+    status,
+    locations
   ) {
     return {
       id,
@@ -122,6 +122,7 @@ export default function RoutesTable({ orders }) {
       finishPlace,
       region,
       status,
+      locations
     };
   }
 
@@ -156,12 +157,13 @@ export default function RoutesTable({ orders }) {
         route.startPlace || "no address",
         route.finishPlace || "no address",
         route.region || "no region",
-        route.status || "no status"
+        route.status || "no status",
+        route.locations
       );
     });
     setRows(rows.reverse());
   }, [data, selectedRouteType]);
-
+console.log(data)
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -187,7 +189,6 @@ export default function RoutesTable({ orders }) {
   };
 
   const handleAssignToRoutes = async (name) => {
-    console.log(name ,orders);
     if (orders) {
       if(assignedRoutes.includes(name)) {
         orders.forEach(async (order) => {
@@ -236,7 +237,6 @@ export default function RoutesTable({ orders }) {
   };
 
   const handleGetOption = (value, id) => {
-    setMenuValue(value);
     if (value === "Edit route") history.push(`route/${id}`);
     if (value === "Delete route") handleDelete(id);
     if (value === "Order routes") {
@@ -361,7 +361,6 @@ export default function RoutesTable({ orders }) {
                             <TableCell>
                               <Menu
                                 options={menuOptions}
-                                selected={menuValue}
                                 onMenuClick={(opt) =>
                                   handleGetOption(opt, row.id)
                                 }
@@ -385,11 +384,12 @@ export default function RoutesTable({ orders }) {
                           align="left"
                           padding="none"
                         >
-                          {row.startPlace}
+                          {row.startPlace.name || "none"}
                         </TableCell>
-                        <TableCell align="left">{row.finishPlace}</TableCell>
-                        <TableCell align="left">{row.region}</TableCell>
+                        <TableCell align="left">{row.finishPlace.name || "none"}</TableCell>
+                        <TableCell align="left">{row.region.name || "none"}</TableCell>
                         <TableCell align="left">{row.status}</TableCell>
+                        <TableCell align="left">View locations</TableCell>
                       </TableRow>
                     );
                   })}
