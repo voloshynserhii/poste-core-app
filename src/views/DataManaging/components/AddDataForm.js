@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback, useContext } from "react";
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   makeStyles,
   Grid,
   TextField,
@@ -11,6 +14,7 @@ import {
   Typography,
   LinearProgress,
 } from "@material-ui/core";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { AppContext } from "../../../store";
 import api from "../../../api";
@@ -72,8 +76,11 @@ const AddDataForm = ({ onCancel, id, title }) => {
   const [locationType, setLocationType] = useState("region");
   const [regions, setRegions] = useState([]);
   const [cities, setCities] = useState([]);
+  const [city, setCity] = useState();
+  const [region, setRegion] = useState();
   const [parent, setParent] = useState();
-
+  const [routesArr, setRoutesArr] = useState([]);
+  
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
       validationSchema: VALIDATE_FORM_LOCATION,
@@ -98,8 +105,7 @@ const AddDataForm = ({ onCancel, id, title }) => {
       setLoading(true);
       setError("");
       try {
-        const res = await state.locations.find((c) => c._id === id);
-        console.log(res);
+        const res = await state.locations.find((location) => location._id === id);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
@@ -111,7 +117,7 @@ const AddDataForm = ({ onCancel, id, title }) => {
             },
           }));
           setLocationType(res?.type || "region");
-          setParent(res?.parent._id || "");
+          setParent(res?.parent?._id || "");
         } else {
           setError(`Location id: "${id}" not found`);
         }
@@ -173,6 +179,15 @@ const AddDataForm = ({ onCancel, id, title }) => {
   const onAlertClose = useCallback(() => {
     setError("");
   }, []);
+  
+  const handleAddRoute = (id) => {
+    if (routesArr.includes(id)) {
+      const newArr = routesArr.filter((route) => route !== id);
+      setRoutesArr(newArr);
+    } else {
+      setRoutesArr((prev) => [...prev, id]);
+    }
+  };
 
   if (locationSaved) return null;
   if (loading) return <LinearProgress />;
@@ -223,6 +238,36 @@ const AddDataForm = ({ onCancel, id, title }) => {
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             />
+            
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>Routes</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {!!state.routes &&
+                  state.routes
+                    .map((route) => (
+                      <FormControlLabel
+                        key={route._id}
+                        control={
+                          <Checkbox
+                            checked={routesArr.includes(route._id)}
+                            onChange={() => handleAddRoute(route._id)}
+                            name={route.title}
+                            color="primary"
+                          />
+                        }
+                        label={route.title}
+                      />
+                    ))}
+              </AccordionDetails>
+            </Accordion>
+            
+            
             <Grid container style={{ marginTop: 20, marginBottom: 20 }}>
               <Typography style={{ margin: "auto" }}>
                 Select type of the location
@@ -266,7 +311,7 @@ const AddDataForm = ({ onCancel, id, title }) => {
                 {locationType !== "region" && (
                   <select
                     className={classes.selects}
-                    onChange={(event) => setParent(event.target.value)}
+                    onChange={(event) => setRegion(event.target.value)}
                   >
                     Regions
                     <option value="">Choose region</option>
@@ -280,11 +325,11 @@ const AddDataForm = ({ onCancel, id, title }) => {
                 {locationType === "village" && (
                   <select
                     className={classes.selects}
-                    onChange={(event) => setParent(event.target.value)}
+                    onChange={(event) => setCity(event.target.value)}
                   >
                     Cities
                     <option value="">Choose city</option>
-                    {cities.map((city) => (
+                    {cities.filter(c => c.parent._id === region).map((city) => (
                       <option key={city._id} value={city._id}>
                         {city.name}
                       </option>
