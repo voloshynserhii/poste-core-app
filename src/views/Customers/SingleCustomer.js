@@ -3,6 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import {
   Grid,
   TextField,
+  Typography,
   Card,
   CardHeader,
   CardContent,
@@ -64,6 +65,7 @@ const SingleCustomerView = () => {
       setError("");
       try {
         const res = await state.customers.find((c) => c._id === id);
+        console.log(res);
         if (res) {
           setAddressList(res.addressList);
           setFormState((oldFormState) => ({
@@ -190,18 +192,61 @@ const SingleCustomerView = () => {
                 {...SHARED_CONTROL_PROPS}
               />
               <CardContent>
-                <h3>Added addresses</h3>
+                <Typography variant="h4" component="h2" gutterBottom>
+                  Added addresses
+                </Typography>
                 <Grid container flex="true" spacing={3}>
                   {addressList?.map((address, index) => (
-                    <Grid item key={address.title}>
-                      <div>TITLE:{address.title}</div>
-                      <div>REGION:{address.region}</div>
-                      <div>CITY:{address.city}</div>
-                      <div>ADDRESS1:{address.address1}</div>
-                      <div>PHONE:{address.contactPhone}</div>
-                      <div>EMAIL:{address.contactEmail}</div>
-                      <div>CONTACT NAME{address.contactName}</div>
-                    </Grid>
+                    <Card key={address.title}>
+                      <CardContent>
+                        <Typography
+                          variant="h5"
+                          component="h2"
+                          color="secondary"
+                        >
+                          {address.title.toUpperCase()}
+                        </Typography>
+                        <Typography variant="h5" component="h6" color="primary">
+                          Name: {address.contactName}
+                        </Typography>
+                        <Typography color="textSecondary" gutterBottom>
+                          REGION:
+                          {
+                            state.locations.find(
+                              (loc) => loc._id === address.region
+                            ).name
+                          }
+                        </Typography>
+                        <Typography color="textSecondary" gutterBottom>
+                          CITY:
+                          {
+                            state.locations.find(
+                              (loc) => loc._id === address.city
+                            ).name
+                          }
+                        </Typography>
+                        <Typography color="textSecondary" gutterBottom>
+                          VILLAGE:
+                          {
+                            state.locations.find(
+                              (loc) => loc._id === address.village
+                            ).name
+                          }
+                        </Typography>
+                        <Typography color="textSecondary">
+                          ADDRESS1:{address.address1}
+                        </Typography>
+                        <Typography color="textSecondary">
+                          PHONE:{address.contactPhone}
+                        </Typography>
+                        <Typography color="textSecondary">
+                          EMAIL:{address.contactEmail}
+                        </Typography>
+                        <Typography variant="body2" component="p">
+                          ADDRESS2:{address.address2 || "empty"}
+                        </Typography>
+                      </CardContent>
+                    </Card>
                   ))}
                 </Grid>
               </CardContent>

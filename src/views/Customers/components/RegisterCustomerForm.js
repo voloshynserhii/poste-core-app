@@ -4,6 +4,7 @@ import {
   makeStyles,
   Grid,
   TextField,
+  Typography,
   Card,
   CardHeader,
   CardContent,
@@ -39,7 +40,7 @@ const VALIDATE_FORM_CUSTOMER = {
 
 const RegisterCustomerForm = ({ onCancel }) => {
   const history = useHistory();
-  const [, dispatch] = useContext(AppContext);
+  const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
   const [addressList, setAddressList] = useState([]);
 
@@ -73,16 +74,20 @@ const RegisterCustomerForm = ({ onCancel }) => {
   const saveRecord = async () => {
     // save changes in BD
     try {
-      const res = await api.customers.create({...formState.values, addressList});
+      const res = await api.customers.create({
+        ...formState.values,
+        addressList,
+      });
       const newCustomer = res.data.data.customer;
-      if(res.status === 201) {
-        dispatch({ type: 'ADD_CUSTOMER', payload: newCustomer });
+      if (res.status === 201) {
+        dispatch({ type: "ADD_CUSTOMER", payload: newCustomer });
       }
-      history.push('/customer');
+      history.push("/customer");
     } catch (err) {
-      alert("Something went wrong. Please try again with another email address")
+      alert(
+        "Something went wrong. Please try again with another email address"
+      );
     }
-
   };
 
   const handleSave = () => {
@@ -105,7 +110,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
               required
               label="Name"
               name="name"
-              value={values.name || ''}
+              value={values.name || ""}
               error={fieldHasError("name")}
               helperText={
                 fieldGetError("name") || "Display name of the customer"
@@ -117,7 +122,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
               required
               label="Email"
               name="email"
-              value={values.email || ''}
+              value={values.email || ""}
               defaultValue={values.email}
               error={fieldHasError("email")}
               helperText={
@@ -130,7 +135,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
               required
               label="Password"
               name="password"
-              value={values.password || ''}
+              value={values.password || ""}
               error={fieldHasError("password")}
               helperText={
                 fieldGetError("password") || "Display password of the customer"
@@ -143,7 +148,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
             <TextField
               label="Phone"
               name="phone"
-              value={values.phone || ''}
+              value={values.phone || ""}
               error={fieldHasError("phone")}
               helperText={
                 fieldGetError("phone") || "Display phone of the customer"
@@ -154,7 +159,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
             <TextField
               label="Tax ID"
               name="taxId"
-              value={values.taxId || ''}
+              value={values.taxId || ""}
               error={fieldHasError("taxId")}
               helperText={
                 fieldGetError("taxId") || "Display tax ID of the customer"
@@ -165,7 +170,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
             <TextField
               label="Company"
               name="company"
-              value={values.company || ''}
+              value={values.company || ""}
               error={fieldHasError("company")}
               helperText={
                 fieldGetError("company") ||
@@ -178,24 +183,57 @@ const RegisterCustomerForm = ({ onCancel }) => {
         </Grid>
       </CardContent>
       <CardContent>
-        <h3>Added addresses</h3>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Added addresses
+        </Typography>
         <Grid container flex="true" spacing={3}>
-          {addressList.map((address, index) => (
-            <Grid item key={address.address1}>
-              <div>TITLE:{address.title}</div>
-              <div>REGION:{address.region}</div>
-              <div>CITY:{address.city}</div>
-              <div>ADDRESS1:{address.address1}</div>
-              <div>PHONE:{address.contactPhone}</div>
-              <div>EMAIL:{address.contactEmail}</div>
-              <div>CONTACT NAME{address.contactName}</div>
-            </Grid>
+          {addressList?.map((address, index) => (
+            <Card key={address.title}>
+              <CardContent>
+                <Typography variant="h5" component="h2" color="secondary">
+                  {address.title.toUpperCase()}
+                </Typography>
+                <Typography variant="h5" component="h6" color="primary">
+                  Name: {address.contactName}
+                </Typography>
+                <Typography color="textSecondary" gutterBottom>
+                  REGION:
+                  {
+                    state.locations.find((loc) => loc._id === address.region)
+                      .name
+                  }
+                </Typography>
+                <Typography color="textSecondary" gutterBottom>
+                  CITY:
+                  {state.locations.find((loc) => loc._id === address.city).name}
+                </Typography>
+                <Typography color="textSecondary" gutterBottom>
+                  VILLAGE:
+                  {
+                    state.locations.find((loc) => loc._id === address.village)
+                      .name
+                  }
+                </Typography>
+                <Typography color="textSecondary">
+                  ADDRESS1:{address.address1}
+                </Typography>
+                <Typography color="textSecondary">
+                  PHONE:{address.contactPhone}
+                </Typography>
+                <Typography color="textSecondary">
+                  EMAIL:{address.contactEmail}
+                </Typography>
+                <Typography variant="body2" component="p">
+                  ADDRESS2:{address.address2 || "empty"}
+                </Typography>
+              </CardContent>
+            </Card>
           ))}
         </Grid>
       </CardContent>
       <AddressForm title="Add new address" onAddAddress={getAddressValues} />
       <Grid container justifyContent="center" alignItems="center">
-        <AppButton onClick={onCancel}>Cancel</AppButton>
+        <AppButton onClick={() => history.push("/customer")}>Cancel</AppButton>
         <AppButton
           color="success"
           disabled={!formState.isValid}

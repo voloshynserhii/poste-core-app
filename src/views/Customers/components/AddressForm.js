@@ -69,6 +69,7 @@ const RegisterCustomerForm = (props) => {
     formAddress();
   }, [formAddress, findCustomerAddress, props.customerId]);
 
+  console.log(values);
   const onAddressChange = useCallback(
     async (event) => {
       const name = event.target?.name;
@@ -178,6 +179,8 @@ const RegisterCustomerForm = (props) => {
               {...SHARED_CONTROL_PROPS}
             />
             <TextField
+              select
+              required
               label="Region"
               name="region"
               value={values?.region || ""}
@@ -185,8 +188,16 @@ const RegisterCustomerForm = (props) => {
               helperText={fieldGetError("region") || "Display the region"}
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
-            />
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "region")
+                .map((location) => (
+                  <MenuItem value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
             <TextField
+              select
               required
               label="City"
               name="city"
@@ -195,7 +206,39 @@ const RegisterCustomerForm = (props) => {
               helperText={fieldGetError("city") || "Display the city"}
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
-            />
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "city")
+                .filter((loc) => loc.parent._id === values.region)
+                .map((location) => (
+                  <MenuItem value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
+            <TextField
+              select
+              required
+              label="End Point"
+              name="village"
+              value={values?.village || ""}
+              error={fieldHasError("village")}
+              helperText={
+                fieldGetError("village") ||
+                "Display a village or a district in a city"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "village")
+                .filter((loc) => loc.parent._id === values.city)
+                .map((location) => (
+                  <MenuItem value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               label="Address"
@@ -206,10 +249,8 @@ const RegisterCustomerForm = (props) => {
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
             <TextField
-              label="Secondary dddress"
+              label="Secondary address"
               name="address2"
               value={values?.address2 || ""}
               error={fieldHasError("address2")}
@@ -226,7 +267,7 @@ const RegisterCustomerForm = (props) => {
               error={fieldHasError("contactName")}
               helperText={
                 fieldGetError("contactName") ||
-                "Display contactName of the Order"
+                "Display contact name of the person responsible for the order"
               }
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
@@ -238,7 +279,8 @@ const RegisterCustomerForm = (props) => {
               value={values?.contactPhone || ""}
               error={fieldHasError("contactPhone")}
               helperText={
-                fieldGetError("contactPhone") || "Display contact phone"
+                fieldGetError("contactPhone") ||
+                "Display contact phone of the contact person"
               }
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
@@ -249,7 +291,8 @@ const RegisterCustomerForm = (props) => {
               value={values?.contactEmail || ""}
               error={fieldHasError("contactEmail")}
               helperText={
-                fieldGetError("contactEmail") || "Display contact Email"
+                fieldGetError("contactEmail") ||
+                "Display contact Email of the contact person"
               }
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}

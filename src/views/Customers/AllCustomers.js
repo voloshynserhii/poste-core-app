@@ -24,19 +24,23 @@ const AllCustomersView = () => {
   const [state, dispatch] = useContext(AppContext);
   
   useEffect(() => {
-    if (state.customers.length) {
+    if (state.customers.length && state.locations.length) {
       setLoading(false)
     } else {
       async function fetchData() {
         const res = await api.customers.read(); // List of All customers
+        const locRes = await api.locations.read(); // List of All locations
         if (res) {
           dispatch({ type: 'SET_CUSTOMERS', customers: res });
+        } 
+        if (locRes) {
+          dispatch({ type: 'SET_LOCATIONS', locations: locRes });
           setLoading(false);
         } 
       }
       fetchData();
     };
-  }, [dispatch, state.customers.length]);
+  }, [dispatch, state.customers.length, state.locations.length]);
   
   const handleAddCustomer = () => {
     history.push('/customer/form')
