@@ -17,6 +17,7 @@ import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
 import UpdateButton from "./components/UpdateButton";
 import AddressForm from "./components/AddressForm";
+import AddressCard from "./components/AddressCard";
 
 const VALIDATE_FORM_ORDER = {
   weight: {
@@ -197,56 +198,24 @@ const SingleCustomerView = () => {
                 </Typography>
                 <Grid container flex="true" spacing={3}>
                   {addressList?.map((address, index) => (
-                    <Card key={address.title}>
-                      <CardContent>
-                        <Typography
-                          variant="h5"
-                          component="h2"
-                          color="secondary"
-                        >
-                          {address.title.toUpperCase()}
-                        </Typography>
-                        <Typography variant="h5" component="h6" color="primary">
-                          Name: {address.contactName}
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom>
-                          REGION:
-                          {
-                            state.locations.find(
-                              (loc) => loc._id === address.region
-                            ).name
-                          }
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom>
-                          CITY:
-                          {
-                            state.locations.find(
-                              (loc) => loc._id === address.city
-                            ).name
-                          }
-                        </Typography>
-                        <Typography color="textSecondary" gutterBottom>
-                          VILLAGE:
-                          {
-                            state.locations.find(
-                              (loc) => loc._id === address.village
-                            ).name
-                          }
-                        </Typography>
-                        <Typography color="textSecondary">
-                          ADDRESS1:{address.address1}
-                        </Typography>
-                        <Typography color="textSecondary">
-                          PHONE:{address.contactPhone}
-                        </Typography>
-                        <Typography color="textSecondary">
-                          EMAIL:{address.contactEmail}
-                        </Typography>
-                        <Typography variant="body2" component="p">
-                          ADDRESS2:{address.address2 || "empty"}
-                        </Typography>
-                      </CardContent>
-                    </Card>
+                    <AddressCard
+                      key={address.title}
+                      title={address.title}
+                      name={address.contactName}
+                      region={state.locations.find(
+                        (loc) => loc._id === address.region
+                      )}
+                      city={state.locations.find(
+                        (loc) => loc._id === address.city
+                      )}
+                      village={state.locations.find(
+                        (loc) => loc._id === address.village
+                      )}
+                      address1={address.address1}
+                      phone={address.contactPhone}
+                      email={address.contactEmail}
+                      address2={address.address2}
+                    />
                   ))}
                 </Grid>
               </CardContent>
