@@ -68,7 +68,6 @@ const UpdateButton = ({ id, payload, disabled, noConfirmation = false, ...restOf
 };
 
 UpdateButton.propTypes = {
-  collection: PropTypes.string.isRequired,
   payload: PropTypes.object,
   noConfirmation: PropTypes.bool,
 };

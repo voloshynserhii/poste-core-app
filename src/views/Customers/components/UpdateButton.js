@@ -6,7 +6,6 @@ import { AppContext } from "../../../store";
 import api from "../../../api";
 import { AppButton } from "../../../components/AppButton";
 import { ConfirmationDialog } from "../../../components/Dialogs";
-import { capitalize } from "../../../utils/string";
 
 /**
  * Renders "Save Collection" button with "Confirm Save" dialog
@@ -16,7 +15,6 @@ import { capitalize } from "../../../utils/string";
  * @param {boolean} [noConfirmation] - open or not the Confirmation dialog
  */
 const UpdateButton = ({
-  collection,
   id,
   payload,
   disabled,
@@ -25,7 +23,6 @@ const UpdateButton = ({
 }) => {
   const [, dispatch] = useContext(AppContext);
   const [modal, setModal] = useState();
-  const title = capitalize(collection);
   const history = useHistory();
 
   const updateRecord = async () => {
@@ -59,8 +56,8 @@ const UpdateButton = ({
     const dialog = (
       <ConfirmationDialog
         open
-        title={`Save ${title}?`}
-        body={`Do you really want to update the ${title} data in the Database?`}
+        title={`Save customer?`}
+        body={`Do you really want to update the customer data in the Database?`}
         confirmButtonText="Confirm and Save"
         confirmButtonColor="success"
         onClose={onDialogClose}
@@ -84,7 +81,6 @@ const UpdateButton = ({
 };
 
 UpdateButton.propTypes = {
-  collection: PropTypes.string.isRequired,
   payload: PropTypes.object,
   noConfirmation: PropTypes.bool,
 };

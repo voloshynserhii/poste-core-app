@@ -528,7 +528,6 @@ const SingleOrderView = () => {
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton
-                  collection="orders"
                   color="primary"
                   id={id}
                   payload={values}

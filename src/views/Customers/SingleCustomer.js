@@ -227,7 +227,6 @@ const SingleCustomerView = () => {
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton
-                  collection="customers"
                   color="primary"
                   id={id}
                   payload={{ ...values, addressList: addressList }}

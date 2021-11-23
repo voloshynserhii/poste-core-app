@@ -208,7 +208,6 @@ const SingleUserView = () => {
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton
-                  collection="users"
                   color="primary"
                   id={id}
                   payload={values}
