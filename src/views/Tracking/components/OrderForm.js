@@ -74,17 +74,21 @@ const OrderForm = ({ onCancel }) => {
         description: "",
         comments: "",
         collectionData: {
-          region: "",
-          city: "",
+          region: null,
+          city: null,
+          village: null,
           address1: "",
+          address2: "",
           contactName: "",
           contactPhone: "",
           contactEmail: "",
         },
         deliveryData: {
-          region: "",
-          city: "",
+          region: null,
+          city: null,
+          village: null,
           address1: "",
+          address2: "",
           contactName: "",
           contactPhone: "",
           contactEmail: "",
@@ -107,8 +111,8 @@ const OrderForm = ({ onCancel }) => {
       const res = await api.orders.create(savedOrder);
 
       const newOrder = res.data.data.order;
-      if(res.status === 201) {
-        dispatch({ type: 'ADD_ORDER', payload: newOrder });
+      if (res.status === 201) {
+        dispatch({ type: "ADD_ORDER", payload: newOrder });
       }
       setOrderSaved(true);
     } else {
@@ -208,8 +212,9 @@ const OrderForm = ({ onCancel }) => {
           values: {
             ...formState.values,
             collectionData: {
-              region: "",
-              city: "",
+              region: null,
+              city: null,
+              village: null,
               address1: "",
               address2: "",
               contactName: "",
@@ -233,8 +238,9 @@ const OrderForm = ({ onCancel }) => {
           values: {
             ...formState.values,
             collectionData: {
-              region: curAddress?.region || "",
-              city: curAddress?.city || "",
+              region: curAddress?.region || null,
+              city: curAddress?.city || null,
+              village: curAddress?.village || null,
               address1: curAddress?.address1 || "",
               address2: curAddress?.address2 || "",
               contactName: curAddress?.contactName || "",
@@ -263,8 +269,9 @@ const OrderForm = ({ onCancel }) => {
           values: {
             ...formState.values,
             deliveryData: {
-              region: "",
-              city: "",
+              region: null,
+              city: null,
+              village: null,
               address1: "",
               address2: "",
               contactName: "",
@@ -288,8 +295,9 @@ const OrderForm = ({ onCancel }) => {
           values: {
             ...formState.values,
             deliveryData: {
-              region: curAddress?.region || "",
-              city: curAddress?.city || "",
+              region: curAddress?.region || null,
+              city: curAddress?.city || null,
+              village: curAddress?.village || null,
               address1: curAddress?.address1 || "",
               address2: curAddress?.address2 || "",
               contactName: curAddress?.contactName || "",
@@ -325,7 +333,7 @@ const OrderForm = ({ onCancel }) => {
               required
               label="Customer TAX ID"
               name="taxId"
-              value={values.customer?.taxId || ''}
+              value={values.customer?.taxId || ""}
               error={fieldHasError("taxId")}
               helperText={
                 fieldGetError("taxId") || "Display tax ID of the Customer"
@@ -337,7 +345,7 @@ const OrderForm = ({ onCancel }) => {
               disabled
               label="Tracking number"
               name="trackingNumber"
-              value={values.trackingNumber || ''}
+              value={values.trackingNumber || ""}
               error={fieldHasError("referenceNumber")}
               helperText={
                 fieldGetError("trackingNumber") ||
@@ -349,7 +357,7 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Reference number"
               name="referenceNumber"
-              value={values.referenceNumber || ''}
+              value={values.referenceNumber || ""}
               error={fieldHasError("referenceNumber")}
               helperText={
                 fieldGetError("referenceNumber") ||
@@ -361,8 +369,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Cash on delivery value"
               name="declaredValue"
-              value={values.declaredValue}
-              defaultValue={values.declaredValue}
+              value={values?.declaredValue || 0}
+              // defaultValue={values.declaredValue}
               error={fieldHasError("declaredValue")}
               helperText={
                 fieldGetError("declaredValue") ||
@@ -377,7 +385,7 @@ const OrderForm = ({ onCancel }) => {
               required
               label="Weight"
               name="weight"
-              value={values.weight || ''}
+              value={values?.weight || ""}
               error={fieldHasError("weight")}
               helperText={
                 fieldGetError("weight") || "Display weight of the order"
@@ -388,8 +396,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Dimensions"
               name="dimensions"
-              value={values.dimensions || ''}
-              defaultValue={values.dimensions}
+              value={values.dimensions || ""}
+              // defaultValue={values.dimensions}
               error={fieldHasError("dimensions")}
               helperText={
                 fieldGetError("dimensions") || "Display dimensions of the Order"
@@ -400,8 +408,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Quantity"
               name="quantity"
-              value={values.quantity}
-              defaultValue={values.quantity}
+              value={values?.quantity || 0}
+              // defaultValue={values.quantity}
               error={fieldHasError("quantity")}
               helperText={
                 fieldGetError("quantity") || "Display quantity of the Order"
@@ -412,8 +420,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Description"
               name="description"
-              value={values.description}
-              defaultValue={values.description}
+              value={values?.description || ''}
+              // defaultValue={values.description}
               error={fieldHasError("description")}
               helperText={
                 fieldGetError("description") ||
@@ -425,8 +433,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Comments"
               name="comments"
-              value={values.comments}
-              defaultValue={values.comments}
+              value={values?.comments || ''}
+              // defaultValue={values.comments}
               error={fieldHasError("comments")}
               helperText={
                 fieldGetError("comments") || "Display comments of the Order"
@@ -462,25 +470,68 @@ const OrderForm = ({ onCancel }) => {
               ))}
             </TextField>
             <TextField
+              select
+              required
               label="Region"
               name="region"
-              value={values?.collectionData?.region || ""}
+              value={values?.collectionData?.region || ''}
               error={fieldHasError("region")}
+              helperText={fieldGetError("region") || "Display the region"}
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "region")
+                .map((location) => (
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
+            <TextField
+              select
+              required
+              label="City"
+              name="city"
+              value={values?.collectionData?.city || ''}
+              error={fieldHasError("city")}
+              helperText={fieldGetError("city") || "Display the city"}
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "city")
+                .filter(
+                  (loc) => loc.parent._id === values?.collectionData?.region
+                )
+                .map((location) => (
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
+            <TextField
+              select
+              required
+              label="End Point"
+              name="village"
+              value={values?.collectionData?.village || ''}
+              error={fieldHasError("village")}
               helperText={
-                fieldGetError("region") || "Display region of the Order"
+                fieldGetError("village") ||
+                "Display a village or a district in a city"
               }
               onChange={onFieldChangeCollection}
               {...SHARED_CONTROL_PROPS}
-            />
-            <TextField
-              label="City"
-              name="city"
-              value={values?.collectionData?.city || ""}
-              error={fieldHasError("city")}
-              helperText={fieldGetError("city") || "Display city of the Order"}
-              onChange={onFieldChangeCollection}
-              {...SHARED_CONTROL_PROPS}
-            />
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "village")
+                .filter(
+                  (loc) => loc.parent._id === values?.collectionData?.city
+                )
+                .map((location) => (
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
             <TextField
               label="Address"
               name="address1"
@@ -488,6 +539,18 @@ const OrderForm = ({ onCancel }) => {
               error={fieldHasError("address1")}
               helperText={
                 fieldGetError("address1") || "Display address of the Order"
+              }
+              onChange={onFieldChangeCollection}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Address secondary"
+              name="address2"
+              value={values?.collectionData?.address2 || ""}
+              error={fieldHasError("address2")}
+              helperText={
+                fieldGetError("address2") ||
+                "Display secondary address of the Order"
               }
               onChange={onFieldChangeCollection}
               {...SHARED_CONTROL_PROPS}
@@ -552,25 +615,66 @@ const OrderForm = ({ onCancel }) => {
               ))}
             </TextField>
             <TextField
+              select
+              required
               label="Region"
               name="region"
-              value={values?.deliveryData?.region || ""}
+              value={values?.deliveryData?.region || ''}
               error={fieldHasError("region")}
+              helperText={fieldGetError("region") || "Display the region"}
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "region")
+                .map((location) => (
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
+            <TextField
+              select
+              required
+              label="City"
+              name="city"
+              value={values?.deliveryData?.city || ''}
+              error={fieldHasError("city")}
+              helperText={fieldGetError("city") || "Display the city"}
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "city")
+                .filter(
+                  (loc) => loc.parent._id === values?.deliveryData?.region
+                )
+                .map((location) => (
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
+            <TextField
+              select
+              required
+              label="End Point"
+              name="village"
+              value={values?.deliveryData?.village || ''}
+              error={fieldHasError("village")}
               helperText={
-                fieldGetError("region") || "Display region of the Order"
+                fieldGetError("village") ||
+                "Display a village or a district in a city"
               }
               onChange={onFieldChangeDelivery}
               {...SHARED_CONTROL_PROPS}
-            />
-            <TextField
-              label="City"
-              name="city"
-              value={values?.deliveryData?.city || ""}
-              error={fieldHasError("city")}
-              helperText={fieldGetError("city") || "Display city of the Order"}
-              onChange={onFieldChangeDelivery}
-              {...SHARED_CONTROL_PROPS}
-            />
+            >
+              <MenuItem value="">---</MenuItem>
+              {state.locations
+                .filter((loc) => loc.type === "village")
+                .filter((loc) => loc.parent._id === values?.deliveryData?.city)
+                .map((location) => (
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                ))}
+            </TextField>
             <TextField
               label="Address"
               name="address1"
@@ -578,6 +682,18 @@ const OrderForm = ({ onCancel }) => {
               error={fieldHasError("address1")}
               helperText={
                 fieldGetError("address1") || "Display address of the Order"
+              }
+              onChange={onFieldChangeDelivery}
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              label="Address secondary"
+              name="address2"
+              value={values?.deliveryData?.address2 || ""}
+              error={fieldHasError("address2")}
+              helperText={
+                fieldGetError("address2") ||
+                "Display secondary address of the Order"
               }
               onChange={onFieldChangeDelivery}
               {...SHARED_CONTROL_PROPS}

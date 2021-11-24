@@ -135,13 +135,16 @@ export default function OrdersTable({ data, ...props }) {
       const assignedCurier = state.users?.find(
         (c) => c._id === order.assignedCurier
       );
+      const deliveryCity = state.locations?.find(loc => loc._id === order.deliveryData.city);
+      const collectionCity = state.locations?.find(loc => loc._id === order.collectionData.city);
+
       return createData(
         order._id,
         order.trackingNumber,
         customer?.name || "no customer",
         assignedCurier?.name || "no assigned curier",
-        order.collectionData?.city || "no address",
-        order.deliveryData?.city || "no address",
+        collectionCity?.name || "no address",
+        deliveryCity?.name || "no address",
         order.status || "no status",
         order.submissionSource || "no submission source",
         order.weight || 0,

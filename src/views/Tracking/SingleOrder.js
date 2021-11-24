@@ -52,7 +52,6 @@ const SingleOrderView = () => {
   const [state, dispatch] = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [customer, setCustomer] = useState({});
-  // const [assignedCurier, setAssignedCurier] = useState({});
   const [, setDispatcher] = useState({});
   const [, setLastModifiedBy] = useState({});
 
@@ -73,7 +72,6 @@ const SingleOrderView = () => {
         console.log(res);
         if (res) {
           setCustomer(res?.customer);
-          // setAssignedCurier(res?.assignedCurier);
           setDispatcher(res?.dispatcher);
           setLastModifiedBy(res?.lastModifiedBy);
 
@@ -84,9 +82,6 @@ const SingleOrderView = () => {
               customer: {
                 _id: res?.customer?._id || "",
               },
-              // assignedCurier: {
-              //   _id: res?.assignedCurier?._id,
-              // },
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
@@ -145,7 +140,7 @@ const SingleOrderView = () => {
     //show modal do you really want to delete order?
     const res = await api.orders.delete(id);
     if (res.status === 200) {
-      dispatch({ type: 'DELETE_ORDER', payload: id });
+      dispatch({ type: "DELETE_ORDER", payload: id });
       history.replace("/tracking");
       //show modal
     }
@@ -246,26 +241,6 @@ const SingleOrderView = () => {
                   ))}
                 </TextField>
               )}
-              {/* <TextField
-                select
-                required
-                label="Assigned Curier"
-                name="assignedCurier"
-                defaultValue={assignedCurier?._id}
-                error={fieldHasError("assignedCurier")}
-                helperText={
-                  fieldGetError("assignedCurier") ||
-                  "Display the name of assigned curier"
-                }
-                onChange={onFieldChange}
-                {...SHARED_CONTROL_PROPS}
-              >
-                {state.users?.filter(user => user.role === "curier").map((option) => (
-                  <MenuItem key={option.name} value={option._id}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </TextField> */}
               <TextField
                 disabled
                 label="Tracking number"
@@ -384,27 +359,64 @@ const SingleOrderView = () => {
               <div>
                 <h3>Collection Address</h3>
                 <TextField
+                  select
+                  required
                   label="Region"
                   name="region"
                   value={values?.collectionData?.region || ""}
                   error={fieldHasError("region")}
-                  helperText={
-                    fieldGetError("region") || "Display region of the Order"
-                  }
+                  helperText={fieldGetError("region") || "Display the region"}
                   onChange={onFieldChangeCollection}
                   {...SHARED_CONTROL_PROPS}
-                />
+                >
+                  <MenuItem value="">---</MenuItem>
+                  {state.locations
+                    .filter((loc) => loc.type === "region")
+                    .map((location) => (
+                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                    ))}
+                </TextField>
                 <TextField
+                  select
+                  required
                   label="City"
                   name="city"
                   value={values?.collectionData?.city || ""}
                   error={fieldHasError("city")}
+                  helperText={fieldGetError("city") || "Display the city"}
+                  onChange={onFieldChangeCollection}
+                  {...SHARED_CONTROL_PROPS}
+                >
+                  <MenuItem value="">---</MenuItem>
+                  {state.locations
+                    .filter((loc) => loc.type === "city")
+                    .filter((loc) => loc.parent._id === values?.collectionData?.region)
+                    .map((location) => (
+                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField
+                  select
+                  required
+                  label="End Point"
+                  name="village"
+                  value={values?.collectionData?.village || ""}
+                  error={fieldHasError("village")}
                   helperText={
-                    fieldGetError("city") || "Display city of the Order"
+                    fieldGetError("village") ||
+                    "Display a village or a district in a city"
                   }
                   onChange={onFieldChangeCollection}
                   {...SHARED_CONTROL_PROPS}
-                />
+                >
+                  <MenuItem value="">---</MenuItem>
+                  {state.locations
+                    .filter((loc) => loc.type === "village")
+                    .filter((loc) => loc.parent._id === values?.collectionData?.city)
+                    .map((location) => (
+                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                    ))}
+                </TextField>
                 <TextField
                   label="Address"
                   name="address1"
@@ -456,27 +468,64 @@ const SingleOrderView = () => {
               <div>
                 <h3>Delivery Address</h3>
                 <TextField
+                  select
+                  required
                   label="Region"
                   name="region"
                   value={values?.deliveryData?.region || ""}
                   error={fieldHasError("region")}
-                  helperText={
-                    fieldGetError("region") || "Display region of the Order"
-                  }
+                  helperText={fieldGetError("region") || "Display the region"}
                   onChange={onFieldChangeDelivery}
                   {...SHARED_CONTROL_PROPS}
-                />
+                >
+                  <MenuItem value="">---</MenuItem>
+                  {state.locations
+                    .filter((loc) => loc.type === "region")
+                    .map((location) => (
+                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                    ))}
+                </TextField>
                 <TextField
+                  select
+                  required
                   label="City"
                   name="city"
                   value={values?.deliveryData?.city || ""}
                   error={fieldHasError("city")}
+                  helperText={fieldGetError("city") || "Display the city"}
+                  onChange={onFieldChangeDelivery}
+                  {...SHARED_CONTROL_PROPS}
+                >
+                  <MenuItem value="">---</MenuItem>
+                  {state.locations
+                    .filter((loc) => loc.type === "city")
+                    .filter((loc) => loc.parent._id === values?.deliveryData?.region)
+                    .map((location) => (
+                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                    ))}
+                </TextField>
+                <TextField
+                  select
+                  required
+                  label="End Point"
+                  name="village"
+                  value={values?.deliveryData?.village || ""}
+                  error={fieldHasError("village")}
                   helperText={
-                    fieldGetError("city") || "Display city of the Order"
+                    fieldGetError("village") ||
+                    "Display a village or a district in a city"
                   }
                   onChange={onFieldChangeDelivery}
                   {...SHARED_CONTROL_PROPS}
-                />
+                >
+                  <MenuItem value="">---</MenuItem>
+                  {state.locations
+                    .filter((loc) => loc.type === "village")
+                    .filter((loc) => loc.parent._id === values?.deliveryData?.city)
+                    .map((location) => (
+                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                    ))}
+                </TextField>
                 <TextField
                   label="Address"
                   name="address1"
@@ -527,11 +576,7 @@ const SingleOrderView = () => {
               </div>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
-                <UpdateButton
-                  color="primary"
-                  id={id}
-                  payload={values}
-                >
+                <UpdateButton color="primary" id={id} payload={values}>
                   Update order
                 </UpdateButton>
                 <AppButton color="error" onClick={() => handleDelete(id)}>
