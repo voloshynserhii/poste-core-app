@@ -74,10 +74,10 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   red: {
-    background: "rgba(255,0,0,.2)",
+    background: "rgba(136, 14, 79,.5)",
   },
   green: {
-    background: "rgba(0,128,0,.2)",
+    background: "#1FAEAB",
   },
 }));
 
