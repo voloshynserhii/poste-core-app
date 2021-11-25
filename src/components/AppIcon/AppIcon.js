@@ -44,10 +44,13 @@ import PeopleIcon from '@material-ui/icons/People';
  */
 const ICONS = {
   default: DefaultIcon,
+  // logo: () => (
+  //   <SvgIcon>
+  //     <LogoIcon />
+  //   </SvgIcon>
+  // ),
   logo: () => (
-    <SvgIcon>
-      <LogoIcon />
-    </SvgIcon>
+    <img src="favicon/ms-icon-310x310.png" alt="logo-icon" style={{height: 40, width: 40}} />
   ),
   close: CloseIcon,
   dots: MoreVertIcon,
