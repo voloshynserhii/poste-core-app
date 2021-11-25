@@ -159,6 +159,7 @@ const SingleCustomerView = () => {
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
+                type="number"
                 label="Pnone"
                 name="phone"
                 value={values?.phone}

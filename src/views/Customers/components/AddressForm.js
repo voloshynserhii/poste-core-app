@@ -273,6 +273,7 @@ const RegisterCustomerForm = (props) => {
               {...SHARED_CONTROL_PROPS}
             />
             <TextField
+              type="number"
               required
               label="Contact phone"
               name="contactPhone"

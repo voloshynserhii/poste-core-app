@@ -147,6 +147,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              type="number"
               label="Phone"
               name="phone"
               value={values.phone || ""}

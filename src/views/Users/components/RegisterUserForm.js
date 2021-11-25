@@ -155,6 +155,7 @@ const RegisterUserForm = ({ onCancel }) => {
             {...SHARED_CONTROL_PROPS}
           />
           <TextField
+            type="number"
             label="Phone"
             name="phone"
             value={values?.phone || ''}

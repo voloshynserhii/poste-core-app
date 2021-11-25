@@ -369,8 +369,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Cash on delivery value"
               name="declaredValue"
-              value={values?.declaredValue || 0}
-              // defaultValue={values.declaredValue}
+              value={values?.declaredValue || ''}
+              type="number"
               error={fieldHasError("declaredValue")}
               helperText={
                 fieldGetError("declaredValue") ||
@@ -386,6 +386,7 @@ const OrderForm = ({ onCancel }) => {
               label="Weight"
               name="weight"
               value={values?.weight || ""}
+              type="number"
               error={fieldHasError("weight")}
               helperText={
                 fieldGetError("weight") || "Display weight of the order"
@@ -397,7 +398,6 @@ const OrderForm = ({ onCancel }) => {
               label="Dimensions"
               name="dimensions"
               value={values.dimensions || ""}
-              // defaultValue={values.dimensions}
               error={fieldHasError("dimensions")}
               helperText={
                 fieldGetError("dimensions") || "Display dimensions of the Order"
@@ -408,8 +408,8 @@ const OrderForm = ({ onCancel }) => {
             <TextField
               label="Quantity"
               name="quantity"
-              value={values?.quantity || 0}
-              // defaultValue={values.quantity}
+              value={values?.quantity || ''}
+              type="number"
               error={fieldHasError("quantity")}
               helperText={
                 fieldGetError("quantity") || "Display quantity of the Order"
@@ -571,6 +571,7 @@ const OrderForm = ({ onCancel }) => {
               label="Contact phone"
               name="contactPhone"
               value={values?.collectionData?.contactPhone || ""}
+              type="number"
               error={fieldHasError("contactPhone")}
               helperText={
                 fieldGetError("contactPhone") ||
@@ -714,6 +715,7 @@ const OrderForm = ({ onCancel }) => {
               label="Contact phone"
               name="contactPhone"
               value={values?.deliveryData?.contactPhone || ""}
+              type="number"
               error={fieldHasError("contactPhone")}
               helperText={
                 fieldGetError("contactPhone") ||

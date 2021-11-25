@@ -290,6 +290,7 @@ const SingleOrderView = () => {
                 label="Declared Value"
                 name="declaredValue"
                 value={values?.declaredValue}
+                type="number"
                 error={fieldHasError("declaredValue")}
                 helperText={
                   fieldGetError("declaredValue") ||
@@ -303,6 +304,7 @@ const SingleOrderView = () => {
                 label="Weight"
                 name="weight"
                 value={values?.weight}
+                type="number"
                 error={fieldHasError("weight")}
                 helperText={
                   fieldGetError("weight") || "Display weight of the order"
@@ -326,6 +328,7 @@ const SingleOrderView = () => {
                 label="Quantity"
                 name="quantity"
                 value={values?.quantity}
+                type="number"
                 error={fieldHasError("quantity")}
                 helperText={
                   fieldGetError("quantity") || "Display quantity of the Order"
@@ -444,6 +447,7 @@ const SingleOrderView = () => {
                   label="Contact phone"
                   name="contactPhone"
                   value={values?.collectionData?.contactPhone || ""}
+                  type="number"
                   error={fieldHasError("contactPhone")}
                   helperText={
                     fieldGetError("contactPhone") ||
