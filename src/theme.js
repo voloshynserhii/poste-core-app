@@ -13,11 +13,11 @@ import { useAppStore } from './store/AppStore';
  */
 const FRONT_COLORS = {
   primary: {
-    main: '#37474f',
+    main: '#333B47', //rgba(24, 218, 208, 1) #37474f
     contrastText: '#FFFFFF',
   },
   secondary: {
-    main: '#880e4f',
+    main: '#1FAEAB',  //#880e4f
     contrastText: '#FFFFFF',
   },
   info: {
@@ -25,7 +25,7 @@ const FRONT_COLORS = {
     contrastText: '#FFFFFF',
   },
   success: {
-    main: '#2e7d32', // Green 800
+    main: '#179467', // Green
     contrastText: '#FFFFFF',
   },
   warning: {
