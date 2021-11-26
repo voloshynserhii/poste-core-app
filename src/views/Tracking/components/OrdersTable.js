@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   red: {
-    background: "rgba(136, 14, 79,.5)",
+    background: "rgba(136, 14, 79,.3)",
   },
   green: {
     background: "#1FAEAB",

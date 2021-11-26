@@ -56,7 +56,7 @@ export default function DataFormList({ data }) {
 
   return (
     <>
-    {editID && <AddDataForm id={editID} title="Edit location" onCancel={() => setEditID('')} />}
+    {editID && <AddDataForm id={editID} onSave={() => setEditID('')} title="Edit location" onCancel={() => setEditID('')} />}
     <List className={classes.root}>
       {data.map((value) => {
         const labelId = `checkbox-list-label-${value}`;

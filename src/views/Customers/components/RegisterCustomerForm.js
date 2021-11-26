@@ -191,7 +191,7 @@ const RegisterCustomerForm = ({ onCancel }) => {
         <Grid container flex="true" spacing={3}>
           {addressList?.map((address, index) => (
             <AddressCard
-              key={address.title}
+              key={address._id || index}
               title={address.title}
               name={address.contactName}
               region={state.locations.find((loc) => loc._id === address.region)}

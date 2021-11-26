@@ -160,7 +160,7 @@ const RegisterCustomerForm = (props) => {
             <MenuItem value="">---</MenuItem>
             <MenuItem value="new">Add new address</MenuItem>
             {currentCustomer?.addressList?.map((option) => (
-              <MenuItem key={option.title} value={option._id}>
+              <MenuItem key={option._id} value={option._id}>
                 {option.title}
               </MenuItem>
             ))}
@@ -193,7 +193,7 @@ const RegisterCustomerForm = (props) => {
               {state.locations
                 .filter((loc) => loc.type === "region")
                 .map((location) => (
-                  <MenuItem value={location._id}>{location.name}</MenuItem>
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
                 ))}
             </TextField>
             <TextField
@@ -212,7 +212,7 @@ const RegisterCustomerForm = (props) => {
                 .filter((loc) => loc.type === "city")
                 .filter((loc) => loc.parent._id === values.region)
                 .map((location) => (
-                  <MenuItem value={location._id}>{location.name}</MenuItem>
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
                 ))}
             </TextField>
             <TextField
@@ -234,7 +234,7 @@ const RegisterCustomerForm = (props) => {
                 .filter((loc) => loc.type === "village")
                 .filter((loc) => loc.parent._id === values.city)
                 .map((location) => (
-                  <MenuItem value={location._id}>{location.name}</MenuItem>
+                  <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
                 ))}
             </TextField>
           </Grid>

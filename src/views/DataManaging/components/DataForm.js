@@ -46,8 +46,10 @@ export default function DataTabs(props) {
       async function fetchData() {
         const res = await api.locations.read(); // List of All locations
         console.log(res);
-        if (res && res.length > 0) {
+        if (!!res && res.length > 0) {
           dispatch({ type: "SET_LOCATIONS", locations: res });
+          setLoading(false);
+        } else if (!!res) {
           setLoading(false);
         }
       }
@@ -103,11 +105,11 @@ export default function DataTabs(props) {
     [data, props.checkboxList]
   );
 
-  if (loading) return <LinearProgress />;
-
   return (
     <Grid container fullwidth="true" spacing={2}>
-      {add && <AddDataForm title="Add new location" onCancel={() => setAdd(false)} />}
+      {add && (
+        <AddDataForm title="Add new location" onSave={(val) => setAdd(!val)} onCancel={() => setAdd(false)} />
+      )}
       <Grid item sm={12} className={classes.container}>
         <TextField
           className={classes.searchField}
@@ -160,13 +162,17 @@ export default function DataTabs(props) {
             )}
           />
         )}
-        <DataFormList
-          data={
-            !dataToRender
-              ? data.filter((data) => data.type === props.type)
-              : dataToRender
-          }
-        />
+        {loading ? (
+          <LinearProgress />
+        ) : (
+          <DataFormList
+            data={
+              !dataToRender
+                ? data.filter((data) => data.type === props.type)
+                : dataToRender
+            }
+          />
+        )}
       </div>
     </Grid>
   );
