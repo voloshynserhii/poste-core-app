@@ -185,56 +185,13 @@ const SingleRouteView = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Region"
-                    name="region"
-                    value={!!values.region ? values.region._id : ""}
-                    error={fieldHasError("region")}
+                    label="Terminal"
+                    name="terminal"
+                    value={!!values.terminal ? values.terminal._id : ""}
+                    error={fieldHasError("terminal")}
                     helperText={
-                      fieldGetError("region") || "Display region of the route"
-                    }
-                    onChange={onFieldChange}
-                    {...SHARED_CONTROL_PROPS}
-                  >
-                    {!!state.locations &&
-                      state.locations
-                        .filter((loc) => loc.type === "region")
-                        .map((location) => (
-                          <MenuItem value={location._id} key={location._id}>
-                            {location.name}
-                          </MenuItem>
-                        ))}
-                  </TextField>
-                  <TextField
-                    select
-                    label="Start place"
-                    name="startPlace"
-                    value={!!values.startPlace ? values.startPlace._id : ""}
-                    error={fieldHasError("startPlace")}
-                    helperText={
-                      fieldGetError("startPlace") ||
-                      "Display start place of the route"
-                    }
-                    onChange={onFieldChange}
-                    {...SHARED_CONTROL_PROPS}
-                  >
-                    {!!state.locations &&
-                      state.locations
-                        .filter((loc) => loc.type === "city")
-                        .map((location) => (
-                          <MenuItem value={location._id} key={location._id}>
-                            {location.name}
-                          </MenuItem>
-                        ))}
-                  </TextField>
-                  <TextField
-                    select
-                    label="Finish place"
-                    name="finishPlace"
-                    value={!!values.finishPlace ? values.finishPlace._id : ""}
-                    error={fieldHasError("finishPlace")}
-                    helperText={
-                      fieldGetError("finishPlace") ||
-                      "Display finish place of the route"
+                      fieldGetError("terminal") ||
+                      "Display terminal of the route"
                     }
                     onChange={onFieldChange}
                     {...SHARED_CONTROL_PROPS}

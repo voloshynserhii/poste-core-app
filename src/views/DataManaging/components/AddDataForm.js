@@ -121,7 +121,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
           setLocationType(res?.type || "region");
           setParent(res?.parent?._id);
           if (res?.type === "city") setRegion(res?.parent?._id)
-          if (res?.type === "village") {
+          if (res?.type === "point") {
             setCity(res?.parent?._id)
             setRegion(res?.parent?.parent)
           }
@@ -153,7 +153,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       setParent(region);
     }
 
-    if (locationType === "village") {
+    if (locationType === "point") {
       const cities = state.locations.filter((loc) => loc.type === "city");
       setCities(cities);
       setParent(city);
@@ -317,9 +317,9 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={locationType === "village"}
-                      onChange={() => setLocationType("village")}
-                      name="village"
+                      checked={locationType === "point"}
+                      onChange={() => setLocationType("point")}
+                      name="point"
                       color="primary"
                     />
                   }
@@ -343,7 +343,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                     ))}
                   </select>
                 )}
-                {locationType === "village" && (
+                {locationType === "point" && (
                   <select
                     className={classes.selects}
                     value={city}

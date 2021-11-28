@@ -402,19 +402,19 @@ const SingleOrderView = () => {
                   select
                   required
                   label="End Point"
-                  name="village"
-                  value={values?.collectionData?.village || ""}
-                  error={fieldHasError("village")}
+                  name="point"
+                  value={values?.collectionData?.point || ""}
+                  error={fieldHasError("point")}
                   helperText={
-                    fieldGetError("village") ||
-                    "Display a village or a district in a city"
+                    fieldGetError("point") ||
+                    "Display a route point"
                   }
                   onChange={onFieldChangeCollection}
                   {...SHARED_CONTROL_PROPS}
                 >
                   <MenuItem value="">---</MenuItem>
                   {state.locations
-                    .filter((loc) => loc.type === "village")
+                    .filter((loc) => loc.type === "point")
                     .filter((loc) => loc.parent._id === values?.collectionData?.city)
                     .map((location) => (
                       <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
@@ -512,19 +512,19 @@ const SingleOrderView = () => {
                   select
                   required
                   label="End Point"
-                  name="village"
-                  value={values?.deliveryData?.village || ""}
-                  error={fieldHasError("village")}
+                  name="point"
+                  value={values?.deliveryData?.point || ""}
+                  error={fieldHasError("point")}
                   helperText={
-                    fieldGetError("village") ||
-                    "Display a village or a district in a city"
+                    fieldGetError("point") ||
+                    "Display a point or a district in a city"
                   }
                   onChange={onFieldChangeDelivery}
                   {...SHARED_CONTROL_PROPS}
                 >
                   <MenuItem value="">---</MenuItem>
                   {state.locations
-                    .filter((loc) => loc.type === "village")
+                    .filter((loc) => loc.type === "point")
                     .filter((loc) => loc.parent._id === values?.deliveryData?.city)
                     .map((location) => (
                       <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>

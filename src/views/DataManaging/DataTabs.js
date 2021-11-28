@@ -66,7 +66,7 @@ export default function DataTabs() {
       >
         <Tab label="Regions" {...a11yProps(0)} />
         <Tab label="Cities" {...a11yProps(1)} />
-        <Tab label="Districts & Villages" {...a11yProps(2)} />
+        <Tab label="Points" {...a11yProps(2)} />
       </Tabs>
       <TabPanel value={value} index={0}>
         <DataForm type="region"/>
@@ -75,7 +75,7 @@ export default function DataTabs() {
         <DataForm type="city"/>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <DataForm type="village" />
+        <DataForm type="point" />
       </TabPanel>
     </div>
   );

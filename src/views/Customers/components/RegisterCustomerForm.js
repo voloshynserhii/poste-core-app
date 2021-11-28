@@ -196,8 +196,8 @@ const RegisterCustomerForm = ({ onCancel }) => {
               name={address.contactName}
               region={state.locations.find((loc) => loc._id === address.region)}
               city={state.locations.find((loc) => loc._id === address.city)}
-              village={state.locations.find(
-                (loc) => loc._id === address.village
+              point={state.locations.find(
+                (loc) => loc._id === address.point
               )}
               address1={address.address1}
               phone={address.contactPhone}

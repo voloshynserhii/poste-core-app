@@ -228,7 +228,7 @@ const RegisterRouteForm = ({ onCancel }) => {
               <AccordionDetails>
                 {!!state.locations &&
                   state.locations
-                    .filter((loc) => loc.type === "village")
+                    .filter((loc) => loc.type === "point")
                     .map((location) => (
                       <FormControlLabel
                         key={location._id}

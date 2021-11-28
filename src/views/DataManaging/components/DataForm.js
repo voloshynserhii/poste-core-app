@@ -69,7 +69,7 @@ export default function DataTabs(props) {
   useEffect(() => {
     if (selectedRegion) {
       const cities = selectedRegion.children;
-      if (props.type === "village") {
+      if (props.type === "point") {
         setCities(cities);
       } else {
         setDataToRender(cities);
@@ -80,8 +80,8 @@ export default function DataTabs(props) {
   //set data by its parent region
   useEffect(() => {
     if (selectedCity) {
-      const villages = selectedCity.children;
-      setDataToRender(villages);
+      const points = selectedCity.children;
+      setDataToRender(points);
     }
   }, [selectedCity]);
 
@@ -147,7 +147,7 @@ export default function DataTabs(props) {
             )}
           />
         )}
-        {props.type === "village" && (
+        {props.type === "point" && (
           <Autocomplete
             id="cityData"
             options={cities}

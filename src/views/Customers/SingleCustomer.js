@@ -209,8 +209,8 @@ const SingleCustomerView = () => {
                       city={state.locations.find(
                         (loc) => loc._id === address.city
                       )}
-                      village={state.locations.find(
-                        (loc) => loc._id === address.village
+                      pointer={state.locations.find(
+                        (loc) => loc._id === address.point
                       )}
                       address1={address.address1}
                       phone={address.contactPhone}

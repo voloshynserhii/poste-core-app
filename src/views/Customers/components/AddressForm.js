@@ -219,19 +219,19 @@ const RegisterCustomerForm = (props) => {
               select
               required
               label="End Point"
-              name="village"
-              value={values?.village || ""}
-              error={fieldHasError("village")}
+              name="point"
+              value={values?.point || ""}
+              error={fieldHasError("point")}
               helperText={
-                fieldGetError("village") ||
-                "Display a village or a district in a city"
+                fieldGetError("point") ||
+                "Display a point or a district in a city"
               }
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             >
               <MenuItem value="">---</MenuItem>
               {state.locations
-                .filter((loc) => loc.type === "village")
+                .filter((loc) => loc.type === "point")
                 .filter((loc) => loc.parent._id === values.city)
                 .map((location) => (
                   <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>

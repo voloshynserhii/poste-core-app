@@ -5,7 +5,7 @@ const AddressCard = ({
   name = "",
   region = "",
   city = "",
-  village = "",
+  point = "",
   address1 = "",
   phone = "",
   email = "",
@@ -29,8 +29,8 @@ const AddressCard = ({
           {city.name}
         </Typography>
         <Typography color="textSecondary" gutterBottom>
-          VILLAGE: 
-          {village.name}
+          POINT: 
+          {point.name}
         </Typography>
         <Typography color="textSecondary">ADDRESS1: {address1}</Typography>
         <Typography color="textSecondary">PHONE: {phone}</Typography>
