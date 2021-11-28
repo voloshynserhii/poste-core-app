@@ -72,7 +72,7 @@ export default function DataFormList({ data }) {
             <ListItemIcon title={`Edit ${value.name}`}>
               <EditIcon onClick={() => setEditID(value._id)} />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={value.name} />
+            <ListItemText id={labelId} primary={value.name} secondary={value.nameGE} />
             <ListItemSecondaryAction>
               <IconButton
                 edge="end"

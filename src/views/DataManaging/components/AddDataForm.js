@@ -108,7 +108,6 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
         const res = await state.locations.find(
           (location) => location._id === id
         );
-        console.log(res)
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
