@@ -72,9 +72,7 @@ const SingleRouteView = () => {
               title: res?.title || "",
               status: res?.status || "",
               type: res?.type || "",
-              region: res?.region || "",
-              startPlace: res?.startPlace || "",
-              finishPlace: res?.finishPlace || "",
+              terminal: res?.terminal || "",
             },
           }));
           setLocationsArr(res.locations.map((loc) => loc._id));
@@ -187,7 +185,7 @@ const SingleRouteView = () => {
                     select
                     label="Terminal"
                     name="terminal"
-                    value={!!values.terminal ? values.terminal._id : ""}
+                    value={values.terminal || ''}
                     error={fieldHasError("terminal")}
                     helperText={
                       fieldGetError("terminal") ||
@@ -199,6 +197,7 @@ const SingleRouteView = () => {
                     {!!state.locations &&
                       state.locations
                         .filter((loc) => loc.type === "city")
+                        .filter((loc) => loc.terminal)
                         .map((location) => (
                           <MenuItem value={location._id} key={location._id}>
                             {location.name}

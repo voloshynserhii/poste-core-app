@@ -85,30 +85,29 @@ export default function DataTabs(props) {
     }
   }, [selectedCity]);
 
-  const searchCheckbox = useCallback(
+  const searchLocation = useCallback(
     (event) => {
       if (event.target.value) {
-        const lowerData = data.map((item) => item.toLowerCase());
-        const res = lowerData.filter((item) =>
-          item.includes(event.target.value)
+        const filteredData = state.locations.filter((item) => !!item.name);
+        const result = filteredData.filter((obj) =>
+          obj.name.toLowerCase().includes(event.target.value.toLowerCase())
         );
-        const result = res.map((item) => {
-          const lower = item.toLowerCase().slice(1);
-          const first = item.charAt(0).toUpperCase();
-          return first + lower;
-        });
         setData(result);
       } else {
-        setData(props.checkboxList);
+        setData(state.locations);
       }
     },
-    [data, props.checkboxList]
+    [data]
   );
 
   return (
     <Grid container fullwidth="true" spacing={2}>
       {add && (
-        <AddDataForm title="Add new location" onSave={(val) => setAdd(!val)} onCancel={() => setAdd(false)} />
+        <AddDataForm
+          title="Add new location"
+          onSave={(val) => setAdd(!val)}
+          onCancel={() => setAdd(false)}
+        />
       )}
       <Grid item sm={12} className={classes.container}>
         <TextField
@@ -124,7 +123,7 @@ export default function DataTabs(props) {
               padding: "0",
             },
           }}
-          onChange={searchCheckbox}
+          onChange={searchLocation}
         />
         <span>or</span>
         <AppButton onClick={() => setAdd(true)}>add</AppButton>

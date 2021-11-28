@@ -74,6 +74,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
   const [error, setError] = useState("");
   const [locationSaved, setLocationSaved] = useState(false);
   const [locationType, setLocationType] = useState("region");
+  const [isTerminal, setIsTerminal] = useState(false);
   const [regions, setRegions] = useState([]);
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState();
@@ -120,10 +121,13 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
           }));
           setLocationType(res?.type || "region");
           setParent(res?.parent?._id);
-          if (res?.type === "city") setRegion(res?.parent?._id)
+          if (res?.type === "city") {
+            setRegion(res?.parent?._id);
+            setIsTerminal(res?.terminal);
+          }
           if (res?.type === "point") {
-            setCity(res?.parent?._id)
-            setRegion(res?.parent?.parent)
+            setCity(res?.parent?._id);
+            setRegion(res?.parent?.parent);
           }
         } else {
           setError(`Location id: "${id}" not found`);
@@ -165,6 +169,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       ...formState.values,
       type: locationType,
       parent: parent,
+      terminal: isTerminal
     };
     try {
       if (!id) {
@@ -326,6 +331,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                   label="Point"
                 />
               </Grid>
+
               <Grid item sm={7} className={classes.selectContainer}>
                 {locationType !== "region" && (
                   <select
@@ -335,13 +341,25 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                   >
                     Regions
                     <option value="">Choose region</option>
-                    
                     {regions.map((region) => (
                       <option key={region._id} value={region._id}>
                         {region.name}
                       </option>
                     ))}
                   </select>
+                )}
+                {locationType === "city" && (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isTerminal}
+                        onChange={() => setIsTerminal((prev) => !prev)}
+                        name="terminal"
+                        color="primary"
+                      />
+                    }
+                    label="Is Terminal"
+                  />
                 )}
                 {locationType === "point" && (
                   <select

@@ -56,9 +56,7 @@ const RegisterRouteForm = ({ onCancel }) => {
         ...oldFormState.values,
         title: "",
         type: "",
-        region: "",
-        startPlace: "",
-        finishPlace: "",
+        terminal: "",
         status: "",
         locations: [],
       },
@@ -154,34 +152,12 @@ const RegisterRouteForm = ({ onCancel }) => {
           <Grid item xs={12} sm={6}>
             <TextField
               select
-              label="Region"
-              name="region"
-              value={values.region || ""}
-              error={fieldHasError("region")}
+              label="Terminal"
+              name="terminal"
+              value={values.terminal || ""}
+              error={fieldHasError("terminal")}
               helperText={
-                fieldGetError("region") || "Display region of the route"
-              }
-              onChange={onFieldChange}
-              {...SHARED_CONTROL_PROPS}
-            >
-              {!!state.locations &&
-                state.locations
-                  .filter((loc) => loc.type === "region")
-                  .map((location) => (
-                    <MenuItem value={location._id} key={location._id}>
-                      {location.name}
-                    </MenuItem>
-                  ))}
-            </TextField>
-            <TextField
-              select
-              label="Start place"
-              name="startPlace"
-              value={values.startPlace || ""}
-              error={fieldHasError("startPlace")}
-              helperText={
-                fieldGetError("startPlace") ||
-                "Display start place of the route"
+                fieldGetError("terminal") || "Display terminal of the route"
               }
               onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
@@ -189,28 +165,7 @@ const RegisterRouteForm = ({ onCancel }) => {
               {!!state.locations &&
                 state.locations
                   .filter((loc) => loc.type === "city")
-                  .map((location) => (
-                    <MenuItem value={location._id} key={location._id}>
-                      {location.name}
-                    </MenuItem>
-                  ))}
-            </TextField>
-            <TextField
-              select
-              label="Finish place"
-              name="finishPlace"
-              value={values.finishPlace || ""}
-              error={fieldHasError("finishPlace")}
-              helperText={
-                fieldGetError("finishPlace") ||
-                "Display finish place of the route"
-              }
-              onChange={onFieldChange}
-              {...SHARED_CONTROL_PROPS}
-            >
-              {!!state.locations &&
-                state.locations
-                  .filter((loc) => loc.type === "city")
+                  .filter((loc) => loc.terminal)
                   .map((location) => (
                     <MenuItem value={location._id} key={location._id}>
                       {location.name}
