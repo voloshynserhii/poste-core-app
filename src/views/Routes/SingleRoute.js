@@ -185,7 +185,7 @@ const SingleRouteView = () => {
                     select
                     label="Terminal"
                     name="terminal"
-                    value={values.terminal || ''}
+                    value={values?.terminal?._id || values?.terminal || ''}
                     error={fieldHasError("terminal")}
                     helperText={
                       fieldGetError("terminal") ||

@@ -27,6 +27,10 @@ const orderForm = makeStyles((theme) => ({
     width: "100%",
     padding: "20px 0 50px 0",
   },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: "1fr 1fr"
+  }
 }));
 
 const VALIDATE_FORM_ROUTE = {
@@ -180,10 +184,10 @@ const RegisterRouteForm = ({ onCancel }) => {
               >
                 <Typography className={classes.heading}>Locations</Typography>
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails className={classes.grid}>
                 {!!state.locations &&
                   state.locations
-                    .filter((loc) => loc.type === "point")
+                    .filter((loc) => loc.type === "city")
                     .map((location) => (
                       <FormControlLabel
                         key={location._id}
