@@ -28,9 +28,9 @@ const orderForm = makeStyles((theme) => ({
     padding: "20px 0 50px 0",
   },
   grid: {
-    display: 'grid',
-    gridTemplateColumns: "1fr 1fr"
-  }
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+  },
 }));
 
 const VALIDATE_FORM_ROUTE = {
@@ -39,6 +39,16 @@ const VALIDATE_FORM_ROUTE = {
     presence: { allowEmpty: false },
   },
 };
+
+const OPERATION_DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 const RegisterRouteForm = ({ onCancel }) => {
   const history = useHistory();
@@ -152,8 +162,92 @@ const RegisterRouteForm = ({ onCancel }) => {
               <MenuItem value="started">Started</MenuItem>
               <MenuItem value="finished">Finished</MenuItem>
             </TextField>
+            <TextField
+              select
+              required
+              label="Curier"
+              name="curier"
+              defaultValue=""
+              error={fieldHasError("curier")}
+              helperText={
+                fieldGetError("curier") || "Display the name of a curier"
+              }
+              onChange={onFieldChange}
+              {...SHARED_CONTROL_PROPS}
+            >
+              {state.users?.map((option) => (
+                <MenuItem key={option.name} value={option._id}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography className={classes.heading}>
+                  Operation days
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails className={classes.grid}>
+                {OPERATION_DAYS.map((day) => (
+                  <FormControlLabel
+                    key={day}
+                    control={
+                      <Checkbox
+                        // checked={locationType === "region"}
+                        // onChange={() => setLocationType("region")}
+                        name={day}
+                        color="primary"
+                      />
+                    }
+                    label={day}
+                  />
+                ))}
+              </AccordionDetails>
+            </Accordion>
           </Grid>
           <Grid item xs={12} sm={6}>
+            <TextField
+              id="latestCollectionTime"
+              label="Latest collection time"
+              name="latestCollectionTime"
+              type="time"
+              defaultValue="12:00"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                step: 300, // 5 min
+              }}
+              error={fieldHasError("latestCollectionTime")}
+              helperText={
+                fieldGetError("latestCollectionTime") ||
+                "Display latest collection time of the route"
+              }
+              {...SHARED_CONTROL_PROPS}
+            />
+            <TextField
+              id="latestDeliveryTime"
+              label="Latest delivery time"
+              name="latestDeliveryTime"
+              type="time"
+              defaultValue="12:00"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                step: 300, // 5 min
+              }}
+              error={fieldHasError("latestDeliveryTime")}
+              helperText={
+                fieldGetError("latestDeliveryTime") ||
+                "Display latest delivery time of the route"
+              }
+              {...SHARED_CONTROL_PROPS}
+            />
             <TextField
               select
               label="Terminal"
@@ -176,6 +270,7 @@ const RegisterRouteForm = ({ onCancel }) => {
                     </MenuItem>
                   ))}
             </TextField>
+
             <Accordion>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
