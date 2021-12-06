@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const menuOptions = ["Order routes", "Edit route", "Delete route"];
+const menuOptions = ["View route", "Edit route", "Orders", "Delete route"];
 
 export default function RoutesTable({ orders }) {
   const [state, dispatch] = useContext(AppContext);
@@ -163,7 +163,7 @@ export default function RoutesTable({ orders }) {
     });
     setRows(rows.reverse());
   }, [data, selectedRouteType]);
-console.log(data)
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -239,7 +239,7 @@ console.log(data)
   const handleGetOption = (value, id) => {
     if (value === "Edit route") history.push(`route/${id}`);
     if (value === "Delete route") handleDelete(id);
-    if (value === "Order routes") {
+    if (value === "Orders") {
       setAssignOrder(true);
       setRouteId(id);
     }

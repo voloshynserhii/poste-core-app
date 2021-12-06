@@ -55,6 +55,7 @@ const RegisterRouteForm = ({ onCancel }) => {
   const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
   const [locationsArr, setLocationsArr] = useState([]);
+  const [operationDays, setOperationDays] = useState([]);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -73,6 +74,8 @@ const RegisterRouteForm = ({ onCancel }) => {
         terminal: "",
         status: "",
         locations: [],
+        latestCollectionTime: "12:00",
+        latestDeliveryTime: "12:00",
       },
     }));
     return;
@@ -88,6 +91,7 @@ const RegisterRouteForm = ({ onCancel }) => {
       const res = await api.routes.create({
         ...formState.values,
         locations: locationsArr,
+        operationDays,
       });
       const newRoute = res.data.data.route;
       if (res.status === 201) {
@@ -103,6 +107,15 @@ const RegisterRouteForm = ({ onCancel }) => {
     // Save without confirmation
     saveRecord();
     return;
+  };
+
+  const handleOperationDays = (day) => {
+    if (!operationDays.includes(day)) {
+      setOperationDays((prev) => [...prev, day]);
+    } else {
+      const filteredOperationDays = operationDays.filter((op) => op !== day);
+      setOperationDays(filteredOperationDays);
+    }
   };
 
   const handleAddLocation = (id) => {
@@ -197,8 +210,8 @@ const RegisterRouteForm = ({ onCancel }) => {
                     key={day}
                     control={
                       <Checkbox
-                        // checked={locationType === "region"}
-                        // onChange={() => setLocationType("region")}
+                        checked={!!operationDays && operationDays.includes(day)}
+                        onChange={() => handleOperationDays(day)}
                         name={day}
                         color="primary"
                       />
@@ -227,6 +240,7 @@ const RegisterRouteForm = ({ onCancel }) => {
                 fieldGetError("latestCollectionTime") ||
                 "Display latest collection time of the route"
               }
+              onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             />
             <TextField
@@ -246,6 +260,7 @@ const RegisterRouteForm = ({ onCancel }) => {
                 fieldGetError("latestDeliveryTime") ||
                 "Display latest delivery time of the route"
               }
+              onChange={onFieldChange}
               {...SHARED_CONTROL_PROPS}
             />
             <TextField

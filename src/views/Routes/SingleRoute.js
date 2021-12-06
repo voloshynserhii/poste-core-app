@@ -64,6 +64,7 @@ const SingleRouteView = () => {
       validationSchema: VALIDATE_FORM_ROUTE,
     });
   const [locationsArr, setLocationsArr] = useState([]);
+  const [operationDays, setOperationDays] = useState([]);
 
   const values = formState.values;
   const id = params?.id;
@@ -74,6 +75,7 @@ const SingleRouteView = () => {
       setError("");
       try {
         const res = await state.routes.find((c) => c._id === id);
+        console.log(res);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
@@ -81,11 +83,15 @@ const SingleRouteView = () => {
               ...oldFormState.values,
               title: res?.title || "",
               status: res?.status || "",
+              curier: res?.curier || null,
               type: res?.type || "",
               terminal: res?.terminal || "",
+              latestCollectionTime: res?.latestCollectionTime || "",
+              latestDeliveryTime: res?.latestDeliveryTime || "",
             },
           }));
           setLocationsArr(res.locations.map((loc) => loc._id));
+          setOperationDays(res.operationDays || []);
         } else {
           setError(`Route id: "${id}" not found`);
         }
@@ -110,6 +116,15 @@ const SingleRouteView = () => {
 
   const handleCancel = () => {
     history.replace("/route");
+  };
+
+  const handleOperationDays = (day) => {
+    if (!operationDays.includes(day)) {
+      setOperationDays((prev) => [...prev, day]);
+    } else {
+      const filteredOperationDays = operationDays.filter((op) => op !== day);
+      setOperationDays(filteredOperationDays);
+    }
   };
 
   const handleAddLocation = (id) => {
@@ -147,7 +162,7 @@ const SingleRouteView = () => {
                     required
                     label="Title"
                     name="title"
-                    value={values.title || ""}
+                    value={values?.title || ""}
                     error={fieldHasError("title")}
                     helperText={
                       fieldGetError("title") || "Display name of the route"
@@ -160,7 +175,7 @@ const SingleRouteView = () => {
                     select
                     label="Type"
                     name="type"
-                    value={values.type || ""}
+                    value={values?.type || ""}
                     error={fieldHasError("type")}
                     helperText={
                       fieldGetError("type") || "Display type of the route"
@@ -177,7 +192,7 @@ const SingleRouteView = () => {
                     select
                     label="Status"
                     name="status"
-                    value={values.status || ""}
+                    value={values?.status || ""}
                     error={fieldHasError("status")}
                     helperText={
                       fieldGetError("status") || "Display status of the route"
@@ -194,7 +209,7 @@ const SingleRouteView = () => {
                     required
                     label="Curier"
                     name="curier"
-                    value={values.curier || ""}
+                    value={values?.curier || ""}
                     error={fieldHasError("curier")}
                     helperText={
                       fieldGetError("curier") || "Display the name of a curier"
@@ -224,8 +239,10 @@ const SingleRouteView = () => {
                           key={day}
                           control={
                             <Checkbox
-                              // checked={locationType === "region"}
-                              // onChange={() => setLocationType("region")}
+                              checked={
+                                !!operationDays && operationDays.includes(day)
+                              }
+                              onChange={() => handleOperationDays(day)}
                               name={day}
                               color="primary"
                             />
@@ -254,6 +271,7 @@ const SingleRouteView = () => {
                       fieldGetError("latestCollectionTime") ||
                       "Display latest collection time of the route"
                     }
+                    onChange={onFieldChange}
                     {...SHARED_CONTROL_PROPS}
                   />
                   <TextField
@@ -273,6 +291,7 @@ const SingleRouteView = () => {
                       fieldGetError("latestDeliveryTime") ||
                       "Display latest delivery time of the route"
                     }
+                    onChange={onFieldChange}
                     {...SHARED_CONTROL_PROPS}
                   />
                   <TextField
@@ -337,7 +356,11 @@ const SingleRouteView = () => {
                 <UpdateButton
                   color="primary"
                   id={id}
-                  payload={{ ...values, locations: locationsArr }}
+                  payload={{
+                    ...values,
+                    locations: locationsArr,
+                    operationDays,
+                  }}
                 >
                   Update route
                 </UpdateButton>
