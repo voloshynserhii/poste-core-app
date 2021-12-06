@@ -5,7 +5,7 @@ import {Checkbox, TableCell, TableHead, TableRow, TableSortLabel} from '@materia
 const headCells = [
   { id: 'trackingNumber', numeric: false, disablePadding: true, label: 'Tracking Number' },
   { id: 'customer', numeric: false, disablePadding: true, label: 'Customer' },
-  { id: 'assignedCurier', numeric: false, disablePadding: true, label: 'Assigned Curier' },
+  { id: 'curier', numeric: false, disablePadding: true, label: 'Curier' },
   { id: 'collectionFrom', numeric: false, disablePadding: false, label: 'Collection from' },
   { id: 'deliveryTo', numeric: false, disablePadding: false, label: 'Delivery to' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Status' },

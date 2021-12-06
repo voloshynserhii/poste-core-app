@@ -101,7 +101,7 @@ export default function OrdersTable({ data, ...props }) {
     id,
     trackingNumber,
     customer,
-    assignedCurier,
+    curier,
     collectionFrom,
     deliveryTo,
     status,
@@ -116,7 +116,7 @@ export default function OrdersTable({ data, ...props }) {
       id,
       trackingNumber,
       customer,
-      assignedCurier,
+      curier,
       collectionFrom,
       deliveryTo,
       status,
@@ -132,8 +132,8 @@ export default function OrdersTable({ data, ...props }) {
   useEffect(() => {
     const rows = data.map((order) => {
       const customer = state.customers?.find((c) => c._id === order.customer);
-      const assignedCurier = state.users?.find(
-        (c) => c._id === order.assignedCurier
+      const curier = state.users?.find(
+        (c) => c._id === order.collectionCurier
       );
       const deliveryCity = state.locations?.find(loc => loc._id === order.deliveryData.city);
       const collectionCity = state.locations?.find(loc => loc._id === order.collectionData.city);
@@ -142,7 +142,7 @@ export default function OrdersTable({ data, ...props }) {
         order._id,
         order.trackingNumber,
         customer?.name || "no customer",
-        assignedCurier?.name || "no assigned curier",
+        curier?.name || "no curier",
         collectionCity?.name || "no address",
         deliveryCity?.name || "no address",
         order.status || "no status",
@@ -315,7 +315,8 @@ export default function OrdersTable({ data, ...props }) {
                           align="left"
                           padding="none"
                         >
-                          {row.assignedCurier}
+                          <p>{'->'}: {row.curier}</p>
+                          <p>{'<-'}: {row.curier}</p>
                         </TableCell>
                         <TableCell align="left">{row.collectionFrom}</TableCell>
                         <TableCell align="left">{row.deliveryTo}</TableCell>
