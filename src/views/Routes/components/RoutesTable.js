@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 const menuOptions = ["View route", "Edit route", "Orders", "Delete route"];
 
-export default function RoutesTable({ orders }) {
+export default function RoutesTable({ orders, onCancel }) {
   const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
@@ -122,7 +122,7 @@ export default function RoutesTable({ orders }) {
       finishPlace,
       region,
       status,
-      locations
+      locations,
     };
   }
 
@@ -190,11 +190,11 @@ export default function RoutesTable({ orders }) {
 
   const handleAssignToRoutes = async (name) => {
     if (orders) {
-      if(assignedRoutes.includes(name)) {
+      if (assignedRoutes.includes(name)) {
         orders.forEach(async (order) => {
           const result = await api.orders.unassignRoute(order, name);
           console.log(result);
-        })
+        });
       } else {
         const response = await api.routes.addMultiplyOrders(orders, name);
         setAssignedRoutes((prev) => [...prev, name]);
@@ -262,6 +262,7 @@ export default function RoutesTable({ orders }) {
           <OrderList routeId={routeId} />
         </>
       )}
+      {!!onCancel && <button onClick={onCancel}>Back</button>}
       {!assignOrder && (
         <Paper className={classes.paper}>
           <Autocomplete
@@ -336,9 +337,7 @@ export default function RoutesTable({ orders }) {
                                     ? "primary"
                                     : "default"
                                 }
-                                onClick={() =>
-                                  handleAssignToRoutes(row.id)
-                                }
+                                onClick={() => handleAssignToRoutes(row.id)}
                               >
                                 {assignedRoutes.includes(row.id)
                                   ? "Assigned"
@@ -386,8 +385,12 @@ export default function RoutesTable({ orders }) {
                         >
                           {row.startPlace.name || "none"}
                         </TableCell>
-                        <TableCell align="left">{row.finishPlace.name || "none"}</TableCell>
-                        <TableCell align="left">{row.region.name || "none"}</TableCell>
+                        <TableCell align="left">
+                          {row.finishPlace.name || "none"}
+                        </TableCell>
+                        <TableCell align="left">
+                          {row.region.name || "none"}
+                        </TableCell>
                         <TableCell align="left">{row.status}</TableCell>
                         <TableCell align="left">View locations</TableCell>
                       </TableRow>

@@ -39,7 +39,7 @@ const VALIDATE_FORM_ORDER = {
   },
 };
 
-const OrderForm = ({ onCancel }) => {
+const OrderForm = () => {
   const history = useHistory();
   const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
@@ -109,7 +109,6 @@ const OrderForm = ({ onCancel }) => {
       };
       // save changes in BD
       const res = await api.orders.create(savedOrder);
-console.log(savedOrder);
       const newOrder = res.data.data.order;
       if (res.status === 201) {
         dispatch({ type: "ADD_ORDER", payload: newOrder });
@@ -740,7 +739,7 @@ console.log(savedOrder);
         </Grid>
       </CardContent>
       <Grid container justifyContent="center" alignItems="center">
-        <AppButton onClick={onCancel}>Cancel</AppButton>
+        <AppButton onClick={() => history.push('/tracking')}>Cancel</AppButton>
         <AppButton
           color="success"
           disabled={!formState.isValid}

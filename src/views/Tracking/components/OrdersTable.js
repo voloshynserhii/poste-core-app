@@ -18,7 +18,8 @@ import Menu from "../../../components/Menu";
 import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
 import RouteTabs from "./RouteTabs";
-import RoutesTable from '../../Routes/components/RoutesTable';
+import RoutesTable from "../../Routes/components/RoutesTable";
+import ChangeMultipleForm from "./ChangeMultiplyForm";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -95,7 +96,8 @@ export default function OrdersTable({ data, ...props }) {
   const [selected, setSelected] = useState([]);
   const [assignRoute, setAssignRoute] = useState(false);
   const [orderToAssignRoute, setOrderToAssignRoute] = useState();
-  const [multiplyAssignRoute, setmultiplyAssignRoute] = useState(false);
+  const [multiplyAssignRoute, setMultiplyAssignRoute] = useState(false);
+  const [changeMultiply, setChangeMultiply] = useState(false);
 
   function createData(
     id,
@@ -132,11 +134,13 @@ export default function OrdersTable({ data, ...props }) {
   useEffect(() => {
     const rows = data.map((order) => {
       const customer = state.customers?.find((c) => c._id === order.customer);
-      const curier = state.users?.find(
-        (c) => c._id === order.collectionCurier
+      const curier = state.users?.find((c) => c._id === order.collectionCurier);
+      const deliveryCity = state.locations?.find(
+        (loc) => loc._id === order.deliveryData.city
       );
-      const deliveryCity = state.locations?.find(loc => loc._id === order.deliveryData.city);
-      const collectionCity = state.locations?.find(loc => loc._id === order.collectionData.city);
+      const collectionCity = state.locations?.find(
+        (loc) => loc._id === order.collectionData.city
+      );
 
       return createData(
         order._id,
@@ -155,7 +159,7 @@ export default function OrdersTable({ data, ...props }) {
       );
     });
     setRows(rows.reverse());
-  }, [data, state.customers, state.users]);
+  }, [data, state.customers, state.users, state.locations]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -221,17 +225,31 @@ export default function OrdersTable({ data, ...props }) {
     }
   };
 
+  //open form for multiple orders assigning to routes
   const handleAssignToRoutes = (val) => {
-    setmultiplyAssignRoute(val);
-  }
+    setMultiplyAssignRoute(val);
+  };
+  //open form for multiple orders changing
+  const handleChangeMultiply = (val) => {
+    setChangeMultiply(val);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  if (multiplyAssignRoute)
+    return (
+      <RoutesTable
+        orders={selected}
+        onCancel={() => setMultiplyAssignRoute(false)}
+      />
+    );
+
   return (
     <div className={classes.root}>
-      {multiplyAssignRoute && <RoutesTable orders={selected}/>}
+      {changeMultiply && <ChangeMultipleForm onCancel={() => setChangeMultiply(false)} />}
       {assignRoute && (
         <>
           <button onClick={() => setAssignRoute(false)}>back</button>
@@ -244,6 +262,7 @@ export default function OrdersTable({ data, ...props }) {
             numSelected={selected.length}
             selectedList={selected}
             onAssignToRoutes={(val) => handleAssignToRoutes(val)}
+            onChangeMultiply={(val) => handleChangeMultiply(val)}
           />
           <TableContainer>
             <Table
@@ -315,8 +334,12 @@ export default function OrdersTable({ data, ...props }) {
                           align="left"
                           padding="none"
                         >
-                          <p>{'->'}: {row.curier}</p>
-                          <p>{'<-'}: {row.curier}</p>
+                          <p>
+                            {"->"}: {row.curier}
+                          </p>
+                          <p>
+                            {"<-"}: {row.curier}
+                          </p>
                         </TableCell>
                         <TableCell align="left">{row.collectionFrom}</TableCell>
                         <TableCell align="left">{row.deliveryTo}</TableCell>

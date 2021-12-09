@@ -4,6 +4,8 @@ import { IconButton, Typography, Toolbar, Tooltip } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LocalShippingIcon from "@material-ui/icons/LocalShipping";
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import api from "../../../api";
 import { AppContext } from "../../../store";
@@ -43,6 +45,10 @@ const UsersToolbar = (props) => {
     props.onAssignToRoutes(true);
   };
 
+  const handleChangeMultiply = () => {
+    props.onChangeMultiply(true);
+  };
+  
   const onDialogClose = useCallback((event, reason) => {
     setConfirm(false);
   }, []);
@@ -96,8 +102,13 @@ const UsersToolbar = (props) => {
 
       {numSelected > 0 ? (
         <>
+          <Tooltip title="Change all">
+            <IconButton aria-label="changemultiply" onClick={handleChangeMultiply}>
+              <PlaylistAddCheckIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Assign selected to routes">
-            <IconButton aria-label="multiply" onClick={handleAssignToRoutes}>
+            <IconButton aria-label="assignmultiply" onClick={handleAssignToRoutes}>
               <LocalShippingIcon />
             </IconButton>
           </Tooltip>
