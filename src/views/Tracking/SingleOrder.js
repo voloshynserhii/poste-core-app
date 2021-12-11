@@ -123,7 +123,7 @@ const SingleOrderView = () => {
     },
     [setFormState]
   ); // Don't pass formState here !!!
-  console.log(values);
+
   useEffect(() => {
     fetchOrderById(id);
   }, [fetchOrderById, id]);
@@ -306,14 +306,14 @@ const SingleOrderView = () => {
                   <MenuItem value="">{" ---- "}</MenuItem>
                   {!!values.status &&
                     statuses
-                    .find((status) => status.value === values.status).hasOwnProperty('details') &&
+                    .find((status) => status.value === values.status)?.hasOwnProperty('details') ?
                     statuses
                       .find((status) => status.value === values.status)
                       .details?.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
-                      ))}
+                      )) : null}
                 </TextField>
               </div>
               <TextField
