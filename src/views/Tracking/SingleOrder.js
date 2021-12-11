@@ -85,6 +85,7 @@ const SingleOrderView = () => {
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
               status: res?.status || "Pending",
+              statusDetail: res?.statusDetail || "",
               declaredValue: res?.declaredValue || "",
               weight: res?.weight || "",
               dimensions: res?.dimensions || "",
@@ -122,7 +123,7 @@ const SingleOrderView = () => {
     },
     [setFormState]
   ); // Don't pass formState here !!!
-
+  console.log(values);
   useEffect(() => {
     fetchOrderById(id);
   }, [fetchOrderById, id]);
@@ -267,17 +268,17 @@ const SingleOrderView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
-              <div style={{ display: "flex"}}>
+              <div style={{ display: "flex" }}>
                 <TextField
                   select
                   required
                   label="Status"
                   name="status"
-                  style = {{marginRight:10}}
+                  style={{ marginRight: 10 }}
                   value={values?.status || ""}
                   error={fieldHasError("status")}
                   helperText={
-                    fieldGetError("status") || "Display status of the Order"
+                    fieldGetError("status") || "Display main status of the Order"
                   }
                   onChange={onFieldChange}
                   {...SHARED_CONTROL_PROPS}
@@ -302,13 +303,10 @@ const SingleOrderView = () => {
                   onChange={onFieldChange}
                   {...SHARED_CONTROL_PROPS}
                 >
+                  <MenuItem value="">{" ---- "}</MenuItem>
                   {!!values.status &&
-                    !statuses
-                      .find((status) => status.value === values.status)
-                      .hasOwnProperty("details") && (
-                      <MenuItem value={"no details"}>No details</MenuItem>
-                    )}
-                  {!!values.status &&
+                    statuses
+                    .find((status) => status.value === values.status).hasOwnProperty('details') &&
                     statuses
                       .find((status) => status.value === values.status)
                       .details?.map((option) => (

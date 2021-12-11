@@ -1,33 +1,83 @@
 export const statuses = [
   {
-    value: "Pending",
+    value: "pending",
     label: "Pending",
   },
   {
-    value: "In Transit",
+    value: "accepted",
+    label: "Accepted",
+    details: [
+      { 
+        value: "modified",
+        label: "Modified by dispatcher",
+      },
+      { 
+        value: "collected",
+        label: "Collected from sender",
+      }
+    ]
+  },
+  {
+    value: "inTransit",
     label: "In Transit",
     details: [
       {
-        value: "some",
-        label: "some",
+        value: "collectionTerminal",
+        label: "In Collection Terminal",
       },
       {
-        value: "some1",
-        label: "some1",
+        value: "onRoute",
+        label: "On The Way To Terminal",
+      },
+      {
+        value: "deliveryTerminal",
+        label: "In Delivery Terminal",
+      },
+      {
+        value: "lastMileCurier",
+        label: "Last Mile Curier",
+      },
+      {
+        value: "delay",
+        label: "Delay (ready for last mile delivery)",
       },
     ],
   },
   {
-    value: "Delivered",
+    value: "delivered",
     label: "Delivered",
   },
   {
-    value: "Cancelled",
+    value: "cancelled",
     label: "Cancelled",
+    details: [
+      {
+        value: "cancelledDispatcher",
+        label: "Cancelled By Dispatcher",
+      },
+      {
+        value: "cancelledClient",
+        label: "Cancelled By Client (not billable)",
+      },
+    ],
   },
   {
-    value: "Cancelled (Billabale)",
+    value: "cancelledBillabale",
     label: "Cancelled (Billabale)",
+    details: [
+      {
+        value: "receiverNotFound",
+        label: "Receiver not found",
+      },
+      {
+        value: "sentBack",
+        label: "Return to sender",
+      },
+      {
+        value: "failed",
+        label: "Failed to deliver",
+      },
+    ],
   },
 ];
 
