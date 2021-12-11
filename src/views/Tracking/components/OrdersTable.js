@@ -249,7 +249,13 @@ export default function OrdersTable({ data, ...props }) {
 
   return (
     <div className={classes.root}>
-      {changeMultiply && <ChangeMultipleForm onCancel={() => setChangeMultiply(false)} />}
+      {changeMultiply && (
+        <ChangeMultipleForm
+          orders={selected}
+          onUpdate={(val) => setChangeMultiply(!val)}
+          onCancel={() => setChangeMultiply(false)}
+        />
+      )}
       {assignRoute && (
         <>
           <button onClick={() => setAssignRoute(false)}>back</button>

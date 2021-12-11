@@ -18,6 +18,7 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import api from "../../api";
 import { AppContext } from "../../store";
 import UpdateButton from "./components/UpdateButton";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
@@ -69,6 +70,22 @@ const SingleRouteView = () => {
   const values = formState.values;
   const id = params?.id;
 
+  useEffect(() => {
+    if (state.routes.length > 0) {
+      return;
+    } else {
+      setLoading(true);
+      async function fetchData() {
+        const res = await api.routes.read(); // List of All routes
+        if (res) {
+          dispatch({ type: "SET_ROUTES", routes: res });
+          setLoading(false);
+        }
+      }
+      fetchData();
+    }
+  }, [dispatch, state.routes]);
+  
   const fetchRouteById = useCallback(
     async (id) => {
       setLoading(true);

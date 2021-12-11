@@ -267,25 +267,57 @@ const SingleOrderView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
-              <TextField
-                select
-                required
-                label="Status"
-                name="status"
-                value={values?.status || ""}
-                error={fieldHasError("status")}
-                helperText={
-                  fieldGetError("status") || "Display status of the Order"
-                }
-                onChange={onFieldChange}
-                {...SHARED_CONTROL_PROPS}
-              >
-                {statuses.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <div style={{ display: "flex"}}>
+                <TextField
+                  select
+                  required
+                  label="Status"
+                  name="status"
+                  style = {{marginRight:10}}
+                  value={values?.status || ""}
+                  error={fieldHasError("status")}
+                  helperText={
+                    fieldGetError("status") || "Display status of the Order"
+                  }
+                  onChange={onFieldChange}
+                  {...SHARED_CONTROL_PROPS}
+                >
+                  {statuses.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  required
+                  label="Status detail"
+                  name="statusDetail"
+                  value={values?.statusDetail || ""}
+                  error={fieldHasError("statusDetail")}
+                  helperText={
+                    fieldGetError("statusDetail") ||
+                    "Display status detail of the Order"
+                  }
+                  onChange={onFieldChange}
+                  {...SHARED_CONTROL_PROPS}
+                >
+                  {!!values.status &&
+                    !statuses
+                      .find((status) => status.value === values.status)
+                      .hasOwnProperty("details") && (
+                      <MenuItem value={"no details"}>No details</MenuItem>
+                    )}
+                  {!!values.status &&
+                    statuses
+                      .find((status) => status.value === values.status)
+                      .details?.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                </TextField>
+              </div>
               <TextField
                 label="Declared Value"
                 name="declaredValue"
@@ -376,7 +408,9 @@ const SingleOrderView = () => {
                   {state.locations
                     .filter((loc) => loc.type === "region")
                     .map((location) => (
-                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                      <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                      </MenuItem>
                     ))}
                 </TextField>
                 <TextField
@@ -393,9 +427,13 @@ const SingleOrderView = () => {
                   <MenuItem value="">---</MenuItem>
                   {state.locations
                     .filter((loc) => loc.type === "city")
-                    .filter((loc) => loc.parent._id === values?.collectionData?.region)
+                    .filter(
+                      (loc) => loc.parent._id === values?.collectionData?.region
+                    )
                     .map((location) => (
-                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                      <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                      </MenuItem>
                     ))}
                 </TextField>
                 <TextField
@@ -405,19 +443,20 @@ const SingleOrderView = () => {
                   name="point"
                   value={values?.collectionData?.point || ""}
                   error={fieldHasError("point")}
-                  helperText={
-                    fieldGetError("point") ||
-                    "Display a route point"
-                  }
+                  helperText={fieldGetError("point") || "Display a route point"}
                   onChange={onFieldChangeCollection}
                   {...SHARED_CONTROL_PROPS}
                 >
                   <MenuItem value="">---</MenuItem>
                   {state.locations
                     .filter((loc) => loc.type === "point")
-                    .filter((loc) => loc.parent._id === values?.collectionData?.city)
+                    .filter(
+                      (loc) => loc.parent._id === values?.collectionData?.city
+                    )
                     .map((location) => (
-                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                      <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                      </MenuItem>
                     ))}
                 </TextField>
                 <TextField
@@ -486,7 +525,9 @@ const SingleOrderView = () => {
                   {state.locations
                     .filter((loc) => loc.type === "region")
                     .map((location) => (
-                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                      <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                      </MenuItem>
                     ))}
                 </TextField>
                 <TextField
@@ -503,9 +544,13 @@ const SingleOrderView = () => {
                   <MenuItem value="">---</MenuItem>
                   {state.locations
                     .filter((loc) => loc.type === "city")
-                    .filter((loc) => loc.parent._id === values?.deliveryData?.region)
+                    .filter(
+                      (loc) => loc.parent._id === values?.deliveryData?.region
+                    )
                     .map((location) => (
-                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                      <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                      </MenuItem>
                     ))}
                 </TextField>
                 <TextField
@@ -525,9 +570,13 @@ const SingleOrderView = () => {
                   <MenuItem value="">---</MenuItem>
                   {state.locations
                     .filter((loc) => loc.type === "point")
-                    .filter((loc) => loc.parent._id === values?.deliveryData?.city)
+                    .filter(
+                      (loc) => loc.parent._id === values?.deliveryData?.city
+                    )
                     .map((location) => (
-                      <MenuItem key={location._id} value={location._id}>{location.name}</MenuItem>
+                      <MenuItem key={location._id} value={location._id}>
+                        {location.name}
+                      </MenuItem>
                     ))}
                 </TextField>
                 <TextField

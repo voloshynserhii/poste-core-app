@@ -19,7 +19,7 @@ const SaveButton = ({ collection, id, payload, disabled, noConfirmation = false,
 
   const updateRecord = async () => {
     console.log(payload, id, collection)
-    await api.orders.update(collection, id, payload);
+    await api.orders.update(id, payload);
   };
 
   const onDialogClose = useCallback((event, reason) => {

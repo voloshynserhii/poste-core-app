@@ -55,8 +55,11 @@ const userForm = makeStyles((theme) => ({
   },
   selects: {
     width: "45%",
-    height: 30,
-    border: "none",
+    height: 40,
+    borderColor: 'rgba(0, 0, 0, .3)',
+    borderRadius: 8,
+    color: 'rgba(0, 0, 0, .6)',
+    outline: 'none',
   },
 }));
 
@@ -101,6 +104,22 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
     }));
   }, [setFormState]);
 
+  useEffect(() => {
+    if (state.routes.length > 0) {
+      return;
+    } else {
+      setLoading(true);
+      async function fetchData() {
+        const res = await api.routes.read(); // List of All routes
+        if (res) {
+          dispatch({ type: "SET_ROUTES", routes: res });
+          setLoading(false);
+        }
+      }
+      fetchData();
+    }
+  }, [dispatch, state.routes]);
+  
   const fetchLocationById = useCallback(
     async (id) => {
       setLoading(true);

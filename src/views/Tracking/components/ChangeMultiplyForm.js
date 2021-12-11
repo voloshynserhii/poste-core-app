@@ -13,6 +13,7 @@ import { AppContext } from "../../../store";
 import api from "../../../api";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../../utils/form";
 import AppButton from "../../../components/AppButton";
+import CustomSelect from "../../../components/CustomSelect";
 import { statuses } from "../utils";
 
 const userForm = makeStyles((theme) => ({
@@ -36,20 +37,25 @@ const userForm = makeStyles((theme) => ({
   },
 }));
 
-const ChangeMultipleForm = ({ onCancel }) => {
-  const [, dispatch] = useContext(AppContext);
+const VALIDATE_FORM_EDIT = {
+  status: {
+    type: "string",
+    presence: { allowEmpty: true },
+  },
+};
+
+const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
+  const [state, dispatch] = useContext(AppContext);
   const classes = userForm();
-  const [userSaved, setUserSaved] = useState(false);
-  const [curier, setCurier] = useState(false);
-  const [dispatcher, setDispatcher] = useState(false);
+  const [ordersUpdated, setOrdersUpdated] = useState(false);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
-      initialValues: {},
-      validationSchema: {},
+      validationSchema: VALIDATE_FORM_EDIT,
     });
+    
   const values = formState.values;
-
+  
   const editForm = useCallback(() => {
     setFormState((oldFormState) => ({
       ...oldFormState,
@@ -65,25 +71,19 @@ const ChangeMultipleForm = ({ onCancel }) => {
   }, [editForm]);
 
   const saveRecord = async () => {
-    let role;
-    if (curier) role = "curier";
-    if (dispatcher) role = "dispatcher";
-
-    const newUser = {
-      ...formState.values,
-      role: role,
-    };
-    // try {
-    //   // save changes in BD
-    //   const res = await api.users.create(newUser);
-    //   const savedUser = res.data.data.user;
-    //   if (res.status === 201) {
-    //     dispatch({ type: "ADD_USER", payload: savedUser });
-    //     setUserSaved(true);
-    //   }
-    // } catch (err) {
-    //   alert("Something went wrong. Please try another email address")
-    // }
+    try {
+      // save changes in BD
+      for (let i = 0; i < orders.length; i++) {
+        const updatedOrder = state.orders.find(order => order._id === orders[i])
+        const res = await api.orders.update(orders[i], values);
+        if(res.status === 200) {
+          dispatch({ type: 'UPDATE_ORDER', id: orders[i], updatedOrder: {...updatedOrder, ...res.data} });
+        }
+      }
+      onUpdate(true)
+    } catch (err) {
+      alert("Something went wrong!")
+    }
   };
   const handleSave = () => {
     // Save without confirmation
@@ -91,27 +91,15 @@ const ChangeMultipleForm = ({ onCancel }) => {
     return;
   };
 
-  if (userSaved) return null;
 
   return (
     <div className={classes.layer}>
       <Card className={classes.root}>
         <CardHeader title="Make changes for chosen orders" />
         <CardContent>
-          <select
-            // className={classes.selects}
-            // value={region}
-            // onChange={(event) => setRegion(event.target.value)}
-          >
-            Status
-            <option value="">Choose status</option>
-            {statuses.map((status) => (
-              <option key={status.value} value={status.value}>
-                {status.label}
-              </option>
-            ))}
-          </select>
-
+          <CustomSelect name="status" data={statuses} title="Choose status" onChange={onFieldChange} />
+          {values.status === "In Transit" && <CustomSelect title="Subtatus" data={statuses} onChange={onFieldChange} />}
+          
           <Grid container justifyContent="center" alignItems="center">
             <AppButton onClick={onCancel}>Cancel</AppButton>
             <AppButton
