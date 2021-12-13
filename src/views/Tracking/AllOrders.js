@@ -1,25 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import { LinearProgress } from "@material-ui/core";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
 
 import { AppContext } from "../../store";
 import api from "../../api";
 import OrdersTable from "./components/OrdersTable";
 
-const useStyles = makeStyles((theme) => ({
-  fixedButton: {
-    position: "fixed",
-    bottom: "5%",
-    right: "5%",
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   fixedButton: {
+//     position: "fixed",
+//     bottom: "5%",
+//     right: "5%",
+//   },
+// }));
 
 const AllOrdersView = () => {
-  const classes = useStyles();
-  const history = useHistory();
+  // const classes = useStyles();
+  // const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [state, dispatch] = useContext(AppContext);
 
@@ -38,23 +36,12 @@ const AllOrdersView = () => {
     }
   }, [dispatch, state.orders.length]);
 
-  const handleAddOrder = () => {
-    history.push("/tracking/form");
-  };
 
   if (loading) return <LinearProgress />;
 
   return (
     <>
       <OrdersTable data={state.orders} />
-      <Fab
-        className={classes.fixedButton}
-        color="secondary"
-        aria-label="add"
-        onClick={handleAddOrder}
-      >
-        <AddIcon />
-      </Fab>
     </>
   );
 };

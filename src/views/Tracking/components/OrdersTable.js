@@ -11,6 +11,8 @@ import {
   TablePagination,
   TableRow,
 } from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 import api from "../../../api";
 import { AppContext } from "../../../store";
@@ -19,7 +21,7 @@ import OrdersToolbar from "./OrdersToolbar";
 import OrdersTableHead from "./OrdersTableHead";
 import RouteTabs from "./RouteTabs";
 import RoutesTable from "../../Routes/components/RoutesTable";
-import ChangeMultipleForm from "./ChangeMultiplyForm";
+import ChangeMultipleForm from "./ChangeMultipleForm";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -80,6 +82,11 @@ const useStyles = makeStyles((theme) => ({
   green: {
     background: "#1FAEAB",
   },
+  fixedButton: {
+    position: "fixed",
+    bottom: "5%",
+    right: "5%",
+  },
 }));
 
 const menuOptions = ["Order routes", "Edit order", "Delete order"];
@@ -136,10 +143,10 @@ export default function OrdersTable({ data, ...props }) {
       const customer = state.customers?.find((c) => c._id === order.customer);
       const curier = state.users?.find((c) => c._id === order.collectionCurier);
       const deliveryCity = state.locations?.find(
-        (loc) => loc._id === order.deliveryData.city
+        (loc) => loc._id === order.deliveryData?.city
       );
       const collectionCity = state.locations?.find(
-        (loc) => loc._id === order.collectionData.city
+        (loc) => loc._id === order.collectionData?.city
       );
 
       return createData(
@@ -238,6 +245,10 @@ export default function OrdersTable({ data, ...props }) {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  const handleAddOrder = () => {
+    history.push("/tracking/form");
+  };
 
   if (multiplyAssignRoute)
     return (
@@ -385,6 +396,14 @@ export default function OrdersTable({ data, ...props }) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
+          <Fab
+            className={classes.fixedButton}
+            color="secondary"
+            aria-label="add"
+            // onClick={handleAddOrder}
+          >
+            <AddIcon />
+          </Fab>
         </Paper>
       )}
     </div>

@@ -6,7 +6,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  MenuItem,
 } from "@material-ui/core";
 
 import { AppContext } from "../../../store";
@@ -50,6 +49,7 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
   const [expectedDeliveryDate, setExpectedDeliveryDate] = useState(new Date().toISOString().slice(0, 10))
   const [expectedDeliveryTime, setExpectedDeliveryTime] = useState("12:00")
   
+  console.log("Change multiple form gets orders", orders)
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -72,26 +72,43 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
         },
       },
     }));
-  }, [setFormState]);
+  }, [setFormState, expectedDeliveryDate, expectedDeliveryTime]);
 
   useEffect(() => {
     editForm();
   }, [editForm]);
-  console.log(values);
+
   const saveRecord = async () => {
     try {
       // save changes in BD
-      for (let i = 0; i < orders.length; i++) {
-        const updatedOrder = state.orders.find(
-          (order) => order._id === orders[i]
-        );
-        const res = await api.orders.update(orders[i], values);
-        if (res.status === 200) {
-          dispatch({
-            type: "UPDATE_ORDER",
-            id: orders[i],
-            updatedOrder: { ...updatedOrder, ...res.data },
-          });
+      if(typeof orders[0] === 'string') {
+        for (let i = 0; i < orders.length; i++) {
+          const updatedOrder = state.orders.find(
+            (order) => order._id === orders[i]
+          );
+          const res = await api.orders.update(orders[i], values);
+          if (res.status === 200) {
+            dispatch({
+              type: "UPDATE_ORDER",
+              id: orders[i],
+              updatedOrder: { ...updatedOrder, ...res.data },
+            });
+          }
+        }
+      }
+      if(typeof orders[0] === 'object') {
+        for (let i = 0; i < orders.length; i++) {
+          const updatedOrder = state.orders.find(
+            (order) => order._id === orders[i]._id
+          );
+          const res = await api.orders.update(orders[i]._id, values);
+          if (res.status === 200) {
+            dispatch({
+              type: "UPDATE_ORDER",
+              id: orders[i]._id,
+              updatedOrder: { ...updatedOrder, ...res.data },
+            });
+          }
         }
       }
       onUpdate(true);

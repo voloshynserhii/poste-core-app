@@ -97,7 +97,7 @@ export default function DataTabs(props) {
         setData(state.locations);
       }
     },
-    [data]
+    [state.locations]
   );
 
   return (

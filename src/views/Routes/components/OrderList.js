@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
   Collapse,
+  Grid,
   IconButton,
   Table,
   TableBody,
@@ -18,9 +19,11 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import CloseIcon from "@material-ui/icons/Close";
 
+import AppButton from "../../../components/AppButton";
 import { AppContext } from "../../../store";
 import Menu from "../../../components/Menu";
 import api from "../../../api";
+import ChangeMultipleForm from "../../Tracking/components/ChangeMultipleForm";
 
 const useRowStyles = makeStyles({
   root: {
@@ -189,7 +192,7 @@ export default function OrderList(props) {
   const [assignedOrders, setAssignedOrders] = useState([]);
   const [rows, setRows] = useState([]);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-  console.log(state.routes);
+  const [changeMultiply, setChangeMultiply] = useState(false);
 
   const onRemoveOrder = useCallback(
     (id) => {
@@ -209,10 +212,14 @@ export default function OrderList(props) {
   );
 
   useEffect(() => {
-    const routeData = state.routes.find((route) => route._id === props.routeId);
-    const ordersList = routeData.orders;
-    setCurrentRoute(routeData);
-    setOrdersList(ordersList);
+    if (!!props.routeId) {
+      const routeData = state.routes.find(
+        (route) => route._id === props.routeId
+      );
+      const ordersList = routeData?.orders || [];
+      setCurrentRoute(routeData);
+      setOrdersList(ordersList);
+    }
   }, [props.routeId, state.routes]);
 
   useEffect(() => {
@@ -236,54 +243,67 @@ export default function OrderList(props) {
     setRows(rows.reverse());
   }, [assignedOrders, ordersList, state.routes]);
 
-  console.log(rows);
   return (
-    <TableContainer component={Paper}>
-      {confirmModalOpen && (
-        <Alert
-          severity="success"
-          variant="filled"
-          action={
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              size="small"
-              onClick={() => {
-                setConfirmModalOpen(false);
-              }}
-            >
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          Order removed
-        </Alert>
+    <>
+      {changeMultiply && (
+        <ChangeMultipleForm
+          orders={assignedOrders}
+          onUpdate={(val) => setChangeMultiply(!val)}
+          onCancel={() => setChangeMultiply(false)}
+        />
       )}
-      <Table aria-label="Order List">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>#</TableCell>
-            <TableCell />
-            <TableCell>Tracking #</TableCell>
-            <TableCell align="right">Weight</TableCell>
-            <TableCell align="right">Quantity</TableCell>
-            <TableCell align="right">Collection address</TableCell>
-            <TableCell align="right">Delivery address</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows?.map((order, i) => (
-            <Row
-              key={order.id}
-              index={i}
-              row={order}
-              routeId={props.routeId}
-              onConfirmModalOpen={(id) => onRemoveOrder(id)}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <TableContainer component={Paper}>
+        {confirmModalOpen && (
+          <Alert
+            severity="success"
+            variant="filled"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setConfirmModalOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            Order removed
+          </Alert>
+        )}
+        <Table aria-label="Order List">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>#</TableCell>
+              <TableCell />
+              <TableCell>Tracking #</TableCell>
+              <TableCell align="right">Weight</TableCell>
+              <TableCell align="right">Quantity</TableCell>
+              <TableCell align="right">Collection address</TableCell>
+              <TableCell align="right">Delivery address</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows?.map((order, i) => (
+              <Row
+                key={order.id}
+                index={i}
+                row={order}
+                routeId={props.routeId}
+                onConfirmModalOpen={(id) => onRemoveOrder(id)}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Grid container justifycontent="center" alignItems="center">
+        <AppButton color="secondary" onClick={() => setChangeMultiply(true)}>
+          Change all
+        </AppButton>
+      </Grid>
+    </>
   );
 }

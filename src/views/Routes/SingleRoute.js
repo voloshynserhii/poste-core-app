@@ -24,6 +24,7 @@ import UpdateButton from "./components/UpdateButton";
 import { useAppForm, SHARED_CONTROL_PROPS } from "../../utils/form";
 import AppAlert from "../../components/AppAlert";
 import AppButton from "../../components/AppButton";
+import OrderList from "./components/OrderList";
 
 const orderForm = makeStyles((theme) => ({
   root: {
@@ -66,6 +67,7 @@ const SingleRouteView = () => {
     });
   const [locationsArr, setLocationsArr] = useState([]);
   const [operationDays, setOperationDays] = useState([]);
+  const [viewOrders, setViewOrders] = useState(false);  
 
   const values = formState.values;
   const id = params?.id;
@@ -85,7 +87,7 @@ const SingleRouteView = () => {
       fetchData();
     }
   }, [dispatch, state.routes]);
-  
+
   const fetchRouteById = useCallback(
     async (id) => {
       setLoading(true);
@@ -160,6 +162,14 @@ const SingleRouteView = () => {
   };
 
   if (loading) return <LinearProgress />;
+  console.log(viewOrders);
+  if (!!viewOrders)
+    return (
+      <>
+        <AppButton onClick={() => setViewOrders(false)}>{"<- Back"}</AppButton>
+        <OrderList routeId={id} />
+      </>
+    );
 
   return (
     <>
@@ -370,6 +380,12 @@ const SingleRouteView = () => {
               </Grid>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
+                <AppButton
+                  color="secondary"
+                  onClick={() => setViewOrders(true)}
+                >
+                  View orders
+                </AppButton>
                 <UpdateButton
                   color="primary"
                   id={id}

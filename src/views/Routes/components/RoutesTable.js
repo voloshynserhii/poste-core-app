@@ -247,7 +247,7 @@ export default function RoutesTable({ orders, onCancel }) {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const routeType = ["lastMile", "collection", "peer-to-peer", "transit"];
+  const routeType = ["Create new", "lastMile", "collection", "peer-to-peer", "transit"];
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
