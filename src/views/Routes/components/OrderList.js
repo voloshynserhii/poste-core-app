@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Box,
   Collapse,
+  Checkbox,
   Grid,
   IconButton,
   Table,
@@ -56,6 +57,7 @@ function Row(props) {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
   const [menuValue, setMenuValue] = useState("");
+  const [selected, setSelected] = useState([]);
 
   const menuOptions = ["Remove"];
 
@@ -64,18 +66,33 @@ function Row(props) {
     if (value === "Remove") {
       try {
         const res = await api.orders.unassignRoute(id, props.routeId);
-        console.log(res);
         if (res.status === 200) props.onConfirmModalOpen(id);
       } catch (err) {
         console.error(err.error);
       }
     }
   };
+  console.log(selected)
+  const handleSelect = (id) => {
+    if(!selected.includes(id)) {
+      setSelected(prev => [...prev, id])
+    }
+    if(selected.includes(id)) {
+      const newArr = selected.filter(item => item !== id)
+      setSelected(newArr)
+    }
+  }
 
   return (
     <>
       <TableRow className={classes.root}>
-        <TableCell>
+        <TableCell style={{display: 'flex', justifyContent: 'center'}}>
+          <Checkbox
+            color="primary"
+            style={{marginRight: 20}}
+            checked={selected.includes(row.id)}
+            onClick={() => handleSelect(row.id)}
+          />
           <IconButton
             aria-label="expand row"
             size="small"
@@ -90,7 +107,7 @@ function Row(props) {
         <TableCell>
           <Menu
             options={menuOptions}
-            selected={menuValue}
+            selected={!!menuValue}
             onMenuClick={(opt) => handleGetOption(opt, row.id)}
           />
         </TableCell>
@@ -163,18 +180,6 @@ function Row(props) {
                       {row.deliveryData.contactName}
                     </TableCell>
                   </TableRow>
-                  {/* {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))} */}
                 </TableBody>
               </Table>
             </Box>
@@ -276,7 +281,14 @@ export default function OrderList(props) {
         <Table aria-label="Order List">
           <TableHead>
             <TableRow>
-              <TableCell />
+              <TableCell style={{ padding: 0, textAlign: "center" }}>
+                <AppButton
+                  color="secondary"
+                  onClick={() => setChangeMultiply(true)}
+                >
+                  Change all
+                </AppButton>
+              </TableCell>
               <TableCell>#</TableCell>
               <TableCell />
               <TableCell>Tracking #</TableCell>
@@ -301,7 +313,7 @@ export default function OrderList(props) {
       </TableContainer>
       <Grid container justifycontent="center" alignItems="center">
         <AppButton color="secondary" onClick={() => setChangeMultiply(true)}>
-          Change all
+          Change selected
         </AppButton>
       </Grid>
     </>
