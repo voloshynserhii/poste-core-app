@@ -400,7 +400,7 @@ export default function OrdersTable({ data, ...props }) {
             className={classes.fixedButton}
             color="secondary"
             aria-label="add"
-            // onClick={handleAddOrder}
+            onClick={handleAddOrder}
           >
             <AddIcon />
           </Fab>
