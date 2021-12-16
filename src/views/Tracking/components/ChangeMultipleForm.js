@@ -46,10 +46,12 @@ const VALIDATE_FORM_EDIT = {
 const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
   const [state, dispatch] = useContext(AppContext);
   const classes = userForm();
-  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState(new Date().toISOString().slice(0, 10))
-  const [expectedDeliveryTime, setExpectedDeliveryTime] = useState("12:00")
-  
-  console.log("Change multiple form gets orders", orders)
+  const [expectedDeliveryDate, setExpectedDeliveryDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
+  const [expectedDeliveryTime, setExpectedDeliveryTime] = useState("12:00");
+
+  console.log("Change multiple form gets orders", orders);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -57,7 +59,6 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
     });
 
   const values = formState.values;
-  // const dayToday = new Date().toISOString().slice(0, 10);
 
   const editForm = useCallback(() => {
     setFormState((oldFormState) => ({
@@ -66,27 +67,30 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
         ...oldFormState.values,
         status: "",
         statusDetail: "",
-        expectedDeliveryAt: {
-          date: expectedDeliveryDate,
-          time: expectedDeliveryTime,
-        },
       },
     }));
-  }, [setFormState, expectedDeliveryDate, expectedDeliveryTime]);
+  }, [setFormState]);
 
   useEffect(() => {
     editForm();
   }, [editForm]);
 
   const saveRecord = async () => {
+    const updatedOrderObj = {
+      ...values,
+      expectedDeliveryAt: {
+        date: expectedDeliveryDate,
+        time: expectedDeliveryTime,
+      },
+    };
     try {
       // save changes in BD
-      if(typeof orders[0] === 'string') {
+      if (typeof orders[0] === "string") {
         for (let i = 0; i < orders.length; i++) {
           const updatedOrder = state.orders.find(
             (order) => order._id === orders[i]
           );
-          const res = await api.orders.update(orders[i], values);
+          const res = await api.orders.update(orders[i], updatedOrderObj);
           if (res.status === 200) {
             dispatch({
               type: "UPDATE_ORDER",
@@ -96,12 +100,12 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
           }
         }
       }
-      if(typeof orders[0] === 'object') {
+      if (typeof orders[0] === "object") {
         for (let i = 0; i < orders.length; i++) {
           const updatedOrder = state.orders.find(
             (order) => order._id === orders[i]._id
           );
-          const res = await api.orders.update(orders[i]._id, values);
+          const res = await api.orders.update(orders[i]._id, updatedOrderObj);
           if (res.status === 200) {
             dispatch({
               type: "UPDATE_ORDER",
@@ -130,7 +134,7 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
           <CustomSelect
             title="Status*"
             name="status"
-            value={values?.status || ""}
+            value={values?.status}
             data={statuses}
             onChange={onFieldChange}
           />
@@ -138,7 +142,7 @@ const ChangeMultipleForm = ({ orders, onUpdate, onCancel }) => {
             <CustomSelect
               title="Status detail"
               name="statusDetail"
-              value={values?.statusDetail || ""}
+              value={values?.statusDetail}
               data={
                 statuses.find((status) => status.value === values.status)
                   .details || []
