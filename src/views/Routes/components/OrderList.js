@@ -57,7 +57,6 @@ function Row(props) {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
   const [menuValue, setMenuValue] = useState("");
-  const [selected, setSelected] = useState([]);
 
   const menuOptions = ["Remove"];
 
@@ -72,26 +71,16 @@ function Row(props) {
       }
     }
   };
-  console.log(selected)
-  const handleSelect = (id) => {
-    if(!selected.includes(id)) {
-      setSelected(prev => [...prev, id])
-    }
-    if(selected.includes(id)) {
-      const newArr = selected.filter(item => item !== id)
-      setSelected(newArr)
-    }
-  }
 
   return (
     <>
       <TableRow className={classes.root}>
-        <TableCell style={{display: 'flex', justifyContent: 'center'}}>
+        <TableCell style={{ display: "flex", justifyContent: "center" }}>
           <Checkbox
             color="primary"
-            style={{marginRight: 20}}
-            checked={selected.includes(row.id)}
-            onClick={() => handleSelect(row.id)}
+            style={{ marginRight: 20 }}
+            checked={props.selected.includes(row.id)}
+            onClick={() => props.onSelectId(row.id)}
           />
           <IconButton
             aria-label="expand row"
@@ -198,6 +187,8 @@ export default function OrderList(props) {
   const [rows, setRows] = useState([]);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [changeMultiply, setChangeMultiply] = useState(false);
+  const [changeSelected, setChangeSelected] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState([]);
 
   const onRemoveOrder = useCallback(
     (id) => {
@@ -215,6 +206,15 @@ export default function OrderList(props) {
     },
     [assignedOrders, ordersList, currentRoute, dispatch]
   );
+
+  const handleAddSelected = (id) => {
+    if (selectedOrders.includes(id)) {
+      const newArr = selectedOrders.filter((item) => item !== id);
+      setSelectedOrders(newArr);
+    } else {
+      setSelectedOrders((prev) => [...prev, id]);
+    }
+  };
 
   useEffect(() => {
     if (!!props.routeId) {
@@ -250,6 +250,13 @@ export default function OrderList(props) {
 
   return (
     <>
+      {changeSelected && (
+        <ChangeMultipleForm
+          orders={selectedOrders}
+          onUpdate={(val) => setChangeSelected(!val)}
+          onCancel={() => setChangeSelected(false)}
+        />
+      )}
       {changeMultiply && (
         <ChangeMultipleForm
           orders={assignedOrders}
@@ -305,17 +312,17 @@ export default function OrderList(props) {
                 index={i}
                 row={order}
                 routeId={props.routeId}
+                onSelectId={(val) => handleAddSelected(val)}
+                selected={selectedOrders}
                 onConfirmModalOpen={(id) => onRemoveOrder(id)}
               />
             ))}
           </TableBody>
+          <AppButton color="secondary" onClick={() => setChangeSelected(true)}>
+            Change selected
+          </AppButton>
         </Table>
       </TableContainer>
-      <Grid container justifycontent="center" alignItems="center">
-        <AppButton color="secondary" onClick={() => setChangeMultiply(true)}>
-          Change selected
-        </AppButton>
-      </Grid>
     </>
   );
 }

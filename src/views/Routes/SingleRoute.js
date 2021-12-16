@@ -162,7 +162,7 @@ const SingleRouteView = () => {
   };
 
   if (loading) return <LinearProgress />;
-  console.log(viewOrders);
+
   if (!!viewOrders)
     return (
       <>
