@@ -14,6 +14,7 @@ import {
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 
+import AppButton from '../../../components/AppButton';
 import api from "../../../api";
 import { AppContext } from "../../../store";
 import Menu from "../../../components/Menu";
@@ -269,7 +270,7 @@ export default function OrdersTable({ data, ...props }) {
       )}
       {assignRoute && (
         <>
-          <button onClick={() => setAssignRoute(false)}>back</button>
+          <AppButton onClick={() => setAssignRoute(false)}>back</AppButton>
           <RouteTabs orderId={orderToAssignRoute} />
         </>
       )}

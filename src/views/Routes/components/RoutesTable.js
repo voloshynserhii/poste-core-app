@@ -258,7 +258,7 @@ export default function RoutesTable({ orders, onCancel }) {
     <div className={classes.root}>
       {assignOrder && (
         <>
-          <button onClick={() => setAssignOrder(false)}>back</button>
+          <AppButton color="default" onClick={() => setAssignOrder(false)}>back</AppButton>
           <OrderList routeId={routeId} />
         </>
       )}

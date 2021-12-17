@@ -290,7 +290,7 @@ export default function OrderList(props) {
             <TableRow>
               <TableCell style={{ padding: 0, textAlign: "center" }}>
                 <AppButton
-                  color="secondary"
+                  color="error"
                   onClick={() => setChangeMultiply(true)}
                 >
                   Change all
