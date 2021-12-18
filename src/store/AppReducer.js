@@ -156,6 +156,18 @@ const AppReducer = (state, action) => {
         ...state,
         routes: updatedRouteArr,
       };
+    case "ASSIGN_ROUTE":
+      return {
+        ...state,
+        // orders: 
+        // routes:
+      };
+    case "UNASSIGN_ROUTE":
+      return {
+        ...state,
+        // orders: 
+        // routes:
+      };
     case "SET_LOCATIONS":
       return {
         ...state,

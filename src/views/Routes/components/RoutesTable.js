@@ -52,7 +52,6 @@ function stableSort(array, comparator) {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "calc(100vw - 256px)",
-    overflow: "hidden",
     [theme.breakpoints.down("sm")]: {
       width: "100vw",
     },
@@ -103,7 +102,7 @@ export default function RoutesTable({ orders, onCancel }) {
   const [routeId, setRouteId] = useState();
   const [data, setData] = useState([]);
   const [assignedRoutes, setAssignedRoutes] = useState([]);
-
+console.log(orders, assignedRoutes)
   function createData(
     id,
     title,
@@ -188,16 +187,16 @@ export default function RoutesTable({ orders, onCancel }) {
     setPage(0);
   };
 
-  const handleAssignToRoutes = async (name) => {
+  const handleAssignToRoutes = async (route) => {
     if (orders) {
-      if (assignedRoutes.includes(name)) {
+      if (assignedRoutes.includes(route)) {
         orders.forEach(async (order) => {
-          const result = await api.orders.unassignRoute(order, name);
+          const result = await api.orders.unassignRoute(order, route);
           console.log(result);
         });
       } else {
-        const response = await api.routes.addMultiplyOrders(orders, name);
-        setAssignedRoutes((prev) => [...prev, name]);
+        const response = await api.routes.addMultiplyOrders(orders, route);
+        setAssignedRoutes((prev) => [...prev, route]);
         if (response) {
           console.log("Response", response);
         }
@@ -255,14 +254,14 @@ export default function RoutesTable({ orders, onCancel }) {
   if (loading) return <LinearProgress />;
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={onCancel ? {position: "absolute", top: '14%'} : {}}>
       {assignOrder && (
         <>
-          <AppButton color="default" onClick={() => setAssignOrder(false)}>back</AppButton>
+          <AppButton color="default" onClick={() => setAssignOrder(false)}>back to all routes</AppButton>
           <OrderList routeId={routeId} />
         </>
       )}
-      {!!onCancel && <button onClick={onCancel}>Back</button>}
+      {!!onCancel && <AppButton color="primary" style={{position: 'absolute', right: "2%", top: "-3%"}} onClick={onCancel}>Cancel</AppButton>}
       {!assignOrder && (
         <Paper className={classes.paper}>
           <Autocomplete

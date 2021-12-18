@@ -25,6 +25,7 @@ import { AppContext } from "../../../store";
 import Menu from "../../../components/Menu";
 import api from "../../../api";
 import ChangeMultipleForm from "../../Tracking/components/ChangeMultipleForm";
+import RoutesTable from "./RoutesTable";
 
 const useRowStyles = makeStyles({
   root: {
@@ -71,7 +72,7 @@ function Row(props) {
       }
     }
     if (value === "Change Route") {
-      alert("In development")
+      props.reassignRoute(id)
     }
   };
 
@@ -192,6 +193,7 @@ export default function OrderList(props) {
   const [changeMultiply, setChangeMultiply] = useState(false);
   const [changeSelected, setChangeSelected] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState([]);
+  const [reassignRoute, setReassignRoute] = useState([]);
 
   const onRemoveOrder = useCallback(
     (id) => {
@@ -251,6 +253,14 @@ export default function OrderList(props) {
     setRows(rows.reverse());
   }, [assignedOrders, ordersList, state.routes]);
 
+  if (reassignRoute.length)
+  return (
+    <RoutesTable
+      orders={reassignRoute}
+      onCancel={() => setReassignRoute([])}
+    />
+  );
+  
   return (
     <>
       {changeSelected && (
@@ -316,6 +326,7 @@ export default function OrderList(props) {
                   index={i}
                   row={order}
                   routeId={props.routeId}
+                  reassignRoute={(val) => setReassignRoute([val])}
                   onSelectId={(val) => handleAddSelected(val)}
                   selected={selectedOrders}
                   onConfirmModalOpen={(id) => onRemoveOrder(id)}

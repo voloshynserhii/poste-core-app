@@ -32,17 +32,22 @@ export default function CheckboxesGroup({ data, orderId }) {
 
   const handleChange = async (event) => {
     if (!checked?.includes(event.target.id)) {
-      setChecked([...checked, event.target.id]);
       const res = await api.orders.assignRoute(orderId, event.target.id);
       console.log(res);
-      //add dispatcher here!!!
+      if(res.status === 200) {
+        dispatch({type: "ASSIGN_ROUTE", orderId, routeId: event.target.id});
+        setChecked([...checked, event.target.id]);
+      }
+
     } else {
       const newChecked = checked.filter((item) => item !== event.target.id);
       const res = await api.orders.unassignRoute(orderId, event.target.id);
       console.log(res);
-      
-      //add dispatcher here!!!!
-      setChecked(newChecked);
+      if(res.status === 200) {
+        dispatch({type: "UNASSIGN_ROUTE", orderId, routeId: event.target.id})
+        setChecked(newChecked);
+      }
+
     }
   };
 
