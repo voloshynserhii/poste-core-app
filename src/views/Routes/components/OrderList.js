@@ -58,7 +58,7 @@ function Row(props) {
   const classes = useRowStyles();
   const [menuValue, setMenuValue] = useState("");
 
-  const menuOptions = ["Remove"];
+  const menuOptions = ["Remove", "Change Route"];
 
   const handleGetOption = async (value, id) => {
     setMenuValue(value);
@@ -69,6 +69,9 @@ function Row(props) {
       } catch (err) {
         console.error(err.error);
       }
+    }
+    if (value === "Change Route") {
+      alert("In development")
     }
   };
 
@@ -264,65 +267,86 @@ export default function OrderList(props) {
           onCancel={() => setChangeMultiply(false)}
         />
       )}
-      <TableContainer component={Paper}>
-        {confirmModalOpen && (
-          <Alert
-            severity="success"
-            variant="filled"
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setConfirmModalOpen(false);
-                }}
-              >
-                <CloseIcon fontSize="inherit" />
-              </IconButton>
-            }
-          >
-            Order removed
-          </Alert>
-        )}
-        <Table aria-label="Order List">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ padding: 0, textAlign: "center" }}>
-                <AppButton
-                  color="error"
-                  onClick={() => setChangeMultiply(true)}
+      {rows.length > 0 ? (
+        <TableContainer component={Paper}>
+          {confirmModalOpen && (
+            <Alert
+              severity="success"
+              variant="filled"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setConfirmModalOpen(false);
+                  }}
                 >
-                  Change all
-                </AppButton>
-              </TableCell>
-              <TableCell>#</TableCell>
-              <TableCell />
-              <TableCell>Tracking #</TableCell>
-              <TableCell align="right">Weight</TableCell>
-              <TableCell align="right">Quantity</TableCell>
-              <TableCell align="right">Collection address</TableCell>
-              <TableCell align="right">Delivery address</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows?.map((order, i) => (
-              <Row
-                key={order.id}
-                index={i}
-                row={order}
-                routeId={props.routeId}
-                onSelectId={(val) => handleAddSelected(val)}
-                selected={selectedOrders}
-                onConfirmModalOpen={(id) => onRemoveOrder(id)}
-              />
-            ))}
-          </TableBody>
-          <AppButton color="secondary" onClick={() => setChangeSelected(true)}>
-            Change selected
-          </AppButton>
-        </Table>
-      </TableContainer>
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              Order removed
+            </Alert>
+          )}
+          <Table aria-label="Order List">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ padding: 0, textAlign: "center" }}>
+                  <AppButton
+                    color="error"
+                    onClick={() => setChangeMultiply(true)}
+                  >
+                    Change all
+                  </AppButton>
+                </TableCell>
+                <TableCell>#</TableCell>
+                <TableCell />
+                <TableCell>Tracking #</TableCell>
+                <TableCell align="right">Weight</TableCell>
+                <TableCell align="right">Quantity</TableCell>
+                <TableCell align="right">Collection address</TableCell>
+                <TableCell align="right">Delivery address</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows?.map((order, i) => (
+                <Row
+                  key={order.id}
+                  index={i}
+                  row={order}
+                  routeId={props.routeId}
+                  onSelectId={(val) => handleAddSelected(val)}
+                  selected={selectedOrders}
+                  onConfirmModalOpen={(id) => onRemoveOrder(id)}
+                />
+              ))}
+            </TableBody>
+          </Table>
+          {selectedOrders.length > 0 && (
+            <>
+              <AppButton color="default" onClick={() => setSelectedOrders([])}>
+                Clear selected
+              </AppButton>
+              <AppButton
+                color="secondary"
+                onClick={() => setChangeSelected(true)}
+              >
+                Change selected
+              </AppButton>
+              <AppButton
+              disabled
+                color="primary"
+                onClick={() => alert("Not ready")}
+              >
+                Change route for selected
+              </AppButton>
+            </>
+          )}
+        </TableContainer>
+      ) : (
+        <Grid>No orders in this route!</Grid>
+      )}
     </>
   );
 }

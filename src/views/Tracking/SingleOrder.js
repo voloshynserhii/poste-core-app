@@ -367,6 +367,10 @@ const SingleOrderView = () => {
                 {...SHARED_CONTROL_PROPS}
               />
               <TextField
+                type="textarea"
+                multiline
+                rows={1}
+                maxRows={4}
                 label="Description"
                 name="description"
                 value={values?.description}
