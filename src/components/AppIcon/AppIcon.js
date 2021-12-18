@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { SvgIcon } from '@material-ui/core';
+// import { SvgIcon } from '@material-ui/core';
 // SVG assets
-import { ReactComponent as LogoIcon } from './logo.svg';
+// import { ReactComponent as LogoIcon } from './logo.svg';
 // Material Icons
 import DefaultIcon from '@material-ui/icons/MoreHoriz';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
