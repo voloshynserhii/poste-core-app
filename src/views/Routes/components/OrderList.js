@@ -26,6 +26,7 @@ import Menu from "../../../components/Menu";
 import api from "../../../api";
 import ChangeMultipleForm from "../../Tracking/components/ChangeMultipleForm";
 import RoutesTable from "./RoutesTable";
+import RegisterRouteForm from "./RegisterRouteForm";
 
 const useRowStyles = makeStyles({
   root: {
@@ -72,7 +73,7 @@ function Row(props) {
       }
     }
     if (value === "Change Route") {
-      props.reassignRoute(id)
+      props.reassignRoute(id);
     }
   };
 
@@ -194,6 +195,7 @@ export default function OrderList(props) {
   const [changeSelected, setChangeSelected] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [reassignRoute, setReassignRoute] = useState([]);
+  const [createRoute, setCreateRoute] = useState(false);
 
   const onRemoveOrder = useCallback(
     (id) => {
@@ -253,14 +255,18 @@ export default function OrderList(props) {
     setRows(rows.reverse());
   }, [assignedOrders, ordersList, state.routes]);
 
+  if (createRoute) {
+    return <RegisterRouteForm orders={selectedOrders} onCancel={() => setCreateRoute(false)} />;
+  }
+
   if (reassignRoute.length)
-  return (
-    <RoutesTable
-      orders={reassignRoute}
-      onCancel={() => setReassignRoute([])}
-    />
-  );
-  
+    return (
+      <RoutesTable
+        orders={reassignRoute}
+        onCancel={() => setReassignRoute([])}
+      />
+    );
+
   return (
     <>
       {changeSelected && (
@@ -346,11 +352,13 @@ export default function OrderList(props) {
                 Change selected
               </AppButton>
               <AppButton
-              disabled
                 color="primary"
-                onClick={() => alert("Not ready")}
+                onClick={() => setReassignRoute(selectedOrders)}
               >
                 Change route for selected
+              </AppButton>
+              <AppButton color="error" onClick={() => setCreateRoute(true)}>
+                Create new route for selected
               </AppButton>
             </>
           )}

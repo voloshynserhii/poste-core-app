@@ -76,11 +76,14 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
-  red: {
+  full: {
     background: "rgba(255,0,0,.2)",
   },
-  green: {
-    background: "rgba(0,128,0,.2)",
+  onLoading: {
+    background: "rgba(123,92,136,.4)",
+  },
+  empty: {
+    background: "transparent",
   },
 }));
 
@@ -111,7 +114,8 @@ console.log(orders, assignedRoutes)
     finishPlace,
     region,
     status,
-    locations
+    locations,
+    orders
   ) {
     return {
       id,
@@ -122,8 +126,11 @@ console.log(orders, assignedRoutes)
       region,
       status,
       locations,
+      orders
     };
   }
+  
+  
 
   useEffect(() => {
     if (state.routes.length) {
@@ -157,11 +164,12 @@ console.log(orders, assignedRoutes)
         route.finishPlace || "no address",
         route.region || "no region",
         route.status || "no status",
-        route.locations
+        route.locations, 
+        route.orders
       );
     });
     setRows(rows.reverse());
-  }, [data, selectedRouteType]);
+  }, [data]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -251,6 +259,7 @@ console.log(orders, assignedRoutes)
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+    console.log(rows)
   if (loading) return <LinearProgress />;
 
   return (
@@ -312,11 +321,9 @@ console.log(orders, assignedRoutes)
                     return (
                       <TableRow
                         className={
-                          row.status === "Cancelled"
-                            ? classes.red
-                            : row.status === "Pending"
-                            ? classes.green
-                            : null
+                          row.orders.length > 0
+                            ? classes.onLoading
+                            : classes.empty
                         }
                         role="checkbox"
                         aria-checked={isItemSelected}
@@ -332,13 +339,13 @@ console.log(orders, assignedRoutes)
                             <TableCell>
                               <AppButton
                                 color={
-                                  assignedRoutes.includes(row.id)
+                                  assignedRoutes.includes(row.id)|| orders.every(order => row.orders.includes(order))
                                     ? "primary"
                                     : "default"
                                 }
                                 onClick={() => handleAssignToRoutes(row.id)}
                               >
-                                {assignedRoutes.includes(row.id)
+                                {assignedRoutes.includes(row.id) || orders.every(order => row.orders.includes(order))
                                   ? "Assigned"
                                   : "Assign"}
                               </AppButton>

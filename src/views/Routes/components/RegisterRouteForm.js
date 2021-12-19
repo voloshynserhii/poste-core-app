@@ -50,12 +50,13 @@ const OPERATION_DAYS = [
   "Sunday",
 ];
 
-const RegisterRouteForm = ({ onCancel }) => {
+const RegisterRouteForm = ({ orders = [], onCancel }) => {
   const history = useHistory();
   const [state, dispatch] = useContext(AppContext);
   const classes = orderForm();
   const [locationsArr, setLocationsArr] = useState([]);
   const [operationDays, setOperationDays] = useState([]);
+  const [newOrders, setNewOrders] = useState([]);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -92,6 +93,7 @@ const RegisterRouteForm = ({ onCancel }) => {
         ...formState.values,
         locations: locationsArr,
         operationDays,
+        orders: orders
       });
       const newRoute = res.data.data.route;
       if (res.status === 201) {
@@ -126,10 +128,19 @@ const RegisterRouteForm = ({ onCancel }) => {
       setLocationsArr((prev) => [...prev, id]);
     }
   };
+  
+  useEffect(() => {
+    orders.forEach((id) => {
+      const res = state.orders.find((order) => order._id === id)
+      setNewOrders((prev) => [...prev, res])
+    })
+  }, [orders])
+  console.log(newOrders)
+
 
   return (
     <Card className={classes.root}>
-      <CardHeader title="Add new route" />
+      <CardHeader title={`Add new route ${!!newOrders ? `for ${newOrders.map(order => order.trackingNumber)}` : ''}`} />
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -318,7 +329,7 @@ const RegisterRouteForm = ({ onCancel }) => {
         </Grid>
       </CardContent>
       <Grid container justifyContent="center" alignItems="center">
-        <AppButton onClick={() => history.push("/route")}>Cancel</AppButton>
+        <AppButton onClick={!!onCancel ? onCancel : () => history.push("/route")}>Cancel</AppButton>
         <AppButton
           color="success"
           disabled={!formState.isValid}
