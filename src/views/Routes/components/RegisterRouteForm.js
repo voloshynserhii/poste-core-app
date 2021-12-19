@@ -134,7 +134,7 @@ const RegisterRouteForm = ({ orders = [], onCancel }) => {
       const res = state.orders.find((order) => order._id === id)
       setNewOrders((prev) => [...prev, res])
     })
-  }, [orders])
+  }, [orders, state.orders])
   console.log(newOrders)
 
 

@@ -169,7 +169,7 @@ console.log(orders, assignedRoutes)
       );
     });
     setRows(rows.reverse());
-  }, [data]);
+  }, [data, selectedRouteType]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
