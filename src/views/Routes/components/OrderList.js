@@ -262,6 +262,7 @@ export default function OrderList(props) {
   if (reassignRoute.length)
     return (
       <RoutesTable
+        oldRoute={props.routeId}
         orders={reassignRoute}
         onCancel={() => setReassignRoute([])}
       />

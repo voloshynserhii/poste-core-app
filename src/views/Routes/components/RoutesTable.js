@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
 const menuOptions = ["View route", "Edit route", "Orders", "Delete route"];
 
-export default function RoutesTable({ orders, onCancel }) {
+export default function RoutesTable({ oldRoute, orders, onCancel }) {
   const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
@@ -105,7 +105,7 @@ export default function RoutesTable({ orders, onCancel }) {
   const [routeId, setRouteId] = useState();
   const [data, setData] = useState([]);
   const [assignedRoutes, setAssignedRoutes] = useState([]);
-console.log(orders, assignedRoutes)
+console.log(orders, assignedRoutes, oldRoute)
   function createData(
     id,
     title,
@@ -198,16 +198,23 @@ console.log(orders, assignedRoutes)
   const handleAssignToRoutes = async (route) => {
     if (orders) {
       if (assignedRoutes.includes(route)) {
-        orders.forEach(async (order) => {
-          const result = await api.orders.unassignRoute(order, route);
+        for (let i = 0; i < orders.length; i++) {
+          const result = await api.orders.unassignRoute(orders[i], route);
+          await dispatch({type: 'UNASSIGN_ROUTE', orderId: orders[i], routeId: route});
           console.log(result);
-        });
-      } else {
-        const response = await api.routes.addMultiplyOrders(orders, route);
-        setAssignedRoutes((prev) => [...prev, route]);
-        if (response) {
-          console.log("Response", response);
         }
+      } else {
+        console.log("addMultiplyOrders", orders, route);
+        await api.routes.addMultiplyOrders(orders, route);
+        await dispatch({type: 'ASSIGN_MULTIPLE_ROUTE', orders, routeId: oldRoute});
+        if (!!oldRoute) {
+          for (let i = 0; i < orders.length; i++) {
+            const result = await api.orders.unassignRoute(orders[i], oldRoute);
+            await dispatch({type: 'UNASSIGN_ROUTE', orderId: orders[i], routeId: oldRoute});
+            console.log(result);
+          }
+        }
+          setAssignedRoutes((prev) => [...prev, route]);
       }
     }
   };
@@ -254,12 +261,11 @@ console.log(orders, assignedRoutes)
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const routeType = ["Create new", "lastMile", "collection", "peer-to-peer", "transit"];
+  const routeType = ["lastMile", "collection", "peer-to-peer", "transit"];
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-    console.log(rows)
   if (loading) return <LinearProgress />;
 
   return (
