@@ -369,7 +369,14 @@ console.log(state.locations)
                       {!!state.locations &&
                         state.locations
                           .filter((loc) => loc.type === "city")
-                          // .filter((loc) => loc?.terminalCity?._id === values?.terminal?._id)
+                          .filter((loc) => {
+                            if(values?.terminal?.hasOwnProperty('_id')) {
+                              return loc?.terminalCity?._id === values?.terminal?._id
+                            } else {
+                              return loc?.terminalCity?._id === values?.terminal
+                            }
+                            
+                          })
                           .map((location) => (
                             <FormControlLabel
                               disabled={viewMode}

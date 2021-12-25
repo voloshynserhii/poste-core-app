@@ -47,10 +47,13 @@ const userForm = makeStyles((theme) => ({
     justifyContent: "center",
     margin: theme.spacing(1),
   },
+  locationsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+  },
   selectContainer: {
     display: "flex",
     alignItems: "center",
-    // justifyContent: "space-between",
     padding: 10,
   },
   selects: {
@@ -106,6 +109,10 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       },
     }));
   }, [setFormState]);
+  
+  useEffect(() => {
+    formLocation();
+  }, [formLocation]);
 
   useEffect(() => {
     if (state.routes.length > 0) {
@@ -128,32 +135,38 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       setLoading(true);
       setError("");
       try {
-        const res = await state.locations.find(
-          (location) => location._id === id
-        );
-        if (res) {
-          setFormState((oldFormState) => ({
-            ...oldFormState,
-            values: {
-              ...oldFormState.values,
-              name: res?.name || "",
-              nameGE: res?.nameGE || "",
-              code: res?.code || "",
-            },
-          }));
-          setLocationType(res?.type || "region");
-          setParent(res?.parent?._id);
-          if (res?.type === "city") {
-            setRegion(res?.parent?._id);
-            setIsTerminal(res?.terminal);
+        if(id) {
+          const res = await api.locations.read(id);
+          if (res) {
+            setFormState((oldFormState) => ({
+              ...oldFormState,
+              values: {
+                ...oldFormState.values,
+                name: res?.name || "",
+                nameGE: res?.nameGE || "",
+                code: res?.code || "",
+              },
+            }));
+            setLocationType(res?.type || "region");
+            setParent(res?.parent?._id);
+            setTerminalCity(res?.terminalCity?._id);
+            if (res?.type === "city") {
+              setRegion(res?.parent?._id);
+              setIsTerminal(res?.terminal);
+            }
+            if (res?.type === "point") {
+              setCity(res?.parent?._id);
+              setRegion(res?.parent?.parent);
+            }
+          } else {
+            setError(`Location id: "${id}" not found`);
           }
-          if (res?.type === "point") {
-            setCity(res?.parent?._id);
-            setRegion(res?.parent?.parent);
-          }
-        } else {
-          setError(`Location id: "${id}" not found`);
         }
+        // const res = await state.locations.find(
+        //   (location) => location._id === id
+        // );
+        
+        
       } catch (error) {
         log.error(error);
         setError(error.message);
@@ -161,16 +174,12 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
         setLoading(false);
       }
     },
-    [setFormState, state.locations]
+    [setFormState]
   );
 
   useEffect(() => {
     fetchLocationById(id);
   }, [fetchLocationById, id]);
-
-  useEffect(() => {
-    formLocation();
-  }, [formLocation]);
 
   useEffect(() => {
     if (locationType !== "region") {
@@ -193,9 +202,10 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       ...formState.values,
       type: locationType,
       parent: parent,
-      terminalCity: terminalCity,
+      terminalCity: !isTerminal ? terminalCity : null,
       terminal: isTerminal,
     };
+    console.log(newLocation);
     try {
       if (!id) {
         // save changes in BD
@@ -211,7 +221,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
         const res = await api.locations.update(id, newLocation);
         const updatedLocation = res.data;
         if (res.status === 200) {
-          dispatch({ type: "UPDATE_LOCATION", payload: updatedLocation });
+          dispatch({ type: "UPDATE_LOCATION", id: id, updatedLocation });
           setLocationSaved(true);
           onSave(true);
         }
@@ -240,7 +250,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       setRoutesArr((prev) => [...prev, id]);
     }
   };
-console.log(terminalCity)
+
   if (locationSaved) return null;
   if (loading) return <LinearProgress />;
 
@@ -299,7 +309,7 @@ console.log(terminalCity)
               >
                 <Typography className={classes.heading}>Routes</Typography>
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails className={classes.locationsGrid} >
                 {!!state.routes &&
                   state.routes.map((route) => (
                     <FormControlLabel
