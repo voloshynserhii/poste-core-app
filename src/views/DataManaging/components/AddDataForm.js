@@ -50,16 +50,17 @@ const userForm = makeStyles((theme) => ({
   selectContainer: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     padding: 10,
   },
   selects: {
-    width: "45%",
+    width: "30%",
     height: 40,
-    borderColor: 'rgba(0, 0, 0, .3)',
+    borderColor: "rgba(0, 0, 0, .3)",
     borderRadius: 8,
-    color: 'rgba(0, 0, 0, .6)',
-    outline: 'none',
+    color: "rgba(0, 0, 0, .6)",
+    outline: "none",
+    marginRight: 20
   },
 }));
 
@@ -79,9 +80,11 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
   const [locationType, setLocationType] = useState("region");
   const [isTerminal, setIsTerminal] = useState(false);
   const [regions, setRegions] = useState([]);
+  const [terminals, setTerminals] = useState([]);
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState();
   const [region, setRegion] = useState();
+  const [terminalCity, setTerminalCity] = useState();
   const [parent, setParent] = useState();
   const [routesArr, setRoutesArr] = useState([]);
 
@@ -119,7 +122,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       fetchData();
     }
   }, [dispatch, state.routes]);
-  
+
   const fetchLocationById = useCallback(
     async (id) => {
       setLoading(true);
@@ -172,6 +175,8 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
   useEffect(() => {
     if (locationType !== "region") {
       const regions = state.locations.filter((loc) => loc.type === "region");
+      const terminals = state.locations.filter((loc) => loc.terminal === true);
+      setTerminals(terminals);
       setRegions(regions);
       setParent(region);
     }
@@ -188,7 +193,8 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       ...formState.values,
       type: locationType,
       parent: parent,
-      terminal: isTerminal
+      terminalCity: terminalCity,
+      terminal: isTerminal,
     };
     try {
       if (!id) {
@@ -234,7 +240,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       setRoutesArr((prev) => [...prev, id]);
     }
   };
-
+console.log(terminalCity)
   if (locationSaved) return null;
   if (loading) return <LinearProgress />;
 
@@ -351,21 +357,36 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                 />
               </Grid>
 
-              <Grid item sm={7} className={classes.selectContainer}>
+              <Grid item xs={12} className={classes.selectContainer}>
                 {locationType !== "region" && (
-                  <select
-                    className={classes.selects}
-                    value={region}
-                    onChange={(event) => setRegion(event.target.value)}
-                  >
-                    Regions
-                    <option value="">Choose region</option>
-                    {regions.map((region) => (
-                      <option key={region._id} value={region._id}>
-                        {region.name}
-                      </option>
-                    ))}
-                  </select>
+                  <>
+                    <select
+                      className={classes.selects}
+                      value={region}
+                      onChange={(event) => setRegion(event.target.value)}
+                    >
+                      Regions
+                      <option value="">Choose region</option>
+                      {regions.map((region) => (
+                        <option key={region._id} value={region._id}>
+                          {region.name}
+                        </option>
+                      ))}
+                    </select>
+                    {!isTerminal && <select
+                      className={classes.selects}
+                      value={terminalCity}
+                      onChange={(event) => setTerminalCity(event.target.value)}
+                    >
+                      Terminal
+                      <option value="">Choose terminal</option>
+                      {terminals.map((terminal) => (
+                        <option key={terminal._id} value={terminal._id}>
+                          {terminal.name}
+                        </option>
+                      ))}
+                    </select>}
+                  </>
                 )}
                 {locationType === "city" && (
                   <FormControlLabel

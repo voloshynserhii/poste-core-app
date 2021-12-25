@@ -67,11 +67,11 @@ const SingleRouteView = () => {
     });
   const [locationsArr, setLocationsArr] = useState([]);
   const [operationDays, setOperationDays] = useState([]);
-  const [viewOrders, setViewOrders] = useState(false);  
+  const [viewOrders, setViewOrders] = useState(false);
 
   const values = formState.values;
   const id = params?.id;
-  const viewMode = params?.type === 'view' ? true : false;
+  const viewMode = params?.type === "view" ? true : false;
 
   useEffect(() => {
     if (state.routes.length > 0) {
@@ -124,6 +124,8 @@ const SingleRouteView = () => {
     },
     [setFormState, state.routes]
   );
+console.log(values)
+console.log(state.locations)
 
   useEffect(() => {
     fetchRouteById(id);
@@ -255,7 +257,7 @@ const SingleRouteView = () => {
                       </MenuItem>
                     ))}
                   </TextField>
-                  <Accordion >
+                  <Accordion>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1a-content"
@@ -367,6 +369,7 @@ const SingleRouteView = () => {
                       {!!state.locations &&
                         state.locations
                           .filter((loc) => loc.type === "city")
+                          // .filter((loc) => loc?.terminalCity?._id === values?.terminal?._id)
                           .map((location) => (
                             <FormControlLabel
                               disabled={viewMode}
@@ -396,20 +399,24 @@ const SingleRouteView = () => {
                 >
                   View orders
                 </AppButton>
-                <UpdateButton
-                  color="primary"
-                  id={id}
-                  payload={{
-                    ...values,
-                    locations: locationsArr,
-                    operationDays,
-                  }}
-                >
-                  Update route
-                </UpdateButton>
-                <AppButton color="error" onClick={() => handleDelete(id)}>
-                  Delete route
-                </AppButton>
+                {!viewMode && (
+                  <UpdateButton
+                    color="primary"
+                    id={id}
+                    payload={{
+                      ...values,
+                      locations: locationsArr,
+                      operationDays,
+                    }}
+                  >
+                    Update route
+                  </UpdateButton>
+                )}
+                {!viewMode && (
+                  <AppButton color="error" onClick={() => handleDelete(id)}>
+                    Delete route
+                  </AppButton>
+                )}
               </Grid>
             </CardContent>
           </Card>
