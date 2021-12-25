@@ -195,6 +195,7 @@ console.log(orders, assignedRoutes, oldRoute)
     setPage(0);
   };
 
+  //function for assigning and reassigning of orders to routes
   const handleAssignToRoutes = async (route) => {
     if (orders) {
       if (assignedRoutes.includes(route)) {
@@ -251,6 +252,7 @@ console.log(orders, assignedRoutes, oldRoute)
   };
 
   const handleGetOption = (value, id) => {
+    if (value === "View route") history.push(`route/${id}/${'view'}`);
     if (value === "Edit route") history.push(`route/${id}`);
     if (value === "Delete route") handleDelete(id);
     if (value === "Orders") {
@@ -327,7 +329,7 @@ console.log(orders, assignedRoutes, oldRoute)
                     return (
                       <TableRow
                         className={
-                          row.orders.length > 0
+                          row?.orders?.length > 0
                             ? classes.onLoading
                             : classes.empty
                         }

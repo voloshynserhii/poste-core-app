@@ -71,6 +71,7 @@ const SingleRouteView = () => {
 
   const values = formState.values;
   const id = params?.id;
+  const viewMode = params?.type === 'view' ? true : false;
 
   useEffect(() => {
     if (state.routes.length > 0) {
@@ -186,6 +187,7 @@ const SingleRouteView = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    disabled={viewMode}
                     required
                     label="Title"
                     name="title"
@@ -198,6 +200,7 @@ const SingleRouteView = () => {
                     {...SHARED_CONTROL_PROPS}
                   />
                   <TextField
+                    disabled={viewMode}
                     required
                     select
                     label="Type"
@@ -216,6 +219,7 @@ const SingleRouteView = () => {
                     <MenuItem value="peerToPeer">Peer-to-peer</MenuItem>
                   </TextField>
                   <TextField
+                    disabled={viewMode}
                     select
                     label="Status"
                     name="status"
@@ -232,6 +236,7 @@ const SingleRouteView = () => {
                     <MenuItem value="finished">Finished</MenuItem>
                   </TextField>
                   <TextField
+                    disabled={viewMode}
                     select
                     required
                     label="Curier"
@@ -250,7 +255,7 @@ const SingleRouteView = () => {
                       </MenuItem>
                     ))}
                   </TextField>
-                  <Accordion>
+                  <Accordion >
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1a-content"
@@ -263,6 +268,7 @@ const SingleRouteView = () => {
                     <AccordionDetails className={classes.grid}>
                       {OPERATION_DAYS.map((day) => (
                         <FormControlLabel
+                          disabled={viewMode}
                           key={day}
                           control={
                             <Checkbox
@@ -282,6 +288,7 @@ const SingleRouteView = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    disabled={viewMode}
                     id="latestCollectionTime"
                     label="Latest collection time"
                     name="latestCollectionTime"
@@ -302,6 +309,7 @@ const SingleRouteView = () => {
                     {...SHARED_CONTROL_PROPS}
                   />
                   <TextField
+                    disabled={viewMode}
                     id="latestDeliveryTime"
                     label="Latest delivery time"
                     name="latestDeliveryTime"
@@ -322,6 +330,7 @@ const SingleRouteView = () => {
                     {...SHARED_CONTROL_PROPS}
                   />
                   <TextField
+                    disabled={viewMode}
                     select
                     label="Terminal"
                     name="terminal"
@@ -360,6 +369,7 @@ const SingleRouteView = () => {
                           .filter((loc) => loc.type === "city")
                           .map((location) => (
                             <FormControlLabel
+                              disabled={viewMode}
                               key={location._id}
                               control={
                                 <Checkbox

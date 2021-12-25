@@ -11,7 +11,8 @@ const RouteRoutes = () => {
   return (
     <Switch>
       <Route path="/route/form" component={RouteForm} />
-      <Route path="/route/:id" component={SingleRouteView} />
+      <Route path="/route/:id" exact component={SingleRouteView} />
+      <Route path="/route/:id/:type" exact component={SingleRouteView} />
       <Route path="/route" component={AllRoutesView} />
       <Route component={AllRoutesView} />
     </Switch>
