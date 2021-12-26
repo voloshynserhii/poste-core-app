@@ -309,6 +309,13 @@ const RegisterRouteForm = ({ orders = [], onCancel }) => {
                 {!!state.locations &&
                   state.locations
                     .filter((loc) => loc.type === "city")
+                    .filter((loc) => {
+                      if(values?.terminal?.hasOwnProperty('_id')) {
+                        return loc?.terminalCity?._id === values?.terminal?._id
+                      } else {
+                        return loc?.terminalCity?._id === values?.terminal
+                      }
+                    })
                     .map((location) => (
                       <FormControlLabel
                         key={location._id}

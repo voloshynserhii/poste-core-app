@@ -95,7 +95,6 @@ const SingleRouteView = () => {
       setError("");
       try {
         const res = await state.routes.find((c) => c._id === id);
-        console.log(res);
         if (res) {
           setFormState((oldFormState) => ({
             ...oldFormState,
@@ -124,8 +123,6 @@ const SingleRouteView = () => {
     },
     [setFormState, state.routes]
   );
-console.log(values)
-console.log(state.locations)
 
   useEffect(() => {
     fetchRouteById(id);
@@ -375,7 +372,6 @@ console.log(state.locations)
                             } else {
                               return loc?.terminalCity?._id === values?.terminal
                             }
-                            
                           })
                           .map((location) => (
                             <FormControlLabel

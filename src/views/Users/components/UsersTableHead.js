@@ -10,8 +10,8 @@ const headCells = [
   { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
   { id: 'phone', numeric: false, disablePadding: false, label: 'Phone' },
   { id: 'role', numeric: false, disablePadding: false, label: 'Role' },
+  { id: 'isAvailable', numeric: false, disablePadding: false, label: 'Available' },
   { id: 'date', numeric: false, disablePadding: false, label: 'Created' },
-  { id: 'availability', numeric: false, disablePadding: false, label: 'Availabile' },
 ];
 
 export default function UsersTableHead(props) {

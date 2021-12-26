@@ -61,6 +61,7 @@ const RegisterUserForm = ({ onCancel }) => {
   const [userSaved, setUserSaved] = useState(false);
   const [curier, setCurier] = useState(false);
   const [dispatcher, setDispatcher] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
 
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
@@ -94,7 +95,9 @@ const RegisterUserForm = ({ onCancel }) => {
     const newUser = {
       ...formState.values,
       role: role,
+      isAvailable
     };
+    console.log(newUser);
     try {
       // save changes in BD
       const res = await api.users.create(newUser);
@@ -104,7 +107,7 @@ const RegisterUserForm = ({ onCancel }) => {
         setUserSaved(true);
       }
     } catch (err) {
-      alert("Something went wrong. Please try another email address")
+      alert("Something went wrong. Please try another email address");
     }
   };
   const handleSave = () => {
@@ -124,7 +127,7 @@ const RegisterUserForm = ({ onCancel }) => {
             required
             label="Name"
             name="name"
-            value={values?.name || ''}
+            value={values?.name || ""}
             error={fieldHasError("name")}
             helperText={fieldGetError("name") || "Provide a name of the user"}
             onChange={onFieldChange}
@@ -134,7 +137,7 @@ const RegisterUserForm = ({ onCancel }) => {
             required
             label="Email"
             name="email"
-            value={values?.email || ''}
+            value={values?.email || ""}
             defaultValue={values.email}
             error={fieldHasError("email")}
             helperText={fieldGetError("email") || "Provide email of the user"}
@@ -145,7 +148,7 @@ const RegisterUserForm = ({ onCancel }) => {
             required
             label="Password"
             name="password"
-            value={values?.password || ''}
+            value={values?.password || ""}
             defaultValue={values.password}
             error={fieldHasError("password")}
             helperText={
@@ -158,44 +161,62 @@ const RegisterUserForm = ({ onCancel }) => {
             type="number"
             label="Phone"
             name="phone"
-            value={values?.phone || ''}
+            value={values?.phone || ""}
             error={fieldHasError("phone")}
             helperText={fieldGetError("phone") || "Provide a phone of the user"}
             onChange={onFieldChange}
             {...SHARED_CONTROL_PROPS}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={curier}
-                onChange={() => {
-                  setCurier((old) => !old);
-                  if (dispatcher) {
-                    setDispatcher(false);
-                  }
-                }}
-                name="curier"
-                color="primary"
+          <Grid container>
+            <Grid item xs={3} sm={2}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={curier}
+                    onChange={() => {
+                      setCurier((old) => !old);
+                      if (dispatcher) {
+                        setDispatcher(false);
+                      }
+                    }}
+                    name="curier"
+                    color="primary"
+                  />
+                }
+                label="Curier"
               />
-            }
-            label="Curier"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={dispatcher}
-                onChange={() => {
-                  setDispatcher((prev) => !prev);
-                  if (curier) {
-                    setCurier(false);
-                  }
-                }}
-                name="curier"
-                color="primary"
+            </Grid>
+            <Grid item xs={3} sm={2}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={dispatcher}
+                    onChange={() => {
+                      setDispatcher((prev) => !prev);
+                      if (curier) {
+                        setCurier(false);
+                      }
+                    }}
+                    name="curier"
+                    color="primary"
+                  />
+                }
+                label="Dispatcher"
               />
-            }
-            label="Dispatcher"
-          />
+            </Grid>
+            <Grid item xs={6} sm={6} style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isAvailable}
+                    onChange={() => setIsAvailable(prev => !prev)}
+                    name="isAvailable"
+                  />
+                }
+                label={"Is Available?"}
+              />
+            </Grid>
+          </Grid>
           <Grid container justifyContent="center" alignItems="center">
             <AppButton onClick={onCancel}>Cancel</AppButton>
             <AppButton

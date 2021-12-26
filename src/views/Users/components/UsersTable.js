@@ -88,7 +88,8 @@ export default function UsersTable({ data }) {
     email,
     phone,
     role,
-    createdAt
+    isAvailable,
+    createdAt,
   ) {
     return {
       id,
@@ -96,7 +97,8 @@ export default function UsersTable({ data }) {
       email,
       phone,
       role,
-      createdAt
+      isAvailable,
+      createdAt,
     };
   }
 
@@ -108,6 +110,7 @@ export default function UsersTable({ data }) {
         customer.email,
         customer.phone,
         customer.role,
+        customer.isAvailable,
         customer.createdAt
       );
     });
@@ -156,7 +159,7 @@ export default function UsersTable({ data }) {
 
                   return (
                     <TableRow
-                      className={row.status === 'Cancelled' ? classes.red : (row.status === 'Pending' ? classes.green : null)}
+                      className={row?.status === 'Cancelled' ? classes.red : (row.status === 'Pending' ? classes.green : null)}
                       hover
                       style={{ cursor: "pointer" }}
                       key={row.id}
@@ -170,12 +173,13 @@ export default function UsersTable({ data }) {
                         padding="none"
                         style={{ minWidth: 250 }}
                       >
-                        {row.name}
+                        {row?.name}
                       </TableCell>
-                      <TableCell style={{ minWidth: 200 }} align="left">{row.email}</TableCell>
-                      <TableCell style={{ minWidth: 180 }} align="left">{row.phone}</TableCell>
-                      <TableCell style={{ minWidth: 200 }} align="left">{row.role}</TableCell>
-                      <TableCell align="left">{row?.createdAt?.replace('T', ' ').replace('Z', ' ')}</TableCell>
+                      <TableCell style={{ minWidth: 200 }} align="left">{row?.email}</TableCell>
+                      <TableCell style={{ minWidth: 180 }} align="left">{row?.phone}</TableCell>
+                      <TableCell style={{ minWidth: 200 }} align="left">{row?.role}</TableCell>
+                      <TableCell style={{ minWidth: 200 }} align="left">{!!row?.isAvailable ? "Yes" : "No" }</TableCell>
+                      <TableCell align="left">{row?.createdAt?.replace('T', ' ').replace('Z', ' ') || 'changed now'}</TableCell>
                     </TableRow>
                   );
                 })}

@@ -39,6 +39,9 @@ const SingleUserView = () => {
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [role, setRole] = useState();
+  const [isAvailable, setIsAvailable] = useState(false);
+  
   const [formState, setFormState, onFieldChange, fieldGetError, fieldHasError] =
     useAppForm({
       validationSchema: VALIDATE_FORM_USER,
@@ -62,9 +65,11 @@ const SingleUserView = () => {
               phone: res?.phone || "",
               password: "",
               confirmPassword: "",
-              role: res?.role || "",
             },
           }));
+          setRole(res?.role || '')
+          setIsAvailable(res?.isAvailable)
+          console.log(res);
         } else {
           setError(`User id: "${id}" not found`);
         }
@@ -114,7 +119,7 @@ const SingleUserView = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={9}>
           <Card>
-            <CardHeader title={`${values?.role?.toUpperCase()} DETAILS`} />
+            <CardHeader title={`${role?.toUpperCase()} DETAILS`} />
             <CardContent>
               <TextField
                 label="Name"
@@ -164,7 +169,6 @@ const SingleUserView = () => {
                 label="Confirm password"
                 name="confirmPassword"
                 value={values?.confirmPassword}
-                // defaultValue={values.confirmPassword}
                 error={fieldHasError("confirmPassword")}
                 helperText={
                   fieldGetError("confirmPassword") ||
@@ -173,44 +177,46 @@ const SingleUserView = () => {
                 onChange={onFieldChange}
                 {...SHARED_CONTROL_PROPS}
               />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.role === "curier"}
-                    // onChange={() => {
-                    //   setCurier((old) => !old);
-                    //   if (dispatcher) {
-                    //     setDispatcher(false);
-                    //   }
-                    // }}
-                    name="curier"
-                    color="primary"
+              <Grid container>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={role === "curier"}
+                      onChange={() => setRole('curier')}
+                      name="curier"
+                    />
+                  }
+                  label="Curier"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={role === 'dispatcher'}
+                      onChange={() => setRole('dispatcher')}
+                      name="dispatcher"
+                    />
+                  }
+                  label="Dispatcher"
+                />
+                <Grid item xs={6} sm={6} style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isAvailable}
+                        onChange={() => setIsAvailable(prev => !prev)}
+                        name="isAvailable"
+                      />
+                    }
+                    label={"Is Available?"}
                   />
-                }
-                label="Curier"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.role === "dispatcher"}
-                    // onChange={() => {
-                    //   setDispatcher((prev) => !prev);
-                    //   if (curier) {
-                    //     setCurier(false);
-                    //   }
-                    // }}
-                    name="curier"
-                    color="primary"
-                  />
-                }
-                label="Dispatcher"
-              />
+                </Grid>
+              </Grid>
               <Grid container justifycontent="center" alignItems="center">
                 <AppButton onClick={handleCancel}>Cancel</AppButton>
                 <UpdateButton
                   color="primary"
                   id={id}
-                  payload={values}
+                  payload={{...values, role, isAvailable}}
                 >
                   Update user
                 </UpdateButton>
