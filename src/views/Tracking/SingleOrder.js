@@ -80,7 +80,7 @@ const SingleOrderView = () => {
             values: {
               ...oldFormState.values,
               customer: {
-                _id: res?.customer?._id || "",
+                _id: res?.customer?._id || null,
               },
               trackingNumber: res?.trackingNumber || "",
               referenceNumber: res?.referenceNumber || "",
@@ -94,16 +94,16 @@ const SingleOrderView = () => {
               comments: res?.comments || "",
               updateDate: Date.now(),
               collectionData: {
-                region: res?.collectionData?.region || "",
-                city: res?.collectionData?.city || "",
+                region: res?.collectionData?.region || null,
+                city: res?.collectionData?.city || null,
                 address1: res?.collectionData?.address1 || "",
                 contactName: res?.collectionData?.contactName || "",
                 contactPhone: res?.collectionData?.contactPhone || "",
                 contactEmail: res?.collectionData?.contactEmail || "",
               },
               deliveryData: {
-                region: res?.deliveryData?.region || "",
-                city: res?.deliveryData?.city || "",
+                region: res?.deliveryData?.region || null,
+                city: res?.deliveryData?.city || null,
                 address1: res?.deliveryData?.address1 || "",
                 contactName: res?.deliveryData?.contactName || "",
                 contactPhone: res?.deliveryData?.contactPhone || "",
@@ -400,7 +400,7 @@ const SingleOrderView = () => {
                   required
                   label="Region"
                   name="region"
-                  value={values?.collectionData?.region || ""}
+                  value={values?.collectionData?.region || null}
                   error={fieldHasError("region")}
                   helperText={fieldGetError("region") || "Display the region"}
                   onChange={onFieldChangeCollection}
@@ -420,7 +420,7 @@ const SingleOrderView = () => {
                   required
                   label="City"
                   name="city"
-                  value={values?.collectionData?.city || ""}
+                  value={values?.collectionData?.city || null}
                   error={fieldHasError("city")}
                   helperText={fieldGetError("city") || "Display the city"}
                   onChange={onFieldChangeCollection}
@@ -443,7 +443,7 @@ const SingleOrderView = () => {
                   required
                   label="End Point"
                   name="point"
-                  value={values?.collectionData?.point || ""}
+                  value={values?.collectionData?.point || null}
                   error={fieldHasError("point")}
                   helperText={fieldGetError("point") || "Display a route point"}
                   onChange={onFieldChangeCollection}
@@ -517,7 +517,7 @@ const SingleOrderView = () => {
                   required
                   label="Region"
                   name="region"
-                  value={values?.deliveryData?.region || ""}
+                  value={values?.deliveryData?.region || null}
                   error={fieldHasError("region")}
                   helperText={fieldGetError("region") || "Display the region"}
                   onChange={onFieldChangeDelivery}
@@ -537,7 +537,7 @@ const SingleOrderView = () => {
                   required
                   label="City"
                   name="city"
-                  value={values?.deliveryData?.city || ""}
+                  value={values?.deliveryData?.city || null}
                   error={fieldHasError("city")}
                   helperText={fieldGetError("city") || "Display the city"}
                   onChange={onFieldChangeDelivery}
@@ -560,7 +560,7 @@ const SingleOrderView = () => {
                   required
                   label="End Point"
                   name="point"
-                  value={values?.deliveryData?.point || ""}
+                  value={values?.deliveryData?.point || null}
                   error={fieldHasError("point")}
                   helperText={
                     fieldGetError("point") ||

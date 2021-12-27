@@ -1,7 +1,8 @@
 import { api } from '../';
 
+
 async function collectionReadMany() {
-  const ref = await api.axios(`${process.env.REACT_APP_API_URL}/api/orders`);
+  const ref = await api.axios(`${process.env.REACT_APP_API_URL}/api/orders/`);
   const data = await ref.data.data.orders;
   if (!data) return [];
   return data;
@@ -10,7 +11,6 @@ async function collectionReadMany() {
 async function collectionReadOne(id) {
   const ref = await api.axios(`${process.env.REACT_APP_API_URL}/api/orders/${id}`);
   const data = await ref.data.data.order;
-  console.log(data);
   if (!data) return undefined;
   return {
     id,
