@@ -2,19 +2,26 @@ import { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
+  Box,
   Checkbox,
+  Collapse,
+  IconButton,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TablePagination,
   TableRow,
+  Typography,
 } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-import AppButton from '../../../components/AppButton';
+import AppButton from "../../../components/AppButton";
 import api from "../../../api";
 import { AppContext } from "../../../store";
 import Menu from "../../../components/Menu";
@@ -96,6 +103,8 @@ export default function OrdersTable({ data, ...props }) {
   const [state, dispatch] = useContext(AppContext);
   const history = useHistory();
   const classes = useStyles();
+
+  const [open, setOpen] = useState(false);
   const [rows, setRows] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("date");
@@ -298,13 +307,13 @@ export default function OrdersTable({ data, ...props }) {
                 onSelectAllClick={handleSelectAllClick}
                 rowCount={rows.length}
               />
-              <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const labelId = `enhanced-table-checkbox-${index}`;
-                    const isItemSelected = isSelected(row.id);
-                    return (
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemSelected = isSelected(row.id);
+                  return (
+                    <TableBody key={row.id}>
                       <TableRow
                         className={
                           row.status === "Cancelled"
@@ -318,7 +327,6 @@ export default function OrdersTable({ data, ...props }) {
                         tabIndex={-1}
                         hover
                         style={{ cursor: "pointer" }}
-                        key={row.id}
                         selected={isItemSelected}
                         onClick={(event) => handleClick(event, row.id)}
                       >
@@ -330,6 +338,17 @@ export default function OrdersTable({ data, ...props }) {
                               "aria-labelledby": labelId,
                             }}
                           />
+                          <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={() => setOpen(!open)}
+                          >
+                            {open ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            )}
+                          </IconButton>
                         </TableCell>
                         <TableCell>
                           <Menu
@@ -378,14 +397,97 @@ export default function OrdersTable({ data, ...props }) {
                           {row.updateDate}
                         </TableCell>
                       </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
+
+                      <TableRow>
+                        <TableCell
+                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                          colSpan={9}
+                        >
+                          <Collapse in={open} timeout="auto" unmountOnExit>
+                            <Box margin={1}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                component="div"
+                              >
+                                Details
+                              </Typography>
+                              <Table size="small" aria-label="details">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell>Region</TableCell>
+                                    <TableCell>City</TableCell>
+                                    <TableCell align="right">
+                                      Address1
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      Address2
+                                    </TableCell>
+                                    <TableCell align="right">Phone</TableCell>
+                                    <TableCell align="right">Email</TableCell>
+                                    <TableCell align="right">
+                                      Contact Name
+                                    </TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell>FROM</TableCell>
+                                    {/* <TableCell>{row.collectionData.region}</TableCell>
+                    <TableCell>{row.collectionData.city}</TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.address1}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.address2}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.contactPhone}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.constactEmail}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.collectionData.contactName}
+                    </TableCell> */}
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell>TO</TableCell>
+                                    {/* <TableCell>{row.deliveryData.region}</TableCell>
+                    <TableCell>{row.deliveryData.city}</TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.address1}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.address2}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.contactPhone}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.constactEmail}
+                    </TableCell>
+                    <TableCell align="right">
+                      {row.deliveryData.contactName}
+                    </TableCell> */}
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableBody>
                   <TableRow style={{ height: 35 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
-                )}
-              </TableBody>
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
           <TablePagination

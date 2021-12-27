@@ -109,9 +109,9 @@ function Row(props) {
           {row.trackingNumber}
         </TableCell>
         <TableCell align="right">{row.weight}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
+        {/* <TableCell align="right">{row.fat}</TableCell>
         <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.protein}</TableCell> */}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
