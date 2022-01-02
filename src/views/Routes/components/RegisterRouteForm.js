@@ -74,7 +74,6 @@ const RegisterRouteForm = ({ orders = [], onCancel }) => {
         type: "",
         terminal: "",
         status: "",
-        locations: [],
         latestCollectionTime: "12:00",
         latestDeliveryTime: "12:00",
       },
@@ -98,6 +97,13 @@ const RegisterRouteForm = ({ orders = [], onCancel }) => {
       const newRoute = res.data.data.route;
       if (res.status === 201) {
         dispatch({ type: "ADD_ROUTE", payload: newRoute });
+        for(let i = 0; i < locationsArr.length; i++) {
+          const res = await api.locations.update(locationsArr[i], {routes: [newRoute._id]});
+          const updatedLocation = res.data;
+          if (res.status === 200) {
+            dispatch({ type: "UPDATE_LOCATION", id: locationsArr[i], updatedLocation });
+          }
+        }
       }
       history.push("/route");
     } catch (err) {
@@ -135,7 +141,7 @@ const RegisterRouteForm = ({ orders = [], onCancel }) => {
       setNewOrders((prev) => [...prev, res])
     })
   }, [orders, state.orders])
-  console.log(newOrders)
+  console.log(values)
 
 
   return (

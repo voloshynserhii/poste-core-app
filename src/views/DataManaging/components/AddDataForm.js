@@ -48,8 +48,8 @@ const userForm = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   locationsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
   },
   selectContainer: {
     display: "flex",
@@ -63,7 +63,7 @@ const userForm = makeStyles((theme) => ({
     borderRadius: 8,
     color: "rgba(0, 0, 0, .6)",
     outline: "none",
-    marginRight: 20
+    marginRight: 20,
   },
 }));
 
@@ -109,7 +109,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       },
     }));
   }, [setFormState]);
-  
+
   useEffect(() => {
     formLocation();
   }, [formLocation]);
@@ -135,7 +135,7 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       setLoading(true);
       setError("");
       try {
-        if(id) {
+        if (id) {
           const res = await api.locations.read(id);
           if (res) {
             setFormState((oldFormState) => ({
@@ -147,6 +147,9 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                 code: res?.code || "",
               },
             }));
+            console.log(res);
+            if (res.routes.length > 0)
+              setRoutesArr(res?.routes?.map((loc) => loc._id));
             setLocationType(res?.type || "region");
             setParent(res?.parent?._id);
             setTerminalCity(res?.terminalCity?._id);
@@ -165,8 +168,6 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
         // const res = await state.locations.find(
         //   (location) => location._id === id
         // );
-        
-        
       } catch (error) {
         log.error(error);
         setError(error.message);
@@ -204,8 +205,8 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
       parent: parent,
       terminalCity: !isTerminal ? terminalCity : null,
       terminal: isTerminal,
+      // routes: routesArr
     };
-    console.log(newLocation);
     try {
       if (!id) {
         // save changes in BD
@@ -309,13 +310,14 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
               >
                 <Typography className={classes.heading}>Routes</Typography>
               </AccordionSummary>
-              <AccordionDetails className={classes.locationsGrid} >
+              <AccordionDetails className={classes.locationsGrid}>
                 {!!state.routes &&
                   state.routes.map((route) => (
                     <FormControlLabel
                       key={route._id}
                       control={
                         <Checkbox
+                          disabled
                           checked={routesArr.includes(route._id)}
                           onChange={() => handleAddRoute(route._id)}
                           name={route.title}
@@ -383,19 +385,23 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                         </option>
                       ))}
                     </select>
-                    {!isTerminal && <select
-                      className={classes.selects}
-                      value={terminalCity}
-                      onChange={(event) => setTerminalCity(event.target.value)}
-                    >
-                      Terminal
-                      <option value="">Choose terminal</option>
-                      {terminals.map((terminal) => (
-                        <option key={terminal._id} value={terminal._id}>
-                          {terminal.name}
-                        </option>
-                      ))}
-                    </select>}
+                    {!isTerminal && (
+                      <select
+                        className={classes.selects}
+                        value={terminalCity}
+                        onChange={(event) =>
+                          setTerminalCity(event.target.value)
+                        }
+                      >
+                        Terminal
+                        <option value="">Choose terminal</option>
+                        {terminals.map((terminal) => (
+                          <option key={terminal._id} value={terminal._id}>
+                            {terminal.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </>
                 )}
                 {locationType === "city" && (
