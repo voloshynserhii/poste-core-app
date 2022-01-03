@@ -147,9 +147,10 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
                 code: res?.code || "",
               },
             }));
-            console.log(res);
-            if (res.routes.length > 0)
+            console.log("location", res);
+            if (res.routes.length > 0) {
               setRoutesArr(res?.routes?.map((loc) => loc._id));
+            }
             setLocationType(res?.type || "region");
             setParent(res?.parent?._id);
             setTerminalCity(res?.terminalCity?._id);
@@ -165,9 +166,6 @@ const AddDataForm = ({ onCancel, id, title, onSave }) => {
             setError(`Location id: "${id}" not found`);
           }
         }
-        // const res = await state.locations.find(
-        //   (location) => location._id === id
-        // );
       } catch (error) {
         log.error(error);
         setError(error.message);
